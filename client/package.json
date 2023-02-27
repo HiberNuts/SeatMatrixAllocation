@@ -2,7 +2,7 @@
   "name": "Seat-Allocation",
   "version": "0",
   "private": true,
-  "proxy": "http://localhost:5555/",
+  "proxy": "https://seatmatrixallocationbackend.onrender.com/",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@fullcalendar/bootstrap5": "^5.11.3",
