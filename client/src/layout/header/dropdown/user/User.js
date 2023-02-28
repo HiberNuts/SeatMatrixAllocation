@@ -15,7 +15,7 @@ const User = () => {
   };
   useEffect(() => {
 
-    fetch('/collegeData', {
+    fetch('https://seatmatrixallocationbackend.onrender.com/collegeData', {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
       }

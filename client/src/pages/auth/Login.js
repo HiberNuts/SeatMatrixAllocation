@@ -33,12 +33,14 @@ const Login = () => {
 
   const onFormSubmit = (formData) => {
     setLoading(true);
-    fetch('/login', {
+    fetch('https://seatmatrixallocationbackend.onrender.com/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ CollegeCode: formData.name, CollegePassword: formData.passcode })
+      body: JSON.stringify({ CollegeCode: formData.name, CollegePassword: formData.passcode }),
+
+
     })
       .then(response => {
         if (!response.ok) {

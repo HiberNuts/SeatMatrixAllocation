@@ -29,7 +29,7 @@ router.get("getById/:id", (req, res) => {
 });
 
 router.post("/", (req, res) => {
-  College.create(req.body)
+  Auth.create(req.body)
     .then((Auth) => res.json({ msg: "Auth added successfully" }))
     .catch((err) => res.status(400).json(err));
 });
