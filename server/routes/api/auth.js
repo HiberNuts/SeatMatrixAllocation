@@ -1,15 +1,14 @@
 // routes/api/Auths.js
 
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const jwt = require('jsonwebtoken');
-const secret = '6$Sz249eF18@MKy1N';
+const jwt = require("jsonwebtoken");
+const secret = "6$Sz249eF18@MKy1N";
 var { expressjwt: ejwt } = require("express-jwt");
 
 // Load Auth model
-const Auth = require('../../db/models/Auth');
-const College = require('../../db/models/CollegeData');
-
+const Auth = require("../../db/models/Auth");
+const College = require("../../db/models/CollegeData");
 
 // // @route GET api/Auths
 // // @description Get all Auths
@@ -23,17 +22,16 @@ const College = require('../../db/models/CollegeData');
 // @route GET api/Auths/:id
 // @description Get single Auth by id
 // @access Public
-router.get('getById/:id', (req, res) => {
+router.get("getById/:id", (req, res) => {
   Auth.findById(req.params.id)
-    .then(Auth => res.json(Auth))
-    .catch(err => res.status(404).json({ noAuthfound: 'No Auth found' }));
+    .then((Auth) => res.json(Auth))
+    .catch((err) => res.status(404).json({ noAuthfound: "No Auth found" }));
 });
 
-router.post('/', (req, res) => {
-
+router.post("/", (req, res) => {
   College.create(req.body)
-    .then(Auth => res.json({ msg: 'Auth added successfully' }))
-    .catch(err => res.status(400).json(err));
+    .then((Auth) => res.json({ msg: "Auth added successfully" }))
+    .catch((err) => res.status(400).json(err));
 });
 
 // // @route GET api/Auths/:id
@@ -57,57 +55,56 @@ router.post('/', (req, res) => {
 // });
 
 // Login auth and generate JWT
-router.post('/login', async (req, res) => {
+router.post("/login", async (req, res) => {
   const { CollegeCode, CollegePassword } = req.body;
   try {
     // Find the auth with the given email
     const auth = await Auth.findOne({ CollegeCode });
 
     if (!auth) {
-      return res.status(400).json({ message: 'User not found' });
+      return res.status(400).json({ message: "User not found" });
     }
 
     // Compare the password with the hashed password
     const match = CollegePassword == auth.CollegePassword;
 
     if (!match) {
-      return res.status(400).json({ message: 'Invalid credentials' });
+      return res.status(400).json({ message: "Invalid credentials" });
     }
     // Generate JWT
-    const token = jwt.sign({ CollegeCode: auth.id }, secret, { expiresIn: '1h' });
+    const token = jwt.sign({ CollegeCode: auth.id }, secret, { expiresIn: "1h" });
     const resetReq = auth.CollegeCode == auth.CollegePassword;
     res.json({ token: token, resetReq: resetReq });
   } catch (err) {
     res.status(500).json(err);
   }
 });
-router.post('/resetPasswordInitial', ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
+router.post("/resetPasswordInitial", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
   try {
     // Find the auth with the given ID
     const auth = await Auth.findByIdAndUpdate(req.auth.CollegeCode, req.body);
 
     if (!auth) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
     res.json({ status: true });
-
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
-router.get('/collegeData', ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
+router.get("/collegeData", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
   try {
     // Find the auth with the given ID
     const auth = await Auth.findById(req.auth.CollegeCode);
 
     if (!auth) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
     const college = await College.findOne({ code: auth.CollegeData_id });
 
     if (!college) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
     res.json(college);
   } catch (err) {
