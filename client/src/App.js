@@ -11,7 +11,7 @@ const App = (props) => {
   return (
     <Switch>
       {/* Auth Pages */}
-      
+
       <Route exact path={`${process.env.PUBLIC_URL}/auth-login`} component={Login}></Route>
       {/*Error Pages*/}
       <Route exact path={`${process.env.PUBLIC_URL}/504`} component={Error504Modern}></Route>
