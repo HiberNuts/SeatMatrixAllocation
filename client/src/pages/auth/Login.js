@@ -151,7 +151,7 @@ const Login = () => {
                     type={passState ? "text" : "password"}
                     id="password"
                     name="passcode"
-                    defaultValue="123456"
+                    defaultValue=""
                     ref={register({ required: "This field is required" })}
                     placeholder="Enter your passcode"
                     className={`form-control-lg form-control ${passState ? "is-hidden" : "is-shown"}`}
@@ -197,7 +197,7 @@ const Login = () => {
                       var passtwo = document.getElementById('passwordTwo').value;
                       if (passone == passtwo) {
                         setLoading(true);
-                        fetch('/resetPasswordInitial', {
+                        fetch('https://seatmatrixallocationbackend.onrender.com/resetPasswordInitial', {
                           method: 'POST',
                           headers: {
                             'Content-Type': 'application/json',
