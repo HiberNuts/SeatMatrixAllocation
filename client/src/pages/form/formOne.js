@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Row, Col, Label, Form } from "reactstrap";
 import { useForm } from "react-hook-form";
 import { Button } from "../../components/Component";
@@ -7,20 +7,58 @@ import { RSelect } from "../../components/Component";
 
 const FormOne = ({ alter, id }) => {
   const { errors, register, handleSubmit } = useForm();
-  const onFormSubmit = (e) => { };
+  const [collegeName, setcollegeName] = useState("");
+  const [collegeCode, setcollegeCode] = useState("");
+
+  const [data, setdata] = useState([]);
+  const [collegeType, setCollegeType] = useState("");
+  console.log(collegeType);
+  const onFormSubmit = (data) => {
+    console.log(data);
+  };
   const formClass = classNames({
-    "form-validate": true,
+    "form-validate": false,
     "is-alter": alter,
+  });
+
+  const getCollegeInfo = async () => {
+    console.log("hii");
+
+    fetch("https://seatmatrixallocationbackend.onrender.com/collegeData", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    })
+      .then((response) => {
+        console.log(response);
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setcollegeName(data[0].can);
+        setcollegeCode(data[0].ccode);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    getCollegeInfo();
   });
 
   const defaultOptions = [
     { value: "GOVT", label: "Government College" },
+    { value: "UNI", label: "University" },
     { value: "SF", label: "Self Financed" },
     { value: "MIN", label: "Minority" },
+    { value: "NMIN", label: "Non Minority" },
   ];
   return (
     <React.Fragment>
-      <Form className={formClass} onSubmit={handleSubmit(onFormSubmit)}>
+      <Form className={formClass} onSubmit={handleSubmit((data) => onFormSubmit(data))}>
         <Row className="g-gs">
           <Col md="6">
             <div className="form-group">
@@ -34,8 +72,27 @@ const FormOne = ({ alter, id }) => {
                   id="fv-full-name"
                   name="CollegeName"
                   className="form-control"
+                  value={collegeName}
                 />
                 {errors.CollegeName && <span className="invalid">This field is required</span>}
+              </div>
+            </div>
+          </Col>
+          <Col md="6">
+            <div className="form-group">
+              <Label className="form-label" htmlFor="fv-full-name">
+                College Code
+              </Label>
+              <div className="form-control-wrap">
+                <input
+                  ref={register({ required: true })}
+                  type="text"
+                  id="fv-full-code"
+                  name="CollegeCode"
+                  className="form-control"
+                  value={collegeCode}
+                />
+                {errors.CollegeCode && <span className="invalid">This field is required</span>}
               </div>
             </div>
           </Col>
@@ -87,8 +144,7 @@ const FormOne = ({ alter, id }) => {
               <Label className="form-label" htmlFor="fv-topics">
                 College Type
               </Label>
-              <RSelect options={defaultOptions} />
-
+              <RSelect setCollegeType={setCollegeType} options={defaultOptions} />
             </div>
           </Col>
           <Col md="12">

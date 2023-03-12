@@ -1,19 +1,18 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const CollegeDataSchema = new mongoose.Schema({
-  name: {
+  can: {
     type: String,
-    required: true
+    required: true,
   },
-  type:{
+  Category: {
     type: String,
-    required: true
+    required: true,
   },
-  code:{
-
-     type: String,
-    required: true
-  }
+  ccode: {
+    type: String,
+    required: true,
+  },
 });
 
-module.exports = College = mongoose.model('CollegeData', CollegeDataSchema);
+module.exports = College = mongoose.model("CollegeData", CollegeDataSchema);

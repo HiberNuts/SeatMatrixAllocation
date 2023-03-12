@@ -9,12 +9,7 @@ import {
   Icon,
   PreviewCard,
 } from "../../components/Component";
-import {
-  Modal,
-  ModalHeader,
-  ModalBody, Form, Spinner, Alert,
-  ModalFooter,
-} from "reactstrap";
+import { Modal, ModalHeader, ModalBody, Form, Spinner, Alert, ModalFooter } from "reactstrap";
 import Logo from "../../images/logo.png";
 import LogoDark from "../../images/logo-dark.png";
 
@@ -33,47 +28,41 @@ const Login = () => {
 
   const onFormSubmit = (formData) => {
     setLoading(true);
-    fetch('https://seatmatrixallocationbackend.onrender.com/login', {
-      method: 'POST',
+    fetch("https://seatmatrixallocationbackend.onrender.com/login", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ CollegeCode: formData.name, CollegePassword: formData.passcode }),
-
-
     })
-      .then(response => {
+      .then((response) => {
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
         return response.json();
       })
-      .then(data => {
+      .then((data) => {
         // Do something with the response data
         localStorage.setItem("accessToken", data.token);
         setError("");
         setLoading(false);
         if (data.resetReq) {
           setModalForm(true);
-        }
-        else {
-
+        } else {
           window.history.pushState(
             `${process.env.PUBLIC_URL ? process.env.PUBLIC_URL : "/"}`,
             "auth-login",
             `${process.env.PUBLIC_URL ? process.env.PUBLIC_URL : "/"}`
           );
           window.location.reload();
-
         }
       })
-      .catch(error => {
+      .catch((error) => {
         setTimeout(() => {
           setError("Invalid Credentials, Try Again");
           setLoading(false);
         }, 2000);
       });
-
   };
 
   const { errors, register, handleSubmit } = useForm();
@@ -132,7 +121,6 @@ const Login = () => {
                   <label className="form-label" htmlFor="password">
                     Passcode
                   </label>
-
                 </div>
                 <div className="form-control-wrap">
                   <a
@@ -166,11 +154,7 @@ const Login = () => {
               </div>
             </Form>
             <Modal isOpen={modalForm} toggle={toggleForm}>
-              <ModalHeader
-                toggle={toggleForm}
-              >
-                Reset Password
-              </ModalHeader>
+              <ModalHeader toggle={toggleForm}>Reset Password</ModalHeader>
               <ModalBody>
                 <form>
                   <div className="form-group">
@@ -191,50 +175,51 @@ const Login = () => {
                   </div>
 
                   <div className="form-group">
-                    <Button color="primary" type="submit" onClick={(ev) => {
-                      ev.preventDefault();
-                      var passone = document.getElementById('passwordOne').value;
-                      var passtwo = document.getElementById('passwordTwo').value;
-                      if (passone == passtwo) {
-                        setLoading(true);
-                        fetch('https://seatmatrixallocationbackend.onrender.com/resetPasswordInitial', {
-                          method: 'POST',
-                          headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-                          },
-                          body: JSON.stringify({ CollegePassword: passone })
-                        })
-                          .then(response => {
-                            if (!response.ok) {
-                              throw new Error('Network response was not ok');
-                            }
-                            return response.json();
+                    <Button
+                      color="primary"
+                      type="submit"
+                      onClick={(ev) => {
+                        ev.preventDefault();
+                        var passone = document.getElementById("passwordOne").value;
+                        var passtwo = document.getElementById("passwordTwo").value;
+                        if (passone == passtwo) {
+                          setLoading(true);
+                          fetch("https://seatmatrixallocationbackend.onrender.com/resetPasswordInitial", {
+                            method: "POST",
+                            headers: {
+                              "Content-Type": "application/json",
+                              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                            },
+                            body: JSON.stringify({ CollegePassword: passone }),
                           })
-                          .then(data => {
-                            // Do something with the response data
-                            setModalForm(false);
-                            window.history.pushState(
-                              `${process.env.PUBLIC_URL ? process.env.PUBLIC_URL : "/"}`,
-                              "auth-login",
-                              `${process.env.PUBLIC_URL ? process.env.PUBLIC_URL : "/"}`
-                            );
-                            window.location.reload();
-
-
-                          })
-                          .catch(error => {
-                            setModalForm(true);
-                            setTimeout(() => {
-                              setError("Invalid Credentials, Try Again");
-                              setLoading(false);
-                            }, 2000);
-                          });
-                      }
-
-                    }} size="lg">
+                            .then((response) => {
+                              if (!response.ok) {
+                                throw new Error("Network response was not ok");
+                              }
+                              return response.json();
+                            })
+                            .then((data) => {
+                              // Do something with the response data
+                              setModalForm(false);
+                              window.history.pushState(
+                                `${process.env.PUBLIC_URL ? process.env.PUBLIC_URL : "/"}`,
+                                "auth-login",
+                                `${process.env.PUBLIC_URL ? process.env.PUBLIC_URL : "/"}`
+                              );
+                              window.location.reload();
+                            })
+                            .catch((error) => {
+                              setModalForm(true);
+                              setTimeout(() => {
+                                setError("Invalid Credentials, Try Again");
+                                setLoading(false);
+                              }, 2000);
+                            });
+                        }
+                      }}
+                      size="lg"
+                    >
                       {loading ? <Spinner size="sm" color="light" /> : "Change"}
-
                     </Button>
                   </div>
                 </form>

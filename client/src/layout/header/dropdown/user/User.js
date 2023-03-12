@@ -13,28 +13,28 @@ const User = () => {
   const handleSignout = () => {
     localStorage.removeItem("accessToken");
   };
-  useEffect(() => {
+  // useEffect(() => {
+  //   fetch("http:localhost:5555/collegeData", {
+  //     headers: {
+  //       Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+  //     },
+  //   })
+  //     .then((response) => {
+  //       if (!response.ok) {
+  //         throw new Error("Network response was not ok");
+  //       }
+  //       return response.json();
+  //     })
+  //     .then((data) => {
+  //       // Do something with the response data
 
-    fetch('https://seatmatrixallocationbackend.onrender.com/collegeData', {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-      }
-    }).then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    }).then(data => {
-      // Do something with the response data
-
-      console.log(data);
-      setData(data);
-    }).catch(error => {
-      console.log(error);
-
-    });
-  }
-    , []);
+  //       console.log(data);
+  //       setData(data);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }, []);
 
   return (
     <Dropdown isOpen={open} className="user-dropdown" toggle={toggle}>

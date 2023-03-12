@@ -1,19 +1,22 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const CollegeAuthSchema = new mongoose.Schema({
   CollegeCode: {
     type: String,
-    required: true
+    required: true,
   },
   CollegePassword: {
     type: String,
-    required: true
+    required: true,
   },
-  CollegeData_id:{
+  can: {
     type: String,
-    required: false
-
-  }
+    required: false,
+  },
+  Category: {
+    type: String,
+    required: false,
+  },
 });
 
-module.exports = Auth = mongoose.model('auth', CollegeAuthSchema);
+module.exports = Auth = mongoose.model("auth", CollegeAuthSchema);

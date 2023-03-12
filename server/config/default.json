@@ -1,3 +1,4 @@
 {
-  "mongoURI": "mongodb+srv://raghav:raghav@seatmatrix.jyphlgc.mongodb.net/?retryWrites=true&w=majority"
+  "mongoURI": "mongodb+srv://raghav:raghav@seatmatrix.jyphlgc.mongodb.net/TNEASeatMatrix",
+  "mongoURIForDB": ""
 }
