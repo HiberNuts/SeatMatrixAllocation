@@ -63,7 +63,7 @@ AuthRouter.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
     // Generate JWT
-    const token = jwt.sign({ CollegeCode: auth.id, ccode: auth.CollegeCode }, secret, { expiresIn: "1h" });
+    const token = jwt.sign({ id: auth.id, CollegeCode: auth.CollegeCode }, secret, { expiresIn: "1h" });
     const resetReq = auth.CollegeCode == auth.CollegePassword;
     res.json({ token: token, resetReq: resetReq });
   } catch (err) {
@@ -73,7 +73,8 @@ AuthRouter.post("/login", async (req, res) => {
 AuthRouter.post("/resetPasswordInitial", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
   try {
     // Find the auth with the given ID
-    const auth = await Auth.findOneAndUpdate({ id: `${req.auth.CollegeCode}` }, req.body);
+    console.log(req.auth);
+    const auth = await Auth.findOneAndUpdate({ CollegeCode: req.auth.CollegeCode }, req.body);
 
     if (!auth) {
       return res.status(404).json({ message: "User not found" });
@@ -84,22 +85,17 @@ AuthRouter.post("/resetPasswordInitial", ejwt({ secret: secret, algorithms: ["HS
   }
 });
 
-// AuthRouter.get("/collegeData", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
-//   try {
-//     // Find the auth with the given ID
-//     const auth = await Auth.find({ id: req.auth.CollegeCode });
+AuthRouter.get("/collegeData", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
+  try {
+    // Find the auth with the given ID
+    const auth = await Auth.findOne({ CollegeCode: req.auth.CollegeCode });
 
-//     if (!auth) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
-//     const college = await College.findOne({ code: auth.CollegeData_id });
-
-//     if (!college) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
-//     res.json(college);
-//   } catch (err) {
-//     res.status(500).json(err);
-//   }
-// });
+    if (!auth) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json(auth);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 module.exports = AuthRouter;

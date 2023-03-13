@@ -9,7 +9,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 app.use(require("./routes/api/auth"));
-app.use(require("./routes/api/collegeData"));
+
 // Connect Database
 connectDB();
 app.get("/", (req, res) => res.send("Hello world!"));
