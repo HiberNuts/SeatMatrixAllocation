@@ -13,29 +13,30 @@ const User = () => {
   const handleSignout = () => {
     localStorage.removeItem("accessToken");
   };
-  // useEffect(() => {
-  //   fetch("http:localhost:5555/collegeData", {
-  //     headers: {
-  //       Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-  //     },
-  //   })
-  //     .then((response) => {
-  //       if (!response.ok) {
-  //         throw new Error("Network response was not ok");
-  //       }
-  //       return response.json();
-  //     })
-  //     .then((data) => {
-  //       // Do something with the response data
 
-  //       console.log(data);
-  //       setData(data);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }, []);
+  const getCollegeInfo = async () => {
+    fetch("http://localhost:5555/collegeData", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setData(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
+  useEffect(() => {
+    getCollegeInfo();
+  }, []);
   return (
     <Dropdown isOpen={open} className="user-dropdown" toggle={toggle}>
       <DropdownToggle
@@ -50,12 +51,12 @@ const User = () => {
           <UserAvatar icon="user-alt" className="sm" />
           <div className="user-info d-none d-md-block">
             <div className="user-status">Administrator</div>
-            <div className="user-name dropdown-indicator">{data.name}</div>
+            <div className="user-name dropdown-indicator">{data.can}</div>
           </div>
         </div>
       </DropdownToggle>
       <DropdownMenu end className="dropdown-menu-md dropdown-menu-s1">
-        <div className="dropdown-inner user-card-wrap bg-lighter d-none d-md-block">
+        {/* <div className="dropdown-inner user-card-wrap bg-lighter d-none d-md-block">
           <div className="user-card sm">
             <div className="user-avatar">
               <span>CN</span>
@@ -65,8 +66,8 @@ const User = () => {
               <span className="sub-text">Mail ID</span>
             </div>
           </div>
-        </div>
-        <div className="dropdown-inner">
+        </div> */}
+        {/* <div className="dropdown-inner">
           <LinkList>
             <LinkItem link="/user-profile-regular" icon="user-alt" onClick={toggle}>
               View Profile
@@ -75,7 +76,7 @@ const User = () => {
               Account Setting
             </LinkItem>
           </LinkList>
-        </div>
+        </div> */}
         <div className="dropdown-inner">
           <LinkList>
             <a href={`${process.env.PUBLIC_URL}/auth-login`} onClick={handleSignout}>

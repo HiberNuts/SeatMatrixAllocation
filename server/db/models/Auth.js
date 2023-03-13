@@ -17,6 +17,18 @@ const CollegeAuthSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  EmailAddress: {
+    type: String,
+    required: false,
+  },
+  PrincipalName: {
+    type: String,
+    required: false,
+  },
+  PrincipalName: {
+    type: String,
+    required: false,
+  },
 });
 
 module.exports = Auth = mongoose.model("auth", CollegeAuthSchema);

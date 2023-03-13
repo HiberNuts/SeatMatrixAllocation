@@ -9,6 +9,7 @@ const FormOne = ({ alter, id }) => {
   const { errors, register, handleSubmit } = useForm();
   const [collegeName, setcollegeName] = useState("");
   const [collegeCode, setcollegeCode] = useState("");
+  const [collegeCategory, setcollegeCategory] = useState("");
 
   const [data, setdata] = useState([]);
   const [collegeType, setCollegeType] = useState("");
@@ -22,8 +23,6 @@ const FormOne = ({ alter, id }) => {
   });
 
   const getCollegeInfo = async () => {
-    console.log("hii");
-
     fetch("https://seatmatrixallocationbackend.onrender.com/collegeData", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -37,8 +36,9 @@ const FormOne = ({ alter, id }) => {
         return response.json();
       })
       .then((data) => {
-        setcollegeName(data[0].can);
-        setcollegeCode(data[0].ccode);
+        setcollegeName(data.can);
+        setcollegeCode(data.CollegeCode);
+        setcollegeCategory(data.Category);
       })
       .catch((error) => {
         console.log(error);
@@ -144,7 +144,7 @@ const FormOne = ({ alter, id }) => {
               <Label className="form-label" htmlFor="fv-topics">
                 College Type
               </Label>
-              <RSelect setCollegeType={setCollegeType} options={defaultOptions} />
+              <RSelect default={collegeCategory} setCollegeType={setCollegeType} options={defaultOptions} />
             </div>
           </Col>
           <Col md="12">
