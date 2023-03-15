@@ -9,11 +9,9 @@ const FormOne = ({ alter, id }) => {
   const { errors, register, handleSubmit } = useForm();
   const [collegeName, setcollegeName] = useState("");
   const [collegeCode, setcollegeCode] = useState("");
-  const [collegeCategory, setcollegeCategory] = useState("");
-
+  const [collegeCategory, setcollegeCategory] = useState("GOVT");
   const [data, setdata] = useState([]);
   const [collegeType, setCollegeType] = useState("");
-  console.log(collegeType);
   const onFormSubmit = (data) => {
     console.log(data);
   };
@@ -29,16 +27,16 @@ const FormOne = ({ alter, id }) => {
       },
     })
       .then((response) => {
-        console.log(response);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         return response.json();
       })
       .then((data) => {
+        console.log(data)
         setcollegeName(data.can);
         setcollegeCode(data.CollegeCode);
-        setcollegeCategory(data.Category);
+        setCollegeType(data.Category);
       })
       .catch((error) => {
         console.log(error);
@@ -47,15 +45,24 @@ const FormOne = ({ alter, id }) => {
 
   useEffect(() => {
     getCollegeInfo();
-  });
+  }, []);
 
-  const defaultOptions = [
+  const collegeCategoryOptions = [
     { value: "GOVT", label: "Government College" },
     { value: "UNI", label: "University" },
     { value: "SF", label: "Self Financed" },
     { value: "MIN", label: "Minority" },
     { value: "NMIN", label: "Non Minority" },
   ];
+  const collegeCategoryMap = {
+    "GOVT": "Government College",
+    "UNI": "University",
+    "SF": "Self Financed",
+    "MIN": "Minority",
+    "NMIN": "Non Minority"
+  }
+
+
   return (
     <React.Fragment>
       <Form className={formClass} onSubmit={handleSubmit((data) => onFormSubmit(data))}>
@@ -144,7 +151,8 @@ const FormOne = ({ alter, id }) => {
               <Label className="form-label" htmlFor="fv-topics">
                 College Type
               </Label>
-              <RSelect default={collegeCategory} setCollegeType={setCollegeType} options={defaultOptions} />
+              {console.log(collegeCategory)}
+              <RSelect disabled value={{ value: collegeType, label: collegeCategoryMap[collegeType] }} options={collegeCategoryOptions} />
             </div>
           </Col>
           <Col md="12">

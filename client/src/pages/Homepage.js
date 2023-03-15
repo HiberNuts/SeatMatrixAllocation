@@ -20,7 +20,7 @@ const Homepage = ({ ...props }) => {
     <React.Fragment>
       <Head title="HomePage" />
       <Content page="component">
-        <Block>
+        <Block size="xl">
           <BlockHead>
             <BlockHeadContent>
               <BlockTitle tag="h5">Seat Matrix Form</BlockTitle>
@@ -93,18 +93,14 @@ const Homepage = ({ ...props }) => {
               </TabPane>
               <TabPane tabId="7">
                 <p>
-                  Fugiat id quis dolor culpa eiusmod anim velit excepteur proident dolor aute qui magna. Ad proident
-                  laboris ullamco esse anim Lorem Lorem veniam quis Lorem irure occaecat velit nostrud magna nulla.
-                  Velit et et proident Lorem do ea tempor officia dolor. Reprehenderit Lorem aliquip labore est magna
-                  commodo est ea veniam consectetur.
+                  We, declare that I have thoroughly reviewed and verified all seat allocation matrix for TNEA. I have ensured that all seats have been allocated appropriately and that no further changes will be made to the allocation matrix without proper authorization from the relevant authorities.
+
+                  I take full responsibility for any errors or omissions that may have occurred during the verification process and certify that all changes made to the matrix were necessary and within the scope of the project/task/assignment.
                 </p>
               </TabPane>
               <TabPane tabId="8">
                 <p>
-                  Eu dolore ea ullamco dolore Lorem id cupidatat excepteur reprehenderit consectetur elit id dolor
-                  proident in cupidatat officia. Voluptate excepteur commodo labore nisi cillum duis aliqua do. Aliqua
-                  amet qui mollit consectetur nulla mollit velit aliqua veniam nisi id do Lorem deserunt amet. Culpa
-                  ullamco sit adipisicing labore officia magna elit nisi in aute tempor commodo eiusmod.
+
                 </p>
               </TabPane>
             </TabContent>

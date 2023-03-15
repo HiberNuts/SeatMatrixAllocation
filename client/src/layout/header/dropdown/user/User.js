@@ -15,7 +15,7 @@ const User = () => {
   };
 
   const getCollegeInfo = async () => {
-    fetch("http://localhost:5555/collegeData", {
+    fetch("https://seatmatrixallocationbackend.onrender.com/collegeData", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },

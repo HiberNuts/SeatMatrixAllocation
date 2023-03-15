@@ -12,31 +12,43 @@ const FormTwo = ({ alter, id }) => {
 
   const { errors, register, handleSubmit } = useForm();
 
-  const onFormSubmit = (e) => {};
+  const onFormSubmit = (e) => { };
   const formClass = classNames({
     "form-validate": true,
     "is-alter": alter,
   });
 
-  console.log(courseSchema  );
+  console.log(courseSchema);
 
   const addCourse = () => {
     let c = Course;
-    c.push(1);
+    c.push(c.length);
     setCourse(c);
   };
 
+  const removeCourse = (e) => {
+    const updatedCourses = [...Course];
+    updatedCourses.splice(e, 1);
+    setCourse(updatedCourses);
+  };
   const defaultOptions = [
     { value: "GOVT", label: "Government College" },
     { value: "SF", label: "Self Financed" },
     { value: "MIN", label: "Minority" },
+  ];
+  const AccredationOptions = [
+    { value: "ACC", label: "Accredated" },
+    { value: "NACC", label: "Non - Accredated" },
+  ];
+  const CourseOptions = [
+
   ];
   return (
     <React.Fragment>
       <Form className={formClass} onSubmit={handleSubmit(onFormSubmit)}>
         <Row className="g-gs">
           <Col md="12">
-            <table className="table table-responsive">
+            <table className="table table">
               <thead>
                 <tr>
                   <th scope="col">#</th>
@@ -44,13 +56,17 @@ const FormTwo = ({ alter, id }) => {
                   <th scope="col">Course Code</th>
                   <th scope="col">Accredation</th>
                   <th scope="col">Santioned Intake</th>
+                  <th scope="col">
+                    Action
+                  </th>
+
                 </tr>
               </thead>
               <tbody>
-                {Course.map((e) => {
+                {Course.map((e, index) => {
                   return (
-                    <tr key={e.CourseName}>
-                      <th scope="row">1</th>
+                    <tr key={index}>
+                      <th scope="row">{index + 1}</th>
                       <td>
                         <div className="form-control-select">
                           <Select
@@ -67,11 +83,16 @@ const FormTwo = ({ alter, id }) => {
                       </td>
                       <td>
                         <div className="form-control-select">
-                          <Select classNamePrefix="react-select" options={defaultOptions} />
+                          <Select classNamePrefix="react-select" options={AccredationOptions} />
                         </div>
                       </td>
                       <td>
-                        <NSComponent defaultVal={5} color="light" outline />
+                        <NSComponent min={1} max={250} defaultVal={5} color="light" outline />
+                      </td>
+                      <td>
+                        <a key={index} onClick={() => {
+                          removeCourse(index - 1);
+                        }} class="btn btn-icon btn-outline-danger"><em class="icon ni ni-cross-c"></em></a>
                       </td>
                     </tr>
                   );
