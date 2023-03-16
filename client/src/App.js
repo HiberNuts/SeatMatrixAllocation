@@ -6,7 +6,8 @@ import Layout from "./layout/Index";
 import Error404Modern from "./pages/error/404-modern";
 import Error504Modern from "./pages/error/504-modern";
 import Login from "./pages/auth/Login";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const App = (props) => {
   return (
     <Switch>
@@ -20,6 +21,7 @@ const App = (props) => {
       {/*Main Routes*/}
       <PrivateRoute exact path="" component={Layout}></PrivateRoute>
       <Route component={RedirectAs404}></Route>
+      <ToastContainer />
     </Switch>
   );
 };
