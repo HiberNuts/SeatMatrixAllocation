@@ -25,15 +25,19 @@ const Login = () => {
   const [errorVal, setError] = useState("");
   const [modalForm, setModalForm] = useState(false);
   const toggleForm = () => setModalForm(!modalForm);
+  const [collegeCode, setcollegeCode] = useState("");
+  const [collegeCodeError, setcollegeCodeError] = useState(false);
+  console.log("colegecoe", collegeCode);
 
   const onFormSubmit = (formData) => {
+    setcollegeCode(formData.name);
     setLoading(true);
-    fetch("https://seatmatrixallocationbackend.onrender.com/login", {
+    fetch("http://localhost:5555/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ CollegeCode: formData.name, CollegePassword: formData.passcode }),
+      body: JSON.stringify({ ccode: formData.name, CollegePassword: formData.passcode }),
     })
       .then((response) => {
         if (!response.ok) {
@@ -163,6 +167,7 @@ const Login = () => {
                     </label>
                     <div className="form-control-wrap">
                       <input type="text" className="form-control" id="passwordOne" />
+                      {collegeCodeError && <span className="invalid">New passowrd cannot be same as old one</span>}
                     </div>
                   </div>
                   <div className="form-group">
@@ -182,39 +187,44 @@ const Login = () => {
                         ev.preventDefault();
                         var passone = document.getElementById("passwordOne").value;
                         var passtwo = document.getElementById("passwordTwo").value;
-                        if (passone == passtwo) {
-                          setLoading(true);
-                          fetch("https://seatmatrixallocationbackend.onrender.com/resetPasswordInitial", {
-                            method: "POST",
-                            headers: {
-                              "Content-Type": "application/json",
-                              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-                            },
-                            body: JSON.stringify({ CollegePassword: passone }),
-                          })
-                            .then((response) => {
-                              if (!response.ok) {
-                                throw new Error("Network response was not ok");
-                              }
-                              return response.json();
+
+                        if (passone == collegeCode) {
+                          setcollegeCodeError(true);
+                        } else {
+                          if (passone == passtwo) {
+                            setLoading(true);
+                            fetch("http://localhost:5555/resetPasswordInitial", {
+                              method: "POST",
+                              headers: {
+                                "Content-Type": "application/json",
+                                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                              },
+                              body: JSON.stringify({ CollegePassword: passone }),
                             })
-                            .then((data) => {
-                              // Do something with the response data
-                              setModalForm(false);
-                              window.history.pushState(
-                                `${process.env.PUBLIC_URL ? process.env.PUBLIC_URL : "/"}`,
-                                "auth-login",
-                                `${process.env.PUBLIC_URL ? process.env.PUBLIC_URL : "/"}`
-                              );
-                              window.location.reload();
-                            })
-                            .catch((error) => {
-                              setModalForm(true);
-                              setTimeout(() => {
-                                setError("Invalid Credentials, Try Again");
-                                setLoading(false);
-                              }, 2000);
-                            });
+                              .then((response) => {
+                                if (!response.ok) {
+                                  throw new Error("Network response was not ok");
+                                }
+                                return response.json();
+                              })
+                              .then((data) => {
+                                // Do something with the response data
+                                setModalForm(false);
+                                window.history.pushState(
+                                  `${process.env.PUBLIC_URL ? process.env.PUBLIC_URL : "/"}`,
+                                  "auth-login",
+                                  `${process.env.PUBLIC_URL ? process.env.PUBLIC_URL : "/"}`
+                                );
+                                window.location.reload();
+                              })
+                              .catch((error) => {
+                                setModalForm(true);
+                                setTimeout(() => {
+                                  setError("Invalid Credentials, Try Again");
+                                  setLoading(false);
+                                }, 2000);
+                              });
+                          }
                         }
                       }}
                       size="lg"

@@ -8,7 +8,7 @@ const secret = "6$Sz249eF18@MKy1N";
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
-app.use(require("./routes/api/auth"));
+app.use(require("./routes/api/UsersRouter"));
 
 // Connect Database
 connectDB();

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
-const CollegeAuthSchema = new mongoose.Schema({
-  CollegeCode: {
+const userSchema = new mongoose.Schema({
+  ccode: {
     type: String,
     required: true,
   },
@@ -17,7 +17,7 @@ const CollegeAuthSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  EmailAddress: {
+  Email: {
     type: String,
     required: false,
   },
@@ -25,10 +25,9 @@ const CollegeAuthSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  PrincipalName: {
-    type: String,
-    required: false,
+  PersonalDetailFlag: {
+    type: Boolean,
   },
 });
 
-module.exports = Auth = mongoose.model("auth", CollegeAuthSchema);
+module.exports = users = mongoose.model("users", userSchema);
