@@ -32,7 +32,7 @@ const Login = () => {
   const onFormSubmit = (formData) => {
     setcollegeCode(formData.name);
     setLoading(true);
-    fetch("http://localhost:5555/login", {
+    fetch("https://seatmatrixallocationbackend.onrender.com/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -193,7 +193,7 @@ const Login = () => {
                         } else {
                           if (passone == passtwo) {
                             setLoading(true);
-                            fetch("http://localhost:5555/resetPasswordInitial", {
+                            fetch("https://seatmatrixallocationbackend.onrender.com/resetPasswordInitial", {
                               method: "POST",
                               headers: {
                                 "Content-Type": "application/json",

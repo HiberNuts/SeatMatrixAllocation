@@ -22,7 +22,7 @@ const FormOne = ({ alter, id }) => {
   const onFormSubmit = (data) => {
     console.log(data.principalName);
     console.log(data.email);
-    fetch("http://localhost:5555/personalDetail", {
+    fetch("https://seatmatrixallocationbackend.onrender.com/personalDetail", {
       method: "Post",
       headers: {
         "Content-Type": "application/json",
@@ -59,7 +59,7 @@ const FormOne = ({ alter, id }) => {
   });
 
   const getCollegeInfo = async () => {
-    fetch("http://localhost:5555/collegeData", {
+    fetch("https://seatmatrixallocationbackend.onrender.com/collegeData", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
