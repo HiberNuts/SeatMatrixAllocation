@@ -111,4 +111,52 @@ UserRouter.post("/personalDetail", ejwt({ secret: secret, algorithms: ["HS256"] 
   }
 });
 
+// *Route for admin panel dashboard - jermey*
+
+UserRouter.get("/list", async (req, res) => {
+  try {
+    const colleges = await users.find({});
+    res.json(colleges);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+UserRouter.get("/list/college/:collegeCode", async (req, res) => {
+  try {
+    const collegeCode = req.params.collegeCode;
+    const college = await users.find({ ccode: collegeCode });
+    res.json(college);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+UserRouter.get("/list/filled", async (req, res) => {
+  try {
+    const college = await users.find({ DeclarationFlag: true });
+    res.json(college);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+UserRouter.get("/list/notfilled", async (req, res) => {
+  try {
+    const college = await users.find({ DeclarationFlag: null });
+    res.json(college);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+UserRouter.get("/unlock/:collegeCode", async (req, res) => {
+  try {
+    const collegeCode = req.params.collegeCode;
+    const college = await users.findOneAndUpdate({ ccode: collegeCode }, { FreezeFlag: false });
+    res.json(college);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 module.exports = UserRouter;
