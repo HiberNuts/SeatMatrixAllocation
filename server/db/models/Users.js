@@ -27,6 +27,19 @@ const userSchema = new mongoose.Schema({
   },
   PersonalDetailFlag: {
     type: Boolean,
+    required: false,
+  },
+  CourseDetailFlag: {
+    type: Boolean,
+    required: false,
+  },
+  DeclarationFlag: {
+    type: Boolean,
+    required: false,
+  },
+  FreezeFlag: {
+    type: Boolean,
+    required: false,
   },
 });
 
