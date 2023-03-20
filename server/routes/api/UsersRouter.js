@@ -46,18 +46,17 @@ UserRouter.post("/login", async (req, res) => {
 
     //Compare the password with the hashed password
     const match = CollegePassword === auth.CollegePassword;
-
     if (!match) {
-      if (auth.hasOwnProperty("CollegePassword")) {
+      if (auth.CollegePassword) {
         return res.status(400).json({ message: "Invalid credentials" });
       } else {
-        const token = jwt.sign({ id: auth.id, ccode: auth.ccode }, secret, { expiresIn: "1h" });
+        const token = jwt.sign({ id: auth.id, ccode: auth.ccode }, secret);
         res.json({ token: token, resetReq: true });
       }
     } else {
       // Generate JWT
-      const token = jwt.sign({ id: auth.id, ccode: auth.ccode }, secret, { expiresIn: "1h" });
-      res.json({ token: token });
+      const token = jwt.sign({ id: auth.id, ccode: auth.ccode }, secret);
+      res.json({ token: token, resetReq: false });
     }
   } catch (err) {
     res.status(500).json(err);

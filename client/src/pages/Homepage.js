@@ -8,6 +8,7 @@ import FormTwo from "./form/formTwo";
 import { Nav, NavItem, NavLink, Row, Col, TabContent, TabPane } from "reactstrap";
 import { Block, BlockHead, BlockHeadContent, BlockTitle, BlockDes, BackTo } from "../components/block/Block";
 import { PreviewCard } from "../components/preview/Preview";
+import FormFour from "./form/formFour";
 
 const Homepage = ({ ...props }) => {
 
@@ -19,8 +20,8 @@ const Homepage = ({ ...props }) => {
   return (
     <React.Fragment>
       <Head title="HomePage" />
-      <Content page="component">
-        <Block size="xl">
+      <Content  >
+        <Block >
           <BlockHead>
             <BlockHeadContent>
               <BlockTitle tag="h5">Seat Matrix Form</BlockTitle>
@@ -29,7 +30,7 @@ const Homepage = ({ ...props }) => {
               </p>
             </BlockHeadContent>
           </BlockHead>
-          <PreviewCard>
+          <PreviewCard >
             <Nav tabs>
               <NavItem>
                 <NavLink
@@ -99,9 +100,7 @@ const Homepage = ({ ...props }) => {
                 </p>
               </TabPane>
               <TabPane tabId="8">
-                <p>
-
-                </p>
+                <FormFour></FormFour>
               </TabPane>
             </TabContent>
           </PreviewCard>

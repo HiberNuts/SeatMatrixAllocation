@@ -5,10 +5,112 @@ import { Button } from "../../components/Component";
 import classNames from "classnames";
 import { RSelect, NSComponent } from "../../components/Component";
 import Select from "react-select";
+const CourseList =
+  [{ "label": "ARTIFICIAL INTELLIGENCE AND DATA SCIENCE", "value": "AD" },
+  { "label": "AERONAUTICAL ENGINEERING", "value": "AE" },
+  { "label": "AGRICULTURAL ENGINEERING", "value": "AG" },
+  { "label": "Artificial Intelligence and Machine Learning", "value": "AL" },
+  { "label": "COMPUTER SCIENCE AND ENGINEERING (ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING)", "value": "AM" },
+  { "label": "AEROSPACE ENGINEERING", "value": "AO" },
+  { "label": "APPAREL TECHNOLOGY (SS)", "value": "AP" },
+  { "label": "AUTOMOBILE ENGINEERING (SS)", "value": "AS" },
+  { "label": "ARTIFICIAL INTELLIGENCE AND DATA SCIENCE (SS)", "value": "AT" },
+  { "label": "AUTOMOBILE ENGINEERING", "value": "AU" },
+  { "label": "Bio Technology and Bio Chemical Engineering", "value": "BC" },
+  { "label": "BIO MEDICAL ENGINEERING ", "value": "BM" },
+  { "label": "B.Plan", "value": "BP" },
+  { "label": "BIO TECHNOLOGY (SS)", "value": "BS" },
+  { "label": "BIO TECHNOLOGY", "value": "BT" },
+  { "label": "BIO MEDICAL ENGINEERING  (SS)", "value": "BY" },
+  { "label": "COMPUTER SCIENCE AND BUSSINESS SYSTEM", "value": "CB" },
+  { "label": "CHEMICAL AND ELECTRO CHEMICAL  ENGINEERING (SS)", "value": "CC" },
+  { "label": "COMPUTER SCIENCE AND DESIGN", "value": "CD" },
+  { "label": "CIVIL  ENGINEERING ", "value": "CE" },
+  { "label": "COMPUTER SCIENCE AND ENGINEERING (DATA SCIENCE)", "value": "CF" },
+  { "label": "Computer Science and Engineering (Artificial Intelligence and Machine Learning) (SS)", "value": "CG" },
+  { "label": "CHEMICAL  ENGINEERING ", "value": "CH" },
+  { "label": "Computer Science and Engineering (Internet of Things)", "value": "CI" },
+  { "label": "M.Tech. Computer Science and Engineering (Integrated 5 years)", "value": "CJ" },
+  { "label": "CHEMICAL  ENGINEERING (SS)", "value": "CL" },
+  { "label": "COMPUTER SCIENCE AND ENGINEERING (SS)", "value": "CM" },
+  { "label": "CIVIL  ENGINEERING (SS)", "value": "CN" },
+  { "label": "COMPUTER AND  COMMUNICATION ENGINEERING", "value": "CO" },
+  { "label": "CERAMIC TECHNOLOGY (SS)", "value": "CR" },
+  { "label": "COMPUTER SCIENCE AND ENGINEERING", "value": "CS" },
+  { "label": "COMPUTER TECHNOLOGY", "value": "CT" },
+  { "label": "Computer Science and Business System (SS)", "value": "CW" },
+  { "label": "Cyber Security", "value": "CY" },
+  { "label": "CIVIL AND STRUCTUTURAL ENGINEERING", "value": "CZ" },
+  { "label": "ELECTRONICS AND COMMUNICATION ENGINEERING", "value": "EC" },
+  { "label": "ELECTRICAL AND ELECTRONICS ENGINEERING", "value": "EE" },
+  { "label": "ELECTRONICS AND INSTRUMENTATION ENGINEERING", "value": "EI" },
+  { "label": "ELECTRONICS AND COMMUNICATION ENGINEERING (SS)", "value": "EM" },
+  { "label": "ENVIRONMENTAL ENGINEERING", "value": "EN" },
+  { "label": "ELECTRICAL AND ELECTRONICS (SANDWICH) (SS)", "value": "ES" },
+  { "label": "ELECTRONICS AND  TELECOMMUNICATION ENGINEERING", "value": "ET" },
+  { "label": "ELECTRICAL AND ELECTRONICS ENGINEERING (SS)", "value": "EY" },
+  { "label": "FOOD TECHNOLOGY ", "value": "FD" },
+  { "label": "FOOD TECHNOLOGY (SS)", "value": "FS" },
+  { "label": "FASHION TECHNOLOGY", "value": "FT" },
+  { "label": "FASHION TECHNOLOGY (SS)", "value": "FY" },
+  { "label": "GEO INFORMATICS", "value": "GI" },
+  { "label": "HANDLOOM AND TEXTILE TECHNOLOGY", "value": "HT" },
+  { "label": "INDUSTRIAL BIO TECHNOLOGY", "value": "IB" },
+  { "label": "INSTRUMENTATION AND CONTROL ENGINEERING", "value": "IC" },
+  { "label": "INDUSTRIAL ENGINEERING", "value": "IE" },
+  { "label": "INFORMATION TECHNOLOGY (SS)", "value": "IM" },
+  { "label": "INDUSTRIAL ENGINEERING AND MANAGEMENT", "value": "IN" },
+  { "label": "INDUSTRIAL BIO TECHNOLOGY (SS)", "value": "IS" },
+  { "label": "INFORMATION TECHNOLOGY", "value": "IT" },
+  { "label": "INSTRUMENTATION AND CONTROL ENGINEERING (SS)", "value": "IY" },
+  { "label": "LEATHER TECHNOLOGY", "value": "LE" },
+  { "label": "MATERIAL SCIENCE AND ENGINEERING (SS)", "value": "MA" },
+  { "label": "MECHATRONICS", "value": "MC" },
+  { "label": "MEDICAL ELECTRONICS ENGINEERING", "value": "MD" },
+  { "label": "MECHANICAL ENGINEERING", "value": "ME" },
+  { "label": "MECHANICAL ENGINEERING (SS)", "value": "MF" },
+  { "label": "MECHATRONICS (SS)", "value": "MG" },
+  { "label": "MECHANICAL ENGINEERING (SANDWICH)", "value": "MH" },
+  { "label": "MINING ENGINEERING", "value": "MI" },
+  { "label": "MECHANICAL ENGINEERING (MANUFACTURING)", "value": "MM" },
+  { "label": "MANUFACTURING ENGINEERING", "value": "MN" },
+  { "label": "Mechanical and Mechatronics Engineering (Additive Manufacturing)", "value": "MO" },
+  { "label": "MARINE ENGINEERING", "value": "MR" },
+  { "label": "MECHANICAL ENGINEERING (SANDWICH) (SS)", "value": "MS" },
+  { "label": "METALLURGICAL ENGINEERING", "value": "MT" },
+  { "label": "MECHANICAL AND AUTOMATION ENGINEERING", "value": "MU" },
+  { "label": "METALLURGICAL ENGINEERING (SS)", "value": "MY" },
+  { "label": "Mechatronics Engineering", "value": "MZ" },
+  { "label": "PLASTIC TECHNOLOGY", "value": "PA" },
+  { "label": "PETRO CHEMICAL TECHNOLOGY", "value": "PC" },
+  { "label": "PETRO CHEMICAL ENGINEERING", "value": "PD" },
+  { "label": "PETROLEUM ENGINEERING", "value": "PE" },
+  { "label": "PHARMACEUTICAL TECHNOLOGY", "value": "PH" },
+  { "label": "PHARMACEUTICAL TECHNOLOGY (SS)", "value": "PM" },
+  { "label": "PRODUCTION ENGINEERING (SS)", "value": "PN" },
+  { "label": "PETROLEUM ENGINEERING AND TECHNOLOGY (SS)", "value": "PP" },
+  { "label": "PRODUCTION ENGINEERING", "value": "PR" },
+  { "label": "PRODUCTION ENGINEERING (SANDWICH) (SS)", "value": "PS" },
+  { "label": "PRINTING AND PACKING TECHNOLOGY", "value": "PT" },
+  { "label": "ROBOTICS AND AUTOMATION (SS)", "value": "RA" },
+  { "label": "ROBOTICS AND AUTOMATION", "value": "RM" },
+  { "label": "RUBBER AND PLASTIC TECHNOLOGY", "value": "RP" },
+  { "label": "Computer Science and Engineering (Internet of Things and Cyber Security including Block Chain Technology)", "value": "SB" },
+  { "label": "Computer Science and Engineering (Cyber Security)", "value": "SC" },
+  { "label": "Information Science and Engineering", "value": "SE" },
+  { "label": "Safety and Fire Engineering", "value": "SF" },
+  { "label": "TEXTILE CHEMISTRY", "value": "TC" },
+  { "label": "Computer Science and Technology", "value": "TS" },
+  { "label": "TEXTILE TECHNOLOGY (SS)", "value": "TT" },
+  { "label": "TEXTILE TECHNOLOGY", "value": "TX" },
+  { "label": "CIVIL ENGINEERING (TAMIL MEDIUM)", "value": "XC" },
+  { "label": "MECHANICAL ENGINEERING (TAMIL MEDIUM)", "value": "XM" },
+  { "label": "COMPUTER SCIENCE AND ENGINEERING (TAMIL)", "value": "XS" }
+  ]
 const FormTwo = ({ alter, id }) => {
-  const [Course, setCourse] = useState([]);
+  const [courseSchema, setcourseSchema] = useState({ courseName: "", courseCode: "", accredation: "", intake: "", Govt: "", Surrender: "", Management: "" });
 
-  const [courseSchema, setcourseSchema] = useState({ courseName: "", courseCode: "", accredation: "", intake: "" });
+  const [Course, setCourse] = useState([courseSchema]);
 
   const { errors, register, handleSubmit } = useForm();
 
@@ -17,12 +119,12 @@ const FormTwo = ({ alter, id }) => {
     "form-validate": true,
     "is-alter": alter,
   });
-
   console.log(courseSchema);
 
   const addCourse = () => {
     let c = Course;
-    c.push(c.length);
+    c.push(courseSchema);
+    setcourseSchema({ courseName: "", courseCode: "", accredation: "", intake: "", Govt: "", Surrender: "", Management: "" })
     setCourse(c);
   };
 
@@ -37,8 +139,8 @@ const FormTwo = ({ alter, id }) => {
     { value: "MIN", label: "Minority" },
   ];
   const AccredationOptions = [
-    { value: "ACC", label: "Accredated" },
-    { value: "NACC", label: "Non - Accredated" },
+    { value: "ACC", label: "Accredited" },
+    { value: "NACC", label: "Non - Accredited" },
   ];
   const CourseOptions = [
 
@@ -48,14 +150,18 @@ const FormTwo = ({ alter, id }) => {
       <Form className={formClass} onSubmit={handleSubmit(onFormSubmit)}>
         <Row className="g-gs">
           <Col md="12">
-            <table className="table table">
+            <table className="table table-responsive text-nowrap w-auto">
               <thead>
                 <tr>
                   <th scope="col">#</th>
                   <th scope="col">Course Name</th>
                   <th scope="col">Course Code</th>
-                  <th scope="col">Accredation</th>
+                  <th scope="col">Accreditation</th>
                   <th scope="col">Santioned Intake</th>
+                  <th scope="col">Govt</th>
+                  <th scope="col">Surrender</th>
+                  <th scope="col">Management</th>
+
                   <th scope="col">
                     Action
                   </th>
@@ -68,26 +174,59 @@ const FormTwo = ({ alter, id }) => {
                     <tr key={index}>
                       <th scope="row">{index + 1}</th>
                       <td>
-                        <div className="form-control-select">
+                        <div className="form-control-select" style={{ width: "400px" }}>
                           <Select
-                            onChange={(newVal) => setcourseSchema({ ...courseSchema, courseName: newVal })}
+                            onChange={(newVal) => setcourseSchema({ ...courseSchema, courseName: newVal, courseCode: newVal.value })}
                             classNamePrefix="react-select"
-                            options={defaultOptions}
+                            options={CourseList}
                           />
                         </div>
                       </td>
                       <td>
-                        <div className="form-control-select">
-                          <Select classNamePrefix="react-select" options={defaultOptions} />
+                        <div className="form-control-warp" style={{ width: "auto" }}>
+                          <input
+                            type="text"
+                            id="fv-subject"
+                            className="form-control"
+                            disabled
+                            value={courseSchema.courseCode}
+                          />
                         </div>
                       </td>
                       <td>
-                        <div className="form-control-select">
+                        <div className="form-control-select" style={{ width: "150px" }}>
                           <Select classNamePrefix="react-select" options={AccredationOptions} />
                         </div>
                       </td>
                       <td>
-                        <NSComponent min={1} max={250} defaultVal={5} color="light" outline />
+                        <NSComponent min={1} max={250} defaultVal={60} color="light" outline />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          id="fv-subject"
+                          className="form-control"
+                          disabled
+                          
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          id="fv-subject"
+                          className="form-control"
+                          disabled
+                          
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          id="fv-subject"
+                          className="form-control"
+                          disabled
+                          
+                        />
                       </td>
                       <td>
                         <a key={index} onClick={() => {
@@ -113,6 +252,7 @@ const FormTwo = ({ alter, id }) => {
             </a>
           </Col>
         </Row>
+        <Button className="text-center m-4" color="success">Save Progress</Button>
       </Form>
     </React.Fragment>
   );

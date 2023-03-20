@@ -37,7 +37,9 @@ const NSComponent = ({ max, min, step, outline, color, defaultVal }) => {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         max={max}
+        width={5}
         min={min}
+        size={2}
       />{" "}
       <Button
         outline={outline ? true : false}
