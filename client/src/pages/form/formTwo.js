@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Row, Col, Label, Form } from "reactstrap";
+import { Row, Col,Form } from "reactstrap";
 import { useForm } from "react-hook-form";
 import { Button } from "../../components/Component";
 import classNames from "classnames";
-import { RSelect, NSComponent } from "../../components/Component";
+import { NSComponent } from "../../components/Component";
 import Select from "react-select";
 const CourseList =
   [{ "label": "ARTIFICIAL INTELLIGENCE AND DATA SCIENCE", "value": "AD" },
@@ -107,44 +107,97 @@ const CourseList =
   { "label": "MECHANICAL ENGINEERING (TAMIL MEDIUM)", "value": "XM" },
   { "label": "COMPUTER SCIENCE AND ENGINEERING (TAMIL)", "value": "XS" }
   ]
+const GOVTSeats={
+  
+    "CENTRAL GOVT":50,
+    "CHRISTIAN":50,
+    "GOVT":100,
+    "GOVT AIDED":100,
+    "HINDI":50,
+    "JAIN":50,
+    "MALAYALAM":50,
+    "MALAYALAM LINGUISTIC":50,
+    "MIN":50,
+    "MUSLIM":50,
+    "NM":65,
+    "SOWRASHTRA":50,
+    "TELUGU":50,
+    "UNIV":100
+}
 const FormTwo = ({ alter, id }) => {
-  const [courseSchema, setcourseSchema] = useState({ courseName: "", courseCode: "", accredation: "", intake: "", Govt: "", Surrender: "", Management: "" });
-
+  const courseSchema={ courseName: "", courseCode: "", accredation: "", intake: 0, Govt: 0, Surrender: 0, Management:0 };
   const [Course, setCourse] = useState([courseSchema]);
-
   const { errors, register, handleSubmit } = useForm();
-
   const onFormSubmit = (e) => { };
   const formClass = classNames({
     "form-validate": true,
     "is-alter": alter,
   });
-  console.log(courseSchema);
+  const handleFormChange =(event,index)=>{
+    let data=[...Course];
+    data[index][event.target.name]= event.target.value;
+    setCourse(data);
+  }
+  const handleCourseChange=(event,index)=>
+  {
+    let data=[...Course];
+    data[index]['courseName']= event;
+    data[index]['courseCode']=event.value;
+    const ind=CourseList.indexOf(event);
+    CourseList.splice(ind,1);
+    setCourse(data);
+  }
+  const handleAccrChange=(event,index)=>
+  {
+    let data=[...Course];
+    data[index]['accredation']= event;
+    setCourse(data);
 
+  }
+  const handleinTakeChange=(event,index)=>
+  {
+    console.log(event);
+    let data=[...Course];
+    data[index]['intake']= event.target.value;
+    data[index]['Govt']=event.target.value*0.01*GOVTSeats["CENTRAL GOVT"];
+    setCourse(data);
+
+  }
+  const handleSurrenderChange=(event,index)=>
+  {
+    let data=[...Course];
+    data[index]['Surrender']= parseInt(event.target.value);
+    data[index]['Govt']=data[index]["Govt"]+parseInt(event.target.value);
+    setCourse(data);
+  }
   const addCourse = () => {
-    let c = Course;
-    c.push(courseSchema);
-    setcourseSchema({ courseName: "", courseCode: "", accredation: "", intake: "", Govt: "", Surrender: "", Management: "" })
-    setCourse(c);
+    let data=[...Course];
+    data.push(courseSchema);
+    setCourse(data);
   };
 
   const removeCourse = (e) => {
     const updatedCourses = [...Course];
+    try{
+    const courseObj = updatedCourses[e]['courseName'];
+    if(courseObj)
+    {
+      CourseList.push(courseObj);    
+    }
+  }
+  finally
+  {
     updatedCourses.splice(e, 1);
     setCourse(updatedCourses);
   };
-  const defaultOptions = [
-    { value: "GOVT", label: "Government College" },
-    { value: "SF", label: "Self Financed" },
-    { value: "MIN", label: "Minority" },
-  ];
+}
+  
+  
   const AccredationOptions = [
     { value: "ACC", label: "Accredited" },
     { value: "NACC", label: "Non - Accredited" },
   ];
-  const CourseOptions = [
 
-  ];
   return (
     <React.Fragment>
       <Form className={formClass} onSubmit={handleSubmit(onFormSubmit)}>
@@ -176,9 +229,10 @@ const FormTwo = ({ alter, id }) => {
                       <td>
                         <div className="form-control-select" style={{ width: "400px" }}>
                           <Select
-                            onChange={(newVal) => setcourseSchema({ ...courseSchema, courseName: newVal, courseCode: newVal.value })}
+                            onChange={event=> handleCourseChange(event,index)}
                             classNamePrefix="react-select"
                             options={CourseList}
+                            value={e.courseName}
                           />
                         </div>
                       </td>
@@ -189,17 +243,22 @@ const FormTwo = ({ alter, id }) => {
                             id="fv-subject"
                             className="form-control"
                             disabled
-                            value={courseSchema.courseCode}
+                            value={e.courseCode}
                           />
                         </div>
                       </td>
                       <td>
-                        <div className="form-control-select" style={{ width: "150px" }}>
-                          <Select classNamePrefix="react-select" options={AccredationOptions} />
+                        <div className="form-control-select" style={{ width: "150px" }}>      
+                          <Select value={e.accredation} onChange={event=> handleAccrChange(event,index)} classNamePrefix="react-select" options={AccredationOptions} />
                         </div>
                       </td>
                       <td>
-                        <NSComponent min={1} max={250} defaultVal={60} color="light" outline />
+                        <input 
+                         type="number"
+                        id="fv-intake"
+                          className="form-control"
+                        onChange={event=> handleinTakeChange(event,index)} 
+                        min={1} value={e.intake} color="light" outline />
                       </td>
                       <td>
                         <input
@@ -207,12 +266,23 @@ const FormTwo = ({ alter, id }) => {
                           id="fv-subject"
                           className="form-control"
                           disabled
-                          
+                          value={e.Govt}                        />
+                      </td>
+                      <td>
+                        <input
+                          onChange={event=> handleSurrenderChange(event,index)}
+                          type="number"
+                          id="fv-subject"
+                          name="Surrender"
+                          className="form-control"
+                          value={e.Surrender}
                         />
                       </td>
                       <td>
                         <input
-                          type="text"
+                          type="number"
+                          onChange={event=> handleFormChange(event,index)}
+                          value={e.Management}
                           id="fv-subject"
                           className="form-control"
                           disabled
@@ -220,18 +290,9 @@ const FormTwo = ({ alter, id }) => {
                         />
                       </td>
                       <td>
-                        <input
-                          type="text"
-                          id="fv-subject"
-                          className="form-control"
-                          disabled
-                          
-                        />
-                      </td>
-                      <td>
-                        <a key={index} onClick={() => {
-                          removeCourse(index - 1);
-                        }} class="btn btn-icon btn-outline-danger"><em class="icon ni ni-cross-c"></em></a>
+                        <Button key={index} onClick={() => {
+                          removeCourse(index);
+                        }} class="btn btn-icon btn-outline-danger"><em class="icon ni ni-cross-c"></em></Button>
                       </td>
                     </tr>
                   );
@@ -240,16 +301,14 @@ const FormTwo = ({ alter, id }) => {
             </table>
           </Col>
           <Col md="12" className="text-center">
-            <a
-              onClick={() => {
+            <Button onClick={() => {
                 addCourse();
               }}
               className="container-fluid btn btn-secondary btn-md"
-              href="#"
               role="button"
             >
               <span className="text-xl-center">+ Add a New Course</span>
-            </a>
+            </Button>
           </Col>
         </Row>
         <Button className="text-center m-4" color="success">Save Progress</Button>

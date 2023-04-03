@@ -3,7 +3,6 @@ import { Row, Col, Label, Form } from "reactstrap";
 import { useForm } from "react-hook-form";
 import { Button } from "../../components/Component";
 import classNames from "classnames";
-import { RSelect } from "../../components/Component";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -11,8 +10,6 @@ const FormOne = ({ alter, id }) => {
   const { errors, register, handleSubmit } = useForm();
   const [collegeName, setcollegeName] = useState("");
   const [collegeCode, setcollegeCode] = useState("");
-  const [collegeCategory, setcollegeCategory] = useState("GOVT");
-  const [data, setdata] = useState([]);
   const [personalDetailFlag, setpersonalDetailFlag] = useState(false);
   const [collegeType, setCollegeType] = useState("");
   const [principalName, setprincipalName] = useState("");
@@ -92,22 +89,6 @@ const FormOne = ({ alter, id }) => {
     seteditFlag(false);
     onFormSubmit(data);
   };
-
-  const collegeCategoryOptions = [
-    { value: "GOVT", label: "Government College" },
-    { value: "UNI", label: "University" },
-    { value: "SF", label: "Self Financed" },
-    { value: "MIN", label: "Minority" },
-    { value: "NMIN", label: "Non Minority" },
-  ];
-  const collegeCategoryMap = {
-    GOVT: "Government College",
-    UNI: "University",
-    SF: "Self Financed",
-    MIN: "Minority",
-    NMIN: "Non Minority",
-  };
-
   return (
     <React.Fragment>
       <ToastContainer />
@@ -223,18 +204,19 @@ const FormOne = ({ alter, id }) => {
           </Col>
           <Col md="12">
             <div className="form-group">
-              {!personalDetailFlag && editFlag == false && (
+              {!personalDetailFlag && editFlag === false && (
                 <Button type="submit" color="primary" size="lg">
                   Submit
                 </Button>
               )}
-              {editFlag == true && (
+              {editFlag === true && (
                 <Button type="submit" onClick={handleSubmit((data) => updateHandler(data))} color="warning" size="lg">
                   Update
                 </Button>
               )}
             </div>
           </Col>
+          
         </Row>
       </Form>
       {personalDetailFlag && !editFlag && (
