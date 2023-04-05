@@ -1,46 +1,94 @@
 import { useState } from "react";
-import Dropzone from "react-dropzone";
-import { Button } from "reactstrap";
+import { Button, Row, Col } from "reactstrap";
+import { Block, BlockHead, BlockHeadContent, BlockTitle, BlockDes, BackTo } from "../../components/block/Block";
+import { PreviewCard } from "../../components/preview/Preview";
 const FormFour = () => {
-    const [files, setFiles] = useState([]);
-
-    const handleDropChange = (acceptedFiles) => {
-        setFiles(
-            acceptedFiles.map((file) =>
-                Object.assign(file, {
-                    preview: URL.createObjectURL(file),
-                })
-            )
-        );
-    };
-
-    return (
-        <Dropzone acceptedFiles={[".pdf"]} onDrop={(acceptedFiles) => handleDropChange(acceptedFiles)}>
-            {({ getRootProps, getInputProps }) => (
-                <section>
-                    <div {...getRootProps()} className="dropzone upload-zone dz-clickable">
-                        <input {...getInputProps()} />
-                        {files.length === 0 && (
-                            <div className="dz-message">
-                                <span className="dz-message-text">Drag and drop file</span>
-                                <span className="dz-message-or">or</span>
-                                <Button color="primary">SELECT</Button>
-                            </div>
-                        )}
-                        {files.map((file) => (
-                            <div
-                                key={file.name}
-                                className="dz-preview dz-processing dz-image-preview dz-error dz-complete"
-                            >
-                                <div className="dz-image">
-                                    <img src={file.preview} alt="preview" />
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </section>
-            )}
-        </Dropzone >
-    );
-}
+  const [seatMatrix, setSeatMatrix] = useState("");
+  const [AICTEApproval, setAICTEApproval] = useState("");
+  const [AUAffiliation, setAUAffiliation] = useState("");
+  const [Accredation, setAccredation] = useState("");
+  const [Autonomous , setAutonomous ] = useState("");
+  return (
+    <Block size="lg" className="container-fluid align-items-center justify-content-center">
+      <table className="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Details</th>
+            <th scope="col">PDF Upload</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>Seat Matrix Declaration</td>
+            <td>
+              <div className="form-control-wrap">
+                <div className="form-file">
+                  <input id="seatMatrix"
+                   onChange={(e) =>  setSeatMatrix(e.target.files[0])}
+                   type="file" accept=".pdf" className="form-control" />
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>AICTE Approval</td>
+            <td>
+              <div className="form-control-wrap">
+                <div className="form-file">
+                  <input id="AICTE"
+                   onChange={(e) => setAICTEApproval(e.target.files[0])}
+                   type="file" accept=".pdf" className="form-control" />
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td>Anna University Affiliation</td>
+            <td>
+              <div className="form-control-wrap">
+                <div className="form-file">
+                  <input id="AUAffiliation" type="file" accept=".pdf"
+                   onChange={(e) => setAUAffiliation(e.target.files[0])}
+                   className="form-control" />
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">4</th>
+            <td>Accredation</td>
+            <td>
+              <div className="form-control-wrap">
+                <div className="form-file">
+                  <input id="Accredation"
+                   onChange={(e) => setAccredation(e.target.files[0])}
+                   type="file" accept=".pdf" className="form-control" />
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">5</th>
+            <td>Autonomous Certification</td>
+            <td>
+              <div className="form-control-wrap">
+                <div className="form-file">
+                  <input id="autonomous" 
+                  onChange={(e) => setAutonomous(e.target.files[0])}
+                  type="file" accept=".pdf" className="form-control" />
+                </div>
+              </div>
+            </td>
+          </tr>
+       
+        </tbody>
+      </table>
+      <Button color="primary"> Submit </Button>
+    </Block>
+  );
+};
 export default FormFour;
