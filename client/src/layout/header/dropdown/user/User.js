@@ -3,7 +3,7 @@ import { DropdownToggle, DropdownMenu, Dropdown } from "reactstrap";
 import { Icon } from "../../../../components/Component";
 import { LinkList, LinkItem } from "../../../../components/links/Links";
 import UserAvatar from "../../../../components/user/UserAvatar";
-
+import { backendURL } from "../../../../backendurl";
 const User = () => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState(false);
@@ -15,7 +15,7 @@ const User = () => {
   };
 
   const getCollegeInfo = async () => {
-    fetch("https://seatmatrixallocationbackend.onrender.com/collegeData", {
+    fetch(`${backendURL}/collegeData`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
