@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-
 const userSchema = new mongoose.Schema({
   ccode: {
     type: String,
@@ -25,9 +24,33 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  PhoneNumber: {
+    type: String,
+    required: false,
+  },
+  Pincode: {
+    type: String,
+    required: false,
+  },
+  District: {
+    type: String,
+    required: false,
+  },
+  Website: {
+    type: String,
+    required: false,
+  },
+  Autonomous: {
+    type: Boolean,
+    required: false,
+  },
   PersonalDetailFlag: {
     type: Boolean,
     required: false,
+  },
+  CourseDetails:{
+    required:false,
+    type:Object
   },
   CourseDetailFlag: {
     type: Boolean,

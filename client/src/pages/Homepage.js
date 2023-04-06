@@ -87,7 +87,7 @@ const Homepage = ({ ...props }) => {
             </Nav>
             <TabContent activeTab={activeIconTab}>
               <TabPane tabId="5">
-                <FormOne id="form-2" alter />
+                <FormOne id="form-2"  toggleIconTab={toggleIconTab} alter />
               </TabPane>
               <TabPane tabId="6">
                 <FormTwo id="form-2" alter />

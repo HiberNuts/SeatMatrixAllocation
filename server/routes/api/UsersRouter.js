@@ -21,7 +21,7 @@ var upload = multer({ storage: storage }).single("file");
 // @route GET api/Auths/:id
 // @description Get single Auth by id
 // @access Public
-UserRouter.get("getById/:id", (req, res) => {
+UserRouter.get("/getById/:id", (req, res) => {
   users
     .findById(req.params.id)
     .then((users) => res.json(users))
@@ -102,14 +102,19 @@ UserRouter.get("/collegeData", ejwt({ secret: secret, algorithms: ["HS256"] }), 
 
 UserRouter.post("/personalDetail", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
   try {
-    const { PrincipalName, Email } = req.body;
+    const { PrincipalName, Email,PhoneNumber,Pincode,District,Website,Autonomous } = req.body;
     console.log(req.body);
-    if (!PrincipalName || !Email) {
-      res.json({ status: false, message: "enter both principal name and email" });
+    if (!PrincipalName || !Email || !PhoneNumber ||!Pincode||!District||!Website) {
+      res.json({ status: false, message: "incomplete body set" });
     } else {
       const user = await users.findByIdAndUpdate(req.auth.id, {
         PrincipalName: PrincipalName,
         Email: Email,
+        PhoneNumber: PhoneNumber,
+        Pincode:Pincode,
+        District:District,
+        Website:Website,
+        Autonomous:Autonomous,
         PersonalDetailFlag: true,
       });
       res.json({ status: true });
@@ -195,5 +200,25 @@ UserRouter.get("/unlock/:collegeCode", async (req, res) => {
     res.status(500).json(err);
   }
 });
+
+
+//Setting CourseDetails
+UserRouter.post("/setCourseDetails", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
+  try {
+    const { CourseDetails } = req.body;
+    console.log(req.body);
+    if (!CourseDetails) {
+      res.json({ status: false, message: "incomplete body set" });
+    } else {
+      const user = await users.findByIdAndUpdate(req.auth.id, {
+        CourseDetails: CourseDetails
+      });
+      res.json({ status: true });
+    }
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 
 module.exports = UserRouter;
