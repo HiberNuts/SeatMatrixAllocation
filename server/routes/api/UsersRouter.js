@@ -163,4 +163,24 @@ UserRouter.get("/unlock/:collegeCode", async (req, res) => {
   }
 });
 
+
+//Setting CourseDetails
+UserRouter.post("/setCourseDetails", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
+  try {
+    const { CourseDetails } = req.body;
+    console.log(req.body);
+    if (!CourseDetails) {
+      res.json({ status: false, message: "incomplete body set" });
+    } else {
+      const user = await users.findByIdAndUpdate(req.auth.id, {
+        CourseDetails: CourseDetails
+      });
+      res.json({ status: true });
+    }
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+
 module.exports = UserRouter;

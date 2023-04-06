@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Col,Form } from "reactstrap";
 import { useForm } from "react-hook-form";
 import { Button } from "../../components/Component";
 import classNames from "classnames";
-import { NSComponent } from "../../components/Component";
+import { backendURL } from "../../backendurl";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Select from "react-select";
 const CourseList =
   [{ "label": "ARTIFICIAL INTELLIGENCE AND DATA SCIENCE", "value": "AD" },
@@ -125,10 +127,68 @@ const GOVTSeats={
     "UNIV":100
 }
 const FormTwo = ({ alter, id }) => {
-  const courseSchema={ courseName: "", courseCode: "", accredation: "", intake: 0, Govt: 0, Surrender: 0, Management:0 };
+  const courseSchema={ courseName: "", courseCode: "", accredation: "", intake: 0, Govt: 0, Surrender: 0, Management:0,SWS:0 };
   const [Course, setCourse] = useState([courseSchema]);
   const { errors, register, handleSubmit } = useForm();
-  const onFormSubmit = (e) => { };
+  const [errSurrender,seterrSurrender]=useState(false);
+  const [clgCAT, setclgCAT]= useState("NM");
+  const onFormSubmit = (data) => { 
+    fetch(`${backendURL}/setCourseDetails`, {
+      method: "Post",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+      body: JSON.stringify({
+       CourseDetails:Course
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        if (data.status) {
+          console.log("s");
+          const notify = () => {
+            toast("Data added successfully");
+          };
+          notify();
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+   
+  const getCollegeInfo = async () => {
+    fetch(`${backendURL}/collegeData`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        setCourse(data.CourseDetails)
+        setclgCAT(data.Category)        
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    getCollegeInfo();
+  }, []);
+
   const formClass = classNames({
     "form-validate": true,
     "is-alter": alter,
@@ -143,8 +203,6 @@ const FormTwo = ({ alter, id }) => {
     let data=[...Course];
     data[index]['courseName']= event;
     data[index]['courseCode']=event.value;
-    const ind=CourseList.indexOf(event);
-    CourseList.splice(ind,1);
     setCourse(data);
   }
   const handleAccrChange=(event,index)=>
@@ -156,26 +214,52 @@ const FormTwo = ({ alter, id }) => {
   }
   const handleinTakeChange=(event,index)=>
   {
+    let intake=parseInt(event.target.value);
+    if(intake<0) intake=-intake;
+    if(!intake) intake=0;
     console.log(event);
     let data=[...Course];
-    data[index]['intake']= event.target.value;
-    data[index]['Govt']=event.target.value*0.01*GOVTSeats["CENTRAL GOVT"];
-    setCourse(data);
+    data[index]['intake']= intake;
+    data[index]['Surrender']=0;
+    data[index]['Govt']=Math.floor(data[index]['intake']*0.01*GOVTSeats[clgCAT]);
+    data[index]['Management']=data[index]['intake']-data[index]['Govt'];
+    data[index]['SWS']= data[index]['Govt'];
 
+
+    setCourse(data);
   }
   const handleSurrenderChange=(event,index)=>
   {
     let data=[...Course];
-    data[index]['Surrender']= parseInt(event.target.value);
-    data[index]['Govt']=data[index]["Govt"]+parseInt(event.target.value);
+    let surrender = parseInt(event.target.value);
+    if(!surrender)surrender =0;
+    data[index]['Surrender']= surrender;
+    if(data[index]['Surrender']>data[index]['Management'])
+    {
+      data[index]['Govt']=Math.floor(data[index]['intake']*0.01*GOVTSeats[clgCAT])
+      data[index]['Management']=data[index]['intake']-data[index]['Govt'];
+      data[index]['SWS']= data[index]['Govt'];
+
+      seterrSurrender(true);
+    }
+    else
+    {
+    seterrSurrender(false);
+    data[index]['Govt']=Math.floor(data[index]['intake']*0.01*GOVTSeats[clgCAT])+surrender;
+    data[index]['Management']=data[index]['intake']-data[index]['Govt'];
+    data[index]['SWS']= data[index]['Govt']+surrender;
+
     setCourse(data);
+    }
   }
   const addCourse = () => {
     let data=[...Course];
+    const ind=CourseList.indexOf(data.at(data.length-1));
+    CourseList.splice(ind,1);
+    setCourse(data);
     data.push(courseSchema);
     setCourse(data);
   };
-
   const removeCourse = (e) => {
     const updatedCourses = [...Course];
     try{
@@ -191,7 +275,9 @@ const FormTwo = ({ alter, id }) => {
     setCourse(updatedCourses);
   };
 }
-  
+const updateHandler = (data) => {
+  onFormSubmit(data);
+};
   
   const AccredationOptions = [
     { value: "ACC", label: "Accredited" },
@@ -200,7 +286,9 @@ const FormTwo = ({ alter, id }) => {
 
   return (
     <React.Fragment>
-      <Form className={formClass} onSubmit={handleSubmit(onFormSubmit)}>
+        <ToastContainer />
+
+      <Form className={formClass} onSubmit={(e)=>e.preventDefault()}>
         <Row className="g-gs">
           <Col md="12">
             <table className="table table-responsive text-nowrap w-auto">
@@ -214,7 +302,7 @@ const FormTwo = ({ alter, id }) => {
                   <th scope="col">Govt</th>
                   <th scope="col">Surrender</th>
                   <th scope="col">Management</th>
-
+                  <th scope="col">SWS</th>
                   <th scope="col">
                     Action
                   </th>
@@ -248,17 +336,18 @@ const FormTwo = ({ alter, id }) => {
                         </div>
                       </td>
                       <td>
-                        <div className="form-control-select" style={{ width: "150px" }}>      
+                        <div className="form-control-select" >      
                           <Select value={e.accredation} onChange={event=> handleAccrChange(event,index)} classNamePrefix="react-select" options={AccredationOptions} />
                         </div>
                       </td>
                       <td>
                         <input 
-                         type="number"
+                        type="number"
                         id="fv-intake"
-                          className="form-control"
+                        ref={register({ required: true })}
+                        className="form-control"
                         onChange={event=> handleinTakeChange(event,index)} 
-                        min={1} value={e.intake} color="light" outline />
+                        value={e.intake} color="light" outline />
                       </td>
                       <td>
                         <input
@@ -274,7 +363,8 @@ const FormTwo = ({ alter, id }) => {
                           type="number"
                           id="fv-subject"
                           name="Surrender"
-                          className="form-control"
+                          ref={register({ required: true })}
+                          className={`form-control ${errSurrender?"error":""}`}
                           value={e.Surrender}
                         />
                       </td>
@@ -290,6 +380,14 @@ const FormTwo = ({ alter, id }) => {
                         />
                       </td>
                       <td>
+                        <input
+                          type="text"
+                          id="fv-subject"
+                          className="form-control"
+                          disabled
+                          value={e.SWS}                        />
+                      </td>
+                      <td>
                         <Button key={index} onClick={() => {
                           removeCourse(index);
                         }} class="btn btn-icon btn-outline-danger"><em class="icon ni ni-cross-c"></em></Button>
@@ -301,17 +399,16 @@ const FormTwo = ({ alter, id }) => {
             </table>
           </Col>
           <Col md="12" className="text-center">
-            <Button onClick={() => {
-                addCourse();
-              }}
+            <Button 
+                       
               className="container-fluid btn btn-secondary btn-md"
-              role="button"
+              onClick={()=>{addCourse()}}    
             >
               <span className="text-xl-center">+ Add a New Course</span>
             </Button>
           </Col>
         </Row>
-        <Button className="text-center m-4" color="success">Save Progress</Button>
+        <Button type="submit"  onClick={handleSubmit((data) => updateHandler(data))}className="text-center m-4" color="success">Save Progress</Button>
       </Form>
     </React.Fragment>
   );

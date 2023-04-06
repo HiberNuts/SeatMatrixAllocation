@@ -48,6 +48,10 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     required: false,
   },
+  CourseDetails:{
+    required:false,
+    type:Object
+  },
   CourseDetailFlag: {
     type: Boolean,
     required: false,

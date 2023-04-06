@@ -7,7 +7,7 @@ import { Button } from "../../components/Component";
 import classNames from "classnames";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-const FormOne = ({ alter, id }) => {
+const FormOne = ({ alter, toggleIconTab }) => {
   const [loading, setLoading] = useState(true);
   const { errors, register, handleSubmit } = useForm();
   const [collegeName, setcollegeName] = useState("");
@@ -376,6 +376,7 @@ const FormOne = ({ alter, id }) => {
                   </Button>
                 )}
               </div>
+            
             </Col>
           </Row>
         </Form>
@@ -384,6 +385,14 @@ const FormOne = ({ alter, id }) => {
             Edit
           </Button>
         )}
+
+        <div className="d-flex justify-content-end">
+              <Button onClick={()=>{
+          toggleIconTab("6")
+              }} type="submit" color="success" size="lg">
+                    Next &gt;
+                  </Button>
+              </div>
       </React.Fragment>
     );
   else
