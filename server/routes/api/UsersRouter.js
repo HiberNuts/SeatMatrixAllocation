@@ -5,9 +5,18 @@ const UserRouter = express.Router();
 const jwt = require("jsonwebtoken");
 const secret = "6$Sz249eF18@MKy1N";
 var { expressjwt: ejwt } = require("express-jwt");
-
+var multer = require("multer");
+const s3 = require("../../config/aws");
 // Load User model
 const users = require("../../db/models/Users");
+
+var storage = multer.memoryStorage({
+  destination: function (req, file, callback) {
+    callback(null, "");
+  },
+});
+var multipleUpload = multer({ storage: storage }).array("file");
+var upload = multer({ storage: storage }).single("file");
 
 // @route GET api/Auths/:id
 // @description Get single Auth by id
@@ -107,6 +116,35 @@ UserRouter.post("/personalDetail", ejwt({ secret: secret, algorithms: ["HS256"] 
     }
   } catch (err) {
     res.status(500).json(err);
+  }
+});
+
+UserRouter.post("/DocUpload", multipleUpload, async (req, res) => {
+  try {
+    const files = req.files;
+    console.log(files);
+
+    files.map(async (file) => {
+      console.log(file);
+      var params = {
+        Bucket: "tneaseatmatrix",
+        Body: file.buffer,
+        Key: `collegeName/${file.originalname}`,
+      };
+
+      await s3.upload(params, function (err, data) {
+        if (err) {
+          console.log("Error", err);
+        }
+        if (data) {
+          console.log("Uploaded in:", data);
+        }
+      });
+    });
+
+    res.json({ status: true });
+  } catch (error) {
+    res.status(500).json(error);
   }
 });
 

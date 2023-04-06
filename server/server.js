@@ -8,10 +8,14 @@ const secret = "6$Sz249eF18@MKy1N";
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
+
 app.use(require("./routes/api/UsersRouter"));
 
 // Connect Database
 connectDB();
+
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.get("/", (req, res) => res.send("Hello world!"));
 
 const port = process.env.PORT || 5555;
