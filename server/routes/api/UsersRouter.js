@@ -15,7 +15,14 @@ var storage = multer.memoryStorage({
     callback(null, "");
   },
 });
-var multipleUpload = multer({ storage: storage }).array("file");
+
+var multipleUpload = multer({ storage: storage }).fields([
+  { name: "seatMatrix" },
+  { name: "AICTEApproval" },
+  { name: "AUAffiliation" },
+  { name: "Accredation" },
+  { name: "Autonomous" },
+]);
 var upload = multer({ storage: storage }).single("file");
 
 // @route GET api/Auths/:id
@@ -59,12 +66,12 @@ UserRouter.post("/login", async (req, res) => {
       if (auth.CollegePassword) {
         return res.status(400).json({ message: "Invalid credentials" });
       } else {
-        const token = jwt.sign({ id: auth.id, ccode: auth.ccode }, secret);
+        const token = jwt.sign({ id: auth.id, ccode: auth.ccode, collegeName: auth.can }, secret);
         res.json({ token: token, resetReq: true });
       }
     } else {
       // Generate JWT
-      const token = jwt.sign({ id: auth.id, ccode: auth.ccode }, secret);
+      const token = jwt.sign({ id: auth.id, ccode: auth.ccode, collegeName: auth.can }, secret);
       res.json({ token: token, resetReq: false });
     }
   } catch (err) {
@@ -102,19 +109,19 @@ UserRouter.get("/collegeData", ejwt({ secret: secret, algorithms: ["HS256"] }), 
 
 UserRouter.post("/personalDetail", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
   try {
-    const { PrincipalName, Email,PhoneNumber,Pincode,District,Website,Autonomous } = req.body;
+    const { PrincipalName, Email, PhoneNumber, Pincode, District, Website, Autonomous } = req.body;
     console.log(req.body);
-    if (!PrincipalName || !Email || !PhoneNumber ||!Pincode||!District||!Website) {
+    if (!PrincipalName || !Email || !PhoneNumber || !Pincode || !District || !Website) {
       res.json({ status: false, message: "incomplete body set" });
     } else {
       const user = await users.findByIdAndUpdate(req.auth.id, {
         PrincipalName: PrincipalName,
         Email: Email,
         PhoneNumber: PhoneNumber,
-        Pincode:Pincode,
-        District:District,
-        Website:Website,
-        Autonomous:Autonomous,
+        Pincode: Pincode,
+        District: District,
+        Website: Website,
+        Autonomous: Autonomous,
         PersonalDetailFlag: true,
       });
       res.json({ status: true });
@@ -124,32 +131,78 @@ UserRouter.post("/personalDetail", ejwt({ secret: secret, algorithms: ["HS256"] 
   }
 });
 
-UserRouter.post("/DocUpload", multipleUpload, async (req, res) => {
-  try {
-    const files = req.files;
-    console.log(files);
-
-    files.map(async (file) => {
-      console.log(file);
-      var params = {
-        Bucket: "tneaseatmatrix",
-        Body: file.buffer,
-        Key: `collegeName/${file.originalname}`,
-      };
-
-      await s3.upload(params, function (err, data) {
-        if (err) {
-          console.log("Error", err);
-        }
-        if (data) {
-          console.log("Uploaded in:", data);
-        }
+UserRouter.post(
+  "/DocUpload",
+  multipleUpload,
+  ejwt({ secret: secret, algorithms: ["HS256"] }),
+  async (req, res, next) => {
+    try {
+      const { files } = req;
+      let allFiles = [];
+      Object.values(files).map((file) => {
+        allFiles.push(file[0]);
       });
-    });
 
-    res.json({ status: true });
+      const College = await users.findById(req.auth.id);
+      let document = College.Documents ? College.Documents : {};
+      for (let i = 0; i < allFiles.length; i++) {
+        var params = {
+          Bucket: "tneaseatmatrix",
+          Body: allFiles[i].buffer,
+          Key: `${req.auth.ccode}/${allFiles[i].fieldname}.pdf`,
+        };
+
+        await s3.upload(params, async function (err, data) {
+          if (err) {
+            console.log("Error", err);
+          }
+          if (data) {
+            document[allFiles[i].fieldname] = true;
+            await users.findByIdAndUpdate(req.auth.id, {
+              Documents: document,
+            });
+          }
+        });
+      }
+      await users.findByIdAndUpdate(req.auth.id, {
+        DocumentUploadFlag: true,
+      });
+      res.json({ status: true });
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+);
+
+UserRouter.get("/documents", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
+  try {
+    var params = {
+      Bucket: "tneaseatmatrix",
+      Delimiter: "/",
+      Prefix: `${req.auth.ccode}/`,
+    };
+    let keys = [];
+    let signedUrls = {};
+    await s3.listObjectsV2(params, function (err, data) {
+      if (err) {
+        console.log(err, err.stack);
+        res.json({ status: false, error: err });
+      } else {
+        data.Contents.forEach((con) => keys.push(con["Key"]));
+        for (let i = 0; i < keys.length; i++) {
+          var params = {
+            Bucket: "tneaseatmatrix",
+            Key: keys[i],
+            Expires: 500,
+          };
+          var url = s3.getSignedUrl("getObject", params);
+          signedUrls[keys[i].split("/")[1]] = url;
+        }
+        res.send(signedUrls);
+      }
+    });
   } catch (error) {
-    res.status(500).json(error);
+    console.log(error);
   }
 });
 
@@ -201,7 +254,6 @@ UserRouter.get("/unlock/:collegeCode", async (req, res) => {
   }
 });
 
-
 //Setting CourseDetails
 UserRouter.post("/setCourseDetails", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
   try {
@@ -211,7 +263,7 @@ UserRouter.post("/setCourseDetails", ejwt({ secret: secret, algorithms: ["HS256"
       res.json({ status: false, message: "incomplete body set" });
     } else {
       const user = await users.findByIdAndUpdate(req.auth.id, {
-        CourseDetails: CourseDetails
+        CourseDetails: CourseDetails,
       });
       res.json({ status: true });
     }
@@ -219,6 +271,5 @@ UserRouter.post("/setCourseDetails", ejwt({ secret: secret, algorithms: ["HS256"
     res.status(500).json(err);
   }
 });
-
 
 module.exports = UserRouter;

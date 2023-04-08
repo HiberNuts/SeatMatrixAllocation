@@ -8,7 +8,7 @@
 /.vscode*
 # testing
 /coverage
-
+.env
 # production
 /build
 
