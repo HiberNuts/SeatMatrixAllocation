@@ -56,8 +56,17 @@ const FormOne = ({ alter, toggleIconTab }) => {
         if (data.status) {
           console.log("s");
           const notify = () => {
-            toast("Data added successfully");
+            toast.success("Data added successfully", {
+              position: "bottom-right",
+              autoClose: true,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: false,
+            });
           };
+          
           notify();
         }
       })

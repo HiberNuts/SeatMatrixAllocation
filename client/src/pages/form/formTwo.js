@@ -130,9 +130,9 @@ const GOVTSeats = {
 };
 const FormTwo = ({ alter, id }) => {
   const courseSchema = {
-    courseName: "",
-    courseCode: "",
-    accredation: "",
+    courseName: null,
+    courseCode: null,
+    accredation: null,
     intake: 0,
     Govt: 0,
     Surrender: 0,
@@ -165,7 +165,7 @@ const FormTwo = ({ alter, id }) => {
         if (data.status) {
           console.log("s");
           const notify = () => {
-            toast("Data added successfully");
+            toast.success("Data added successfully");
           };
           notify();
         }
@@ -211,6 +211,13 @@ const FormTwo = ({ alter, id }) => {
   };
   const handleCourseChange = (event, index) => {
     let data = [...Course];
+    let ind=CourseList.indexOf(event);
+    if(ind!==-1)
+    CourseList.splice(ind,1);
+    if(data[index]["courseCode"])
+    {
+      CourseList.splice(0,0,data[index]["courseName"]);
+    }
     data[index]["courseName"] = event;
     data[index]["courseCode"] = event.value;
     setCourse(data);
@@ -254,20 +261,40 @@ const FormTwo = ({ alter, id }) => {
       setCourse(data);
     }
   };
+  const checkErr = ()=>{
+    let val=true;
+    Course.forEach(e=>{
+    if(e.Govt>=0 && e.SWS === e.Govt+e.Surrender && e.Govt+e.Surrender+e.Management===e.intake && e.courseCode!=null && e.accredation!=null)
+    {
+      val= val && true;
+    }
+    else
+    {
+      
+      toast.error("Please Fill all Fields, to add New Course");
+   
+      val=val&& false;
+    }
+  })
+  return val;
+
+
+  }
+ 
   const addCourse = () => {
     let data = [...Course];
-    const ind = CourseList.indexOf(data.at(data.length - 1));
-    CourseList.splice(ind, 1);
-    setCourse(data);
+    if(checkErr())
+    {
     data.push(courseSchema);
     setCourse(data);
+    }
   };
   const removeCourse = (e) => {
     const updatedCourses = [...Course];
     try {
       const courseObj = updatedCourses[e]["courseName"];
       if (courseObj) {
-        CourseList.push(courseObj);
+        CourseList.splice(0,0,courseObj);
       }
     } finally {
       updatedCourses.splice(e, 1);
@@ -275,6 +302,13 @@ const FormTwo = ({ alter, id }) => {
     }
   };
   const updateHandler = (data) => {
+    let val =[...Course];
+    if(!val.at(Course.length-1).courseCode)
+    {
+      val.splice(val.length-1,1);      
+    }
+    setCourse(val);
+    // if(checkErr())
     onFormSubmit(data);
   };
 

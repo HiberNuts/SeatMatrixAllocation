@@ -18,6 +18,6 @@ app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.get("/", (req, res) => res.send("Hello world!"));
 
-const port = process.env.PORT;
+const port = process.env.PORT|| 5555;
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
