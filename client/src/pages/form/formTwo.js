@@ -127,6 +127,8 @@ const GOVTSeats = {
   SOWRASHTRA: 50,
   TELUGU: 50,
   UNIV: 100,
+  IRTT: 65,
+
 };
 const FormTwo = ({ alter, id }) => {
   const courseSchema = {
@@ -190,7 +192,14 @@ const FormTwo = ({ alter, id }) => {
       .then((data) => {
         console.log(data);
         setCourse(data.CourseDetails ? data.CourseDetails : []);
-        setclgCAT(data.Category);
+        if (data.ccode == '2709') {
+          setclgCAT("IRTT");
+
+        }
+        else {
+          setclgCAT(data.Category);
+
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -211,12 +220,11 @@ const FormTwo = ({ alter, id }) => {
   };
   const handleCourseChange = (event, index) => {
     let data = [...Course];
-    let ind=CourseList.indexOf(event);
-    if(ind!==-1)
-    CourseList.splice(ind,1);
-    if(data[index]["courseCode"])
-    {
-      CourseList.splice(0,0,data[index]["courseName"]);
+    let ind = CourseList.indexOf(event);
+    if (ind !== -1)
+      CourseList.splice(ind, 1);
+    if (data[index]["courseCode"]) {
+      CourseList.splice(0, 0, data[index]["courseName"]);
     }
     data[index]["courseName"] = event;
     data[index]["courseCode"] = event.value;
@@ -235,7 +243,13 @@ const FormTwo = ({ alter, id }) => {
     let data = [...Course];
     data[index]["intake"] = intake;
     data[index]["Surrender"] = 0;
-    data[index]["Govt"] = Math.floor(data[index]["intake"] * 0.01 * GOVTSeats[clgCAT]);
+    if (data[index]["courseName"].label.includes("(SS)")) {
+      data[index]["Govt"] = Math.floor(data[index]["intake"] * 0.01 * 70);
+
+    } else {
+      data[index]["Govt"] = Math.floor(data[index]["intake"] * 0.01 * GOVTSeats[clgCAT]);
+
+    }
     data[index]["Management"] = data[index]["intake"] - data[index]["Govt"];
     data[index]["SWS"] = data[index]["Govt"];
 
@@ -247,46 +261,51 @@ const FormTwo = ({ alter, id }) => {
     if (!surrender) surrender = 0;
     data[index]["Surrender"] = surrender;
     if (data[index]["Surrender"] > data[index]["Management"]) {
-      data[index]["Govt"] = Math.floor(data[index]["intake"] * 0.01 * GOVTSeats[clgCAT]);
+      // if (data[index]["courseName"].label.includes("(SS)")) {
+      //   data[index]["Govt"] = Math.floor(data[index]["intake"] * 0.01 * 70);
+      // } else {
+      //   data[index]["Govt"] = Math.floor(data[index]["intake"] * 0.01 * GOVTSeats[clgCAT]);
+      // }
       data[index]["Management"] = data[index]["intake"] - data[index]["Govt"];
       data[index]["SWS"] = data[index]["Govt"];
 
       seterrSurrender(true);
     } else {
       seterrSurrender(false);
-      data[index]["Govt"] = Math.floor(data[index]["intake"] * 0.01 * GOVTSeats[clgCAT]) + surrender;
-      data[index]["Management"] = data[index]["intake"] - data[index]["Govt"];
+      // if (data[index]["courseName"].label.includes("(SS)")) {
+      //   data[index]["Govt"] = Math.floor(data[index]["intake"] * 0.01 * 70) + surrender;
+      // } else {
+      //   data[index]["Govt"] = Math.floor(data[index]["intake"] * 0.01 * GOVTSeats[clgCAT]) + surrender;
+      // }
+      data[index]["Management"] = data[index]["intake"] - data[index]["Govt"]-surrender;
       data[index]["SWS"] = data[index]["Govt"] + surrender;
 
       setCourse(data);
     }
   };
-  const checkErr = ()=>{
-    let val=true;
-    Course.forEach(e=>{
-    if(e.Govt>=0 && e.SWS === e.Govt+e.Surrender && e.Govt+e.Surrender+e.Management===e.intake && e.courseCode!=null && e.accredation!=null)
-    {
-      val= val && true;
-    }
-    else
-    {
-      
-      toast.error("Please Fill all Fields, to add New Course");
-   
-      val=val&& false;
-    }
-  })
-  return val;
+  const checkErr = () => {
+    let val = true;
+    Course.forEach(e => {
+      if (e.Govt >= 0 && e.SWS === e.Govt + e.Surrender && e.Govt + e.Surrender + e.Management === e.intake && e.courseCode != null && e.accredation != null) {
+        val = val && true;
+      }
+      else {
+
+        toast.error("Please Fill all Fields, to add New Course");
+
+        val = val && false;
+      }
+    })
+    return val;
 
 
   }
- 
+
   const addCourse = () => {
     let data = [...Course];
-    if(checkErr())
-    {
-    data.push(courseSchema);
-    setCourse(data);
+    if (checkErr()) {
+      data.push(courseSchema);
+      setCourse(data);
     }
   };
   const removeCourse = (e) => {
@@ -294,7 +313,7 @@ const FormTwo = ({ alter, id }) => {
     try {
       const courseObj = updatedCourses[e]["courseName"];
       if (courseObj) {
-        CourseList.splice(0,0,courseObj);
+        CourseList.splice(0, 0, courseObj);
       }
     } finally {
       updatedCourses.splice(e, 1);
@@ -302,10 +321,9 @@ const FormTwo = ({ alter, id }) => {
     }
   };
   const updateHandler = (data) => {
-    let val =[...Course];
-    if(!val.at(Course.length-1).courseCode)
-    {
-      val.splice(val.length-1,1);      
+    let val = [...Course];
+    if (!val.at(Course.length - 1).courseCode) {
+      val.splice(val.length - 1, 1);
     }
     setCourse(val);
     // if(checkErr())
