@@ -66,8 +66,12 @@ UserRouter.post("/login", async (req, res) => {
       if (auth.CollegePassword) {
         return res.status(400).json({ message: "Invalid credentials" });
       } else {
-        const token = jwt.sign({ id: auth.id, ccode: auth.ccode, collegeName: auth.can }, secret);
-        res.json({ token: token, resetReq: true });
+        if (CollegePassword != ccode) {
+          return res.status(400).json({ message: "Invalid credentials" });
+        } else {
+          const token = jwt.sign({ id: auth.id, ccode: auth.ccode, collegeName: auth.can }, secret);
+          res.json({ token: token, resetReq: true });
+        }
       }
     } else {
       // Generate JWT
