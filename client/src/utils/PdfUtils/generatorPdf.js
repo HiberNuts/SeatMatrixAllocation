@@ -13,15 +13,15 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
-    height: "100%",
+    height: "90%",
   },
   viewer: {
     width: window.innerWidth, //the pdf viewer will take up all of the width and height
     height: window.innerHeight,
   },
   Logo: {
-    width: "100px",
-    height: "100px",
+    width: "80px",
+    height: "80px",
     objectPosition: "center",
     marginLeft: "auto",
     marginRight: "auto",
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   },
   HeaderText: {
     fontSize: "20px",
-    fontWeight: "bold",
+
     color: "black",
     marginLeft: "auto",
     marginRight: "auto",
@@ -43,58 +43,61 @@ const styles = StyleSheet.create({
   },
 
   Field: {
-    fontSize: "18px",
+    fontSize: "10px",
   },
   decl: {
     fontWeight: "extralight",
-    fontSize: "12px",
+    fontSize: "10px",
   },
   box: {
-    border: "1px solid black",
     width: "300px",
     height: "100px",
   },
+  warning: {
+    color: "red",
+    fontSize: "12px",
+  },
 });
-const PdfDcoument = () => {
-  return (
-    <PDFViewer style={styles.viewer}>
-      <Document>
-        <Page size="A4" style={styles.page}>
-          <View styles={styles.Center}>
-            <Image style={styles.Logo} src={LogoDark2x} />
-            <Text style={styles.HeaderText}>Tamil Nadu Engineering Association</Text>
-          </View>
-          <View styles={styles.Center}>
-            <View style={{ display: "flex" }}>
-              <Text style={styles.Field} src={LogoDark2x}>
-                College Name: Government college of Technology
-              </Text>
-            </View>
-            <View>
-              <Text style={styles.Field} src={LogoDark2x}>
-                College Code: 2005
-              </Text>
-              <Text style={styles.Value} src={LogoDark2x}></Text>
-            </View>
-          </View>
-          <CourseTable />
-          <View>
-            <Text style={styles.decl}>
-              We, declare that I have thoroughly reviewed and verified all seat allocation matrix for TNEA. I have
-              ensured that all seats have been allocated appropriately and that no further changes will be made to the
-              allocation matrix without proper authorization from the relevant authorities. I take full responsibility
-              for any errors or omissions that may have occurred during the verification process and certify that all
-              changes made to the matrix were necessary and within the scope of the project/task/assignment.
-            </Text>
-          </View>
-          <View>
-            <Text style={styles.box}></Text>
-            <Text style={styles.decl}>Principal Signature</Text>
-          </View>
-        </Page>
-      </Document>
-    </PDFViewer>
-  );
-};
+const PdfDcoument = ({ collegeData }) => (
+  <Document>
+    <Page size="A4" style={styles.page}>
+      <View styles={styles.Center}>
+        <Image style={styles.Logo} src={LogoDark2x} />
+        <Text style={styles.HeaderText}>Tamil Nadu Engineering Association</Text>
+      </View>
+      <View styles={styles.Center}>
+        <View style={{ display: "flex" }}>
+          <Text style={styles.Field} src={LogoDark2x}>
+            College Name : <Text>{collegeData?.can}</Text>
+          </Text>
+        </View>
+        <View>
+          <Text style={styles.Field} src={LogoDark2x}>
+            College Code : <Text>{collegeData?.ccode}</Text>
+          </Text>
+          <Text style={styles.Value} src={LogoDark2x}></Text>
+        </View>
+      </View>
+      <CourseTable collegeData={collegeData} />
+      <View>
+        <Text style={styles.decl}>
+          We, declare that I have thoroughly reviewed and verified all seat allocation matrix for TNEA. I have ensured
+          that all seats have been allocated appropriately and that no further changes will be made to the allocation
+          matrix without proper authorization from the relevant authorities. I take full responsibility for any errors
+          or omissions that may have occurred during the verification process and certify that all changes made to the
+          matrix were necessary and within the scope of the project/task/assignment.
+        </Text>
+      </View>
+
+      <View>
+        <Text style={styles.box}></Text>
+        <Text style={{ fontSize: "15px" }}>Principal Signature</Text>
+      </View>
+      <View>
+        <Text style={styles.warning}>*Please sign this document and upload it in the documents upload section</Text>
+      </View>
+    </Page>
+  </Document>
+);
 
 export default PdfDcoument;

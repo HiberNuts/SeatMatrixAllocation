@@ -234,6 +234,23 @@ UserRouter.get("/documents", ejwt({ secret: secret, algorithms: ["HS256"] }), as
   }
 });
 
+UserRouter.post("/declaration", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
+  const { flag } = req.body;
+  const auth = await users.findById(req.auth.id);
+
+  if (!auth) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  const College = await users.findByIdAndUpdate(req.auth.id, { DeclarationFlag: flag });
+
+  if (College) {
+    res.json({ status: true });
+  }
+});
+
+
+
 // *Route for admin panel dashboard - jermey*
 
 UserRouter.get("/list", async (req, res) => {

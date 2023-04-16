@@ -13,14 +13,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const CourseTable = () => {
+const CourseTable = ({ collegeData }) => {
   return (
     <View style={styles.tableContainer}>
       <TableHeader />
-      {/* <TableHeader /> */}
-      <TableContent />
-      {/* <InvoiceTableRow items={invoice.items} />
-      <InvoiceTableFooter items={invoice.items} /> */}
+      <TableContent collegeData={collegeData} />
     </View>
   );
 };

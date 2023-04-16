@@ -18,7 +18,7 @@ const App = (props) => {
       {/*Error Pages*/}
       <Route exact path={`${process.env.PUBLIC_URL}/504`} component={Error504Modern}></Route>
       <Route exact path={`${process.env.PUBLIC_URL}/404`} component={Error404Modern}></Route>
-      <Route exact path={"/pdf"} component={PdfDisplay}></Route>
+      
 
       {/*Main Routes*/}
       <PrivateRoute exact path="" component={Layout}></PrivateRoute>
