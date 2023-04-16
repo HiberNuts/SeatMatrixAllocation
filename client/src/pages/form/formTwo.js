@@ -191,9 +191,8 @@ const FormTwo = ({ alter, id }) => {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
+        console.log("here", data);
         setCourse(data.CourseDetails ? data.CourseDetails : []);
-        removeCourseOnFetch(data.ccode);
         if (data.ccode === '2709') {
           setclgCAT("IRTT");
         }
@@ -201,36 +200,35 @@ const FormTwo = ({ alter, id }) => {
           setclgCAT(data.Category);
 
         }
+        removeCourseOnFetch(data.CourseDetails, data.ccode);
 
       })
       .catch((error) => {
         console.log(error);
       });
 
-
   };
   useEffect(() => {
     getCollegeInfo();
+
   }, []);
 
   const formClass = classNames({
     "form-validate": true,
     "is-alter": alter,
   });
-  const removeCourseOnFetch = (ccode) => {
-    console.log(clgCode, ["1", "2", "4", "2006", "2007", "5008"].includes(ccode));
-    setclgCode(ccode);
-    if (["1", "2", "4", "2006", "2007", "5008"].includes(ccode)) {
+  const removeCourseOnFetch = (Course, clgCode) => {
+    console.log(clgCode, ["1", "2", "4", "2006", "2007", "5008"].includes(clgCode));
+    setclgCode(clgCode);
+    if (["1", "2", "4", "2006", "2007", "5008"].includes(clgCode)) {
       CourseList.push(...SSCourse);
     }
-    console.log(CourseList)
-
-    if (Course)
-      Course.forEach(element => {
-        let ind = CourseList.findIndex(p => p.value === element.courseCode);
-        if (ind !== -1)
-          console.log(CourseList.splice(ind, 1));
-      });
+    console.log(Course);
+    Course.forEach(element => {
+      let ind = CourseList.findIndex(p => p.value === element.courseCode);
+      if (ind !== -1)
+        console.log(CourseList.splice(ind, 1));
+    });
   }
   const handleFormChange = (event, index) => {
     let data = [...Course];
@@ -305,7 +303,7 @@ const FormTwo = ({ alter, id }) => {
   const checkErr = () => {
     let val = true;
     Course.forEach(e => {
-      if (e.Govt >= 0 && e.SWS === e.Govt + e.Surrender && e.Govt + e.Surrender + e.Management === e.intake && e.courseCode != null && e.accredation != null) {
+      if (e.Govt >= 0 && e.SWS === e.Govt + e.Surrender && e.Govt + e.Surrender + e.Management === e.intake && e.courseCode != null && e.accredation != null && e.intake != 0) {
         val = val && true;
       }
       else {
