@@ -7,6 +7,8 @@ import { Button } from "../../components/Component";
 import classNames from "classnames";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { PDFViewer } from "@react-pdf/renderer";
+import PdfDcoument from "../../utils/PdfUtils/generatorPdf";
 const FormOne = ({ alter, toggleIconTab }) => {
   const [loading, setLoading] = useState(true);
   const { errors, register, handleSubmit } = useForm();
@@ -23,11 +25,10 @@ const FormOne = ({ alter, toggleIconTab }) => {
   const [email, setEmail] = useState("");
   const [editFlag, seteditFlag] = useState(false);
 
-
-  const AutonomousOptions =[
+  const AutonomousOptions = [
     { label: "Autonomous", value: true },
     { label: "Non Autonomous", value: false },
-  ]
+  ];
   const onFormSubmit = (data) => {
     fetch(`${backendURL}/personalDetail`, {
       method: "Post",
@@ -41,8 +42,8 @@ const FormOne = ({ alter, toggleIconTab }) => {
         PhoneNumber: data.phone,
         Pincode: data.pincode,
         District: data.district,
-        Website:data.website,
-        Autonomous: Autonomous.value
+        Website: data.website,
+        Autonomous: Autonomous.value,
       }),
     })
       .then((response) => {
@@ -66,7 +67,7 @@ const FormOne = ({ alter, toggleIconTab }) => {
               progress: false,
             });
           };
-          
+
           notify();
         }
       })
@@ -100,7 +101,7 @@ const FormOne = ({ alter, toggleIconTab }) => {
         setpersonalDetailFlag(data.PersonalDetailFlag);
         setprincipalName(data.PrincipalName);
         setPhone(data.PhoneNumber);
-        setAutonomous(data.Autonomous?AutonomousOptions[0]:AutonomousOptions[1]);
+        setAutonomous(data.Autonomous ? AutonomousOptions[0] : AutonomousOptions[1]);
         setDistrict(data.District);
         setWebsite(data.Website);
         setPincode(data.Pincode);
@@ -123,6 +124,7 @@ const FormOne = ({ alter, toggleIconTab }) => {
     return (
       <React.Fragment>
         <ToastContainer />
+
         <Form className={formClass} onSubmit={handleSubmit((data) => onFormSubmit(data))}>
           <Row className="g-gs">
             <Col md="6">
@@ -187,7 +189,6 @@ const FormOne = ({ alter, toggleIconTab }) => {
                 <div className="form-control-wrap">
                   <input
                     disabled={!editFlag}
-
                     ref={register({ required: true })}
                     type="text"
                     id="fv-subject"
@@ -208,7 +209,6 @@ const FormOne = ({ alter, toggleIconTab }) => {
                 <div className="form-control-wrap">
                   <input
                     disabled={!editFlag}
-
                     ref={register({
                       required: true,
                       pattern: {
@@ -240,7 +240,6 @@ const FormOne = ({ alter, toggleIconTab }) => {
                 <div className="form-control-wrap">
                   <input
                     disabled={!editFlag}
-
                     ref={register({
                       required: true,
                       pattern: {
@@ -335,7 +334,6 @@ const FormOne = ({ alter, toggleIconTab }) => {
                   <input
                     ref={register({
                       required: true,
-                     
                     })}
                     type="text"
                     id="fv-website"
@@ -348,7 +346,6 @@ const FormOne = ({ alter, toggleIconTab }) => {
                   {errors.website && errors.website.type === "required" && (
                     <span className="invalid">This is required</span>
                   )}
-                  
                 </div>
               </div>
             </Col>
@@ -369,7 +366,6 @@ const FormOne = ({ alter, toggleIconTab }) => {
                     value={Autonomous}
                   />
                 </div>
-               
               </div>
             </Col>
             <Col md="12">
@@ -385,7 +381,6 @@ const FormOne = ({ alter, toggleIconTab }) => {
                   </Button>
                 )}
               </div>
-            
             </Col>
           </Row>
         </Form>
@@ -396,12 +391,17 @@ const FormOne = ({ alter, toggleIconTab }) => {
         )}
 
         <div className="d-flex justify-content-end">
-              <Button onClick={()=>{
-          toggleIconTab("6")
-              }} type="submit" color="success" size="lg">
-                    Next &gt;
-                  </Button>
-              </div>
+          <Button
+            onClick={() => {
+              toggleIconTab("6");
+            }}
+            type="submit"
+            color="success"
+            size="lg"
+          >
+            Next &gt;
+          </Button>
+        </div>
       </React.Fragment>
     );
   else

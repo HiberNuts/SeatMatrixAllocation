@@ -77,8 +77,12 @@ const Login = () => {
       <PageContainer>
         <Block className="nk-block-middle nk-auth-body  wide-xs">
           <div className="brand-logo pb-4 text-center">
+            <div style={{ fontSize: "30px" }}>Directorate of Technical Education - Chennai</div>
             <Link to={process.env.PUBLIC_URL + "/"} className="logo-link">
-              <img className="logo-light logo-img logo-img-lg" src={Logo} alt="logo" />
+              <div>
+                <img className="logo-light logo-img logo-img-lg" src={Logo} alt="logo" />
+                <span style={{ fontSize: "22px", color: "black" }}>2023</span>
+              </div>
               <img className="logo-dark logo-img logo-img-lg" src={LogoDark} alt="logo-dark" />
             </Link>
           </div>
