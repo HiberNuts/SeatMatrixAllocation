@@ -11,6 +11,7 @@ import { PreviewCard } from "../components/preview/Preview";
 import FormFour from "./form/formFour";
 import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 import PdfDcoument from "../utils/PdfUtils/generatorPdf";
+import FormThree from "./form/formThree";
 
 const Homepage = ({ ...props }) => {
   const [activeIconTab, setActiveIconTab] = useState("5");
@@ -92,14 +93,7 @@ const Homepage = ({ ...props }) => {
                 <FormTwo id="form-2" alter />
               </TabPane>
               <TabPane tabId="7">
-                <p>
-                  We, declare that I have thoroughly reviewed and verified all seat allocation matrix for TNEA. I have
-                  ensured that all seats have been allocated appropriately and that no further changes will be made to
-                  the allocation matrix without proper authorization from the relevant authorities. I take full
-                  responsibility for any errors or omissions that may have occurred during the verification process and
-                  certify that all changes made to the matrix were necessary and within the scope of the
-                  project/task/assignment.
-                </p>
+                <FormThree />
               </TabPane>
               <TabPane tabId="8">
                 <FormFour></FormFour>

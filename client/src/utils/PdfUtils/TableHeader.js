@@ -10,18 +10,20 @@ const styles = StyleSheet.create({
     borderBottomColor: "black",
     backgroundColor: "white",
     color: "black",
-    fontSize: "10px",
+    fontSize: "7px",
     justifyContent: "space-between",
     display: "flex",
     alignItems: "center",
     height: 20,
     textAlign: "center",
     flexGrow: 1,
+    
   },
   courseName: {
-    width: "30%",
+    width: "36%",
   },
   common: {
+    width: "8%",
     borderRightColor: "black",
   },
 });

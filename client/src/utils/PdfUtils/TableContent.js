@@ -4,13 +4,13 @@ import Courses from "./data.js";
 
 const styles = StyleSheet.create({
   container: {
+    borderBottomColor: "black",
+    borderBottomWidth: 1,
     flexDirection: "row",
-    // borderBottomColor: "black",
-    // borderBottomWidth: 1,
     borderBottomColor: "black",
     backgroundColor: "white",
     color: "black",
-    fontSize: "10px",
+    fontSize: "8px",
     justifyContent: "space-between",
     display: "flex",
     alignItems: "center",
@@ -19,15 +19,16 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   courseName: {
-    width: "30%",
+    width: "36%",
   },
   common: {
+    width: "8%",
     borderRightColor: "black",
-    alignItems: "center",
   },
 });
-const TableContent = () => {
-  const rows = Courses.map((item, index) => (
+const TableContent = ({ collegeData }) => {
+  console.log(collegeData);
+  const rows = collegeData?.CourseDetails?.map((item, index) => (
     <View style={styles.container}>
       <Text style={styles.common}>{index}</Text>
       <Text style={styles.courseName}>{item.courseName.label}</Text>
