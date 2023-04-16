@@ -14,87 +14,57 @@ const CourseList = [
   { label: "Artificial Intelligence and Machine Learning", value: "AL" },
   { label: "COMPUTER SCIENCE AND ENGINEERING (ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING)", value: "AM" },
   { label: "AEROSPACE ENGINEERING", value: "AO" },
-  { label: "APPAREL TECHNOLOGY (SS)", value: "AP" },
-  { label: "AUTOMOBILE ENGINEERING (SS)", value: "AS" },
-  { label: "ARTIFICIAL INTELLIGENCE AND DATA SCIENCE (SS)", value: "AT" },
   { label: "AUTOMOBILE ENGINEERING", value: "AU" },
   { label: "Bio Technology and Bio Chemical Engineering", value: "BC" },
   { label: "BIO MEDICAL ENGINEERING ", value: "BM" },
   { label: "B.Plan", value: "BP" },
-  { label: "BIO TECHNOLOGY (SS)", value: "BS" },
   { label: "BIO TECHNOLOGY", value: "BT" },
-  { label: "BIO MEDICAL ENGINEERING  (SS)", value: "BY" },
   { label: "COMPUTER SCIENCE AND BUSSINESS SYSTEM", value: "CB" },
-  { label: "CHEMICAL AND ELECTRO CHEMICAL  ENGINEERING (SS)", value: "CC" },
   { label: "COMPUTER SCIENCE AND DESIGN", value: "CD" },
   { label: "CIVIL  ENGINEERING ", value: "CE" },
   { label: "COMPUTER SCIENCE AND ENGINEERING (DATA SCIENCE)", value: "CF" },
-  { label: "Computer Science and Engineering (Artificial Intelligence and Machine Learning) (SS)", value: "CG" },
   { label: "CHEMICAL  ENGINEERING ", value: "CH" },
   { label: "Computer Science and Engineering (Internet of Things)", value: "CI" },
   { label: "M.Tech. Computer Science and Engineering (Integrated 5 years)", value: "CJ" },
-  { label: "CHEMICAL  ENGINEERING (SS)", value: "CL" },
-  { label: "COMPUTER SCIENCE AND ENGINEERING (SS)", value: "CM" },
-  { label: "CIVIL  ENGINEERING (SS)", value: "CN" },
   { label: "COMPUTER AND  COMMUNICATION ENGINEERING", value: "CO" },
-  { label: "CERAMIC TECHNOLOGY (SS)", value: "CR" },
   { label: "COMPUTER SCIENCE AND ENGINEERING", value: "CS" },
   { label: "COMPUTER TECHNOLOGY", value: "CT" },
-  { label: "Computer Science and Business System (SS)", value: "CW" },
   { label: "Cyber Security", value: "CY" },
   { label: "CIVIL AND STRUCTUTURAL ENGINEERING", value: "CZ" },
   { label: "ELECTRONICS AND COMMUNICATION ENGINEERING", value: "EC" },
   { label: "ELECTRICAL AND ELECTRONICS ENGINEERING", value: "EE" },
   { label: "ELECTRONICS AND INSTRUMENTATION ENGINEERING", value: "EI" },
-  { label: "ELECTRONICS AND COMMUNICATION ENGINEERING (SS)", value: "EM" },
   { label: "ENVIRONMENTAL ENGINEERING", value: "EN" },
-  { label: "ELECTRICAL AND ELECTRONICS (SANDWICH) (SS)", value: "ES" },
   { label: "ELECTRONICS AND  TELECOMMUNICATION ENGINEERING", value: "ET" },
-  { label: "ELECTRICAL AND ELECTRONICS ENGINEERING (SS)", value: "EY" },
   { label: "FOOD TECHNOLOGY ", value: "FD" },
-  { label: "FOOD TECHNOLOGY (SS)", value: "FS" },
   { label: "FASHION TECHNOLOGY", value: "FT" },
-  { label: "FASHION TECHNOLOGY (SS)", value: "FY" },
   { label: "GEO INFORMATICS", value: "GI" },
   { label: "HANDLOOM AND TEXTILE TECHNOLOGY", value: "HT" },
   { label: "INDUSTRIAL BIO TECHNOLOGY", value: "IB" },
   { label: "INSTRUMENTATION AND CONTROL ENGINEERING", value: "IC" },
   { label: "INDUSTRIAL ENGINEERING", value: "IE" },
-  { label: "INFORMATION TECHNOLOGY (SS)", value: "IM" },
   { label: "INDUSTRIAL ENGINEERING AND MANAGEMENT", value: "IN" },
-  { label: "INDUSTRIAL BIO TECHNOLOGY (SS)", value: "IS" },
   { label: "INFORMATION TECHNOLOGY", value: "IT" },
-  { label: "INSTRUMENTATION AND CONTROL ENGINEERING (SS)", value: "IY" },
   { label: "LEATHER TECHNOLOGY", value: "LE" },
-  { label: "MATERIAL SCIENCE AND ENGINEERING (SS)", value: "MA" },
   { label: "MECHATRONICS", value: "MC" },
   { label: "MEDICAL ELECTRONICS ENGINEERING", value: "MD" },
   { label: "MECHANICAL ENGINEERING", value: "ME" },
-  { label: "MECHANICAL ENGINEERING (SS)", value: "MF" },
-  { label: "MECHATRONICS (SS)", value: "MG" },
   { label: "MECHANICAL ENGINEERING (SANDWICH)", value: "MH" },
   { label: "MINING ENGINEERING", value: "MI" },
   { label: "MECHANICAL ENGINEERING (MANUFACTURING)", value: "MM" },
   { label: "MANUFACTURING ENGINEERING", value: "MN" },
   { label: "Mechanical and Mechatronics Engineering (Additive Manufacturing)", value: "MO" },
   { label: "MARINE ENGINEERING", value: "MR" },
-  { label: "MECHANICAL ENGINEERING (SANDWICH) (SS)", value: "MS" },
   { label: "METALLURGICAL ENGINEERING", value: "MT" },
   { label: "MECHANICAL AND AUTOMATION ENGINEERING", value: "MU" },
-  { label: "METALLURGICAL ENGINEERING (SS)", value: "MY" },
   { label: "Mechatronics Engineering", value: "MZ" },
   { label: "PLASTIC TECHNOLOGY", value: "PA" },
   { label: "PETRO CHEMICAL TECHNOLOGY", value: "PC" },
   { label: "PETRO CHEMICAL ENGINEERING", value: "PD" },
   { label: "PETROLEUM ENGINEERING", value: "PE" },
   { label: "PHARMACEUTICAL TECHNOLOGY", value: "PH" },
-  { label: "PHARMACEUTICAL TECHNOLOGY (SS)", value: "PM" },
-  { label: "PRODUCTION ENGINEERING (SS)", value: "PN" },
-  { label: "PETROLEUM ENGINEERING AND TECHNOLOGY (SS)", value: "PP" },
   { label: "PRODUCTION ENGINEERING", value: "PR" },
-  { label: "PRODUCTION ENGINEERING (SANDWICH) (SS)", value: "PS" },
   { label: "PRINTING AND PACKING TECHNOLOGY", value: "PT" },
-  { label: "ROBOTICS AND AUTOMATION (SS)", value: "RA" },
   { label: "ROBOTICS AND AUTOMATION", value: "RM" },
   { label: "RUBBER AND PLASTIC TECHNOLOGY", value: "RP" },
   {
@@ -106,12 +76,42 @@ const CourseList = [
   { label: "Safety and Fire Engineering", value: "SF" },
   { label: "TEXTILE CHEMISTRY", value: "TC" },
   { label: "Computer Science and Technology", value: "TS" },
-  { label: "TEXTILE TECHNOLOGY (SS)", value: "TT" },
   { label: "TEXTILE TECHNOLOGY", value: "TX" },
   { label: "CIVIL ENGINEERING (TAMIL MEDIUM)", value: "XC" },
   { label: "MECHANICAL ENGINEERING (TAMIL MEDIUM)", value: "XM" },
   { label: "COMPUTER SCIENCE AND ENGINEERING (TAMIL)", value: "XS" },
 ];
+const SSCourse =[{ label: "APPAREL TECHNOLOGY (SS)", value: "AP" },
+{ label: "AUTOMOBILE ENGINEERING (SS)", value: "AS" },
+{ label: "ARTIFICIAL INTELLIGENCE AND DATA SCIENCE (SS)", value: "AT" },
+{ label: "BIO TECHNOLOGY (SS)", value: "BS" },
+{ label: "BIO MEDICAL ENGINEERING  (SS)", value: "BY" },
+{ label: "CHEMICAL AND ELECTRO CHEMICAL  ENGINEERING (SS)", value: "CC" },
+{ label: "Computer Science and Engineering (Artificial Intelligence and Machine Learning) (SS)", value: "CG" },
+{ label: "CHEMICAL  ENGINEERING (SS)", value: "CL" },
+{ label: "COMPUTER SCIENCE AND ENGINEERING (SS)", value: "CM" },
+{ label: "CIVIL  ENGINEERING (SS)", value: "CN" },
+{ label: "CERAMIC TECHNOLOGY (SS)", value: "CR" },
+{ label: "Computer Science and Business System (SS)", value: "CW" },
+{ label: "ELECTRONICS AND COMMUNICATION ENGINEERING (SS)", value: "EM" },
+{ label: "ELECTRICAL AND ELECTRONICS (SANDWICH) (SS)", value: "ES" },
+{ label: "ELECTRICAL AND ELECTRONICS ENGINEERING (SS)", value: "EY" },
+{ label: "FOOD TECHNOLOGY (SS)", value: "FS" },
+{ label: "FASHION TECHNOLOGY (SS)", value: "FY" },
+{ label: "INFORMATION TECHNOLOGY (SS)", value: "IM" },
+{ label: "INDUSTRIAL BIO TECHNOLOGY (SS)", value: "IS" },
+{ label: "INSTRUMENTATION AND CONTROL ENGINEERING (SS)", value: "IY" },
+{ label: "MATERIAL SCIENCE AND ENGINEERING (SS)", value: "MA" },
+{ label: "MECHANICAL ENGINEERING (SS)", value: "MF" },
+{ label: "MECHATRONICS (SS)", value: "MG" },
+{ label: "MECHANICAL ENGINEERING (SANDWICH) (SS)", value: "MS" },
+{ label: "METALLURGICAL ENGINEERING (SS)", value: "MY" },
+{ label: "PHARMACEUTICAL TECHNOLOGY (SS)", value: "PM" },
+{ label: "PRODUCTION ENGINEERING (SS)", value: "PN" },
+{ label: "PETROLEUM ENGINEERING AND TECHNOLOGY (SS)", value: "PP" },
+{ label: "PRODUCTION ENGINEERING (SANDWICH) (SS)", value: "PS" },
+{ label: "ROBOTICS AND AUTOMATION (SS)", value: "RA" },
+{ label: "TEXTILE TECHNOLOGY (SS)", value: "TT" }]
 const GOVTSeats = {
   "CENTRAL GOVT": 50,
   CHRISTIAN: 50,
@@ -145,6 +145,7 @@ const FormTwo = ({ alter, id }) => {
   const { errors, register, handleSubmit } = useForm();
   const [errSurrender, seterrSurrender] = useState(false);
   const [clgCAT, setclgCAT] = useState("NM");
+  const [clgCode,setclgCode] = useState("");
   const onFormSubmit = (data) => {
     fetch(`${backendURL}/setCourseDetails`, {
       method: "Post",
@@ -192,18 +193,21 @@ const FormTwo = ({ alter, id }) => {
       .then((data) => {
         console.log(data);
         setCourse(data.CourseDetails ? data.CourseDetails : []);
-        if (data.ccode == '2709') {
+        removeCourseOnFetch(data.ccode);
+        if (data.ccode === '2709') {
           setclgCAT("IRTT");
-
         }
         else {
           setclgCAT(data.Category);
 
         }
+        
       })
       .catch((error) => {
         console.log(error);
       });
+      
+
   };
   useEffect(() => {
     getCollegeInfo();
@@ -213,6 +217,22 @@ const FormTwo = ({ alter, id }) => {
     "form-validate": true,
     "is-alter": alter,
   });
+  const removeCourseOnFetch=(ccode)=>  {
+    console.log(clgCode,["1","2","4","2006","2007","5008"].includes(ccode));
+    setclgCode(ccode);
+    if(["1","2","4","2006","2007","5008"].includes(ccode))
+    {
+      CourseList.push(...SSCourse);
+    }
+    console.log(CourseList)
+
+    if(Course)
+    Course.forEach(element => {
+      let ind = CourseList.findIndex(p=>p.value===element.courseCode);
+      if(ind!==-1)
+      console.log(CourseList.splice(ind,1));      
+    });
+  }
   const handleFormChange = (event, index) => {
     let data = [...Course];
     data[index][event.target.name] = event.target.value;
@@ -300,7 +320,6 @@ const FormTwo = ({ alter, id }) => {
 
 
   }
-
   const addCourse = () => {
     let data = [...Course];
     if (checkErr()) {
@@ -341,7 +360,7 @@ const FormTwo = ({ alter, id }) => {
       <Form className={formClass} onSubmit={(e) => e.preventDefault()}>
         <Row className="g-gs">
           <Col md="12">
-            <table className="table table-responsive text-nowrap w-auto">
+            <table className="table table-responsive  w-auto">
               <thead>
                 <tr>
                   <th scope="col">#</th>
