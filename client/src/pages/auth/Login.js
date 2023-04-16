@@ -18,7 +18,7 @@ import Head from "../../layout/head/Head";
 import AuthFooter from "./AuthFooter";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-
+import { backendURL } from "../../backendurl";
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const [passState, setPassState] = useState(false);
@@ -32,7 +32,7 @@ const Login = () => {
   const onFormSubmit = (formData) => {
     setcollegeCode(formData.name);
     setLoading(true);
-    fetch("https://seatmatrixallocationbackend.onrender.com/login", {
+    fetch(`${backendURL}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -77,8 +77,12 @@ const Login = () => {
       <PageContainer>
         <Block className="nk-block-middle nk-auth-body  wide-xs">
           <div className="brand-logo pb-4 text-center">
+            <div style={{ fontSize: "30px" }}>Directorate of Technical Education - Chennai</div>
             <Link to={process.env.PUBLIC_URL + "/"} className="logo-link">
-              <img className="logo-light logo-img logo-img-lg" src={Logo} alt="logo" />
+              <div>
+                <img className="logo-light logo-img logo-img-lg" src={Logo} alt="logo" />
+                <span style={{ fontSize: "22px", color: "black" }}>2023</span>
+              </div>
               <img className="logo-dark logo-img logo-img-lg" src={LogoDark} alt="logo-dark" />
             </Link>
           </div>
@@ -193,7 +197,7 @@ const Login = () => {
                         } else {
                           if (passone == passtwo) {
                             setLoading(true);
-                            fetch("https://seatmatrixallocationbackend.onrender.com/resetPasswordInitial", {
+                            fetch(`${backendURL}/resetPasswordInitial`, {
                               method: "POST",
                               headers: {
                                 "Content-Type": "application/json",
