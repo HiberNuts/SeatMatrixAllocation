@@ -123,8 +123,6 @@ const FormOne = ({ alter, toggleIconTab }) => {
   if (!loading)
     return (
       <React.Fragment>
-        <ToastContainer />
-
         <Form className={formClass} onSubmit={handleSubmit((data) => onFormSubmit(data))}>
           <Row className="g-gs">
             <Col md="6">
@@ -402,6 +400,7 @@ const FormOne = ({ alter, toggleIconTab }) => {
             Next &gt;
           </Button>
         </div>
+        <ToastContainer />
       </React.Fragment>
     );
   else

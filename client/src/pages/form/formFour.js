@@ -51,10 +51,6 @@ const FormFour = () => {
           },
         });
         if (res.data.status) {
-          const notify = () => {
-            toast("Data added successfully");
-          };
-          notify();
           setSeatMatrix();
           inputseatMatrix.current.value = "";
           setAICTEApproval();
@@ -92,9 +88,12 @@ const FormFour = () => {
   };
 
   useEffect(() => {
-    getCollegeData();
     getDocUrls();
   }, []);
+
+  useEffect(() => {
+    getCollegeData();
+  }, [collegeData]);
 
   const GenerateButtons = ({ type }) => {
     return (
@@ -116,9 +115,20 @@ const FormFour = () => {
   const inputAccredation = useRef(null);
   const inputAutonomous = useRef(null);
 
+  const handleDocDelete = async (type) => {
+    const response = await axios.post(
+      `${backendURL}/deleteDoc`,
+      { key: type },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      }
+    );
+  };
+
   return (
     <Block size="lg" className="container-fluid align-items-center justify-content-center">
-      <ToastContainer />
       <table className="table">
         <thead>
           <tr>
@@ -126,6 +136,7 @@ const FormFour = () => {
             <th scope="col">Details</th>
             <th scope="col">PDF Download</th>
             <th scope="col">Upload/Update</th>
+            <th scope="col">Delete</th>
           </tr>
         </thead>
         <tbody>
@@ -142,17 +153,7 @@ const FormFour = () => {
                 </div>
               )}
             </td>
-            {/* <td>
-              {collegeData?.Documents?.seatMatrix == true ? (
-                <Button className="btn btn-sm btn-success">
-                  <i class="bi bi-check-lg"></i>
-                </Button>
-              ) : (
-                <Button disabled className="btn btn-sm btn-dark">
-                  <i class="bi bi-x-lg"></i>
-                </Button>
-              )}
-            </td> */}
+
             <td>
               <div className="form-control-wrap">
                 <div className="form-file">
@@ -190,9 +191,9 @@ const FormFour = () => {
                     accept=".pdf"
                     onChange={(e) => {
                       if (e.target.files[0].size > 1048576) {
-                        toast("File size must not exceed 1MB");
                         inputseatMatrix.current.value = "";
                         setSeatMatrix();
+                        toast("File size must not exceed 1MB", { autoClose: 3000 });
                         return;
                       }
                       setSeatMatrix(e.target.files[0]);
@@ -201,6 +202,13 @@ const FormFour = () => {
                   />
                 </div>
               </div>
+            </td>
+            <td>
+              {collegeData?.Documents?.seatMatrix == true && (
+                <button onClick={() => handleDocDelete("seatMatrix")} className="btn btn-sm btn-outline-danger">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+              )}
             </td>
           </tr>
           <tr>
@@ -216,17 +224,7 @@ const FormFour = () => {
                 </div>
               )}
             </td>
-            {/* <td>
-              {collegeData?.Documents?.AICTEApproval == true ? (
-                <Button className="btn btn-sm btn-success">
-                  <i class="bi bi-check-lg"></i>
-                </Button>
-              ) : (
-                <Button disabled className="btn btn-sm btn-dark">
-                  <i class="bi bi-x-lg"></i>
-                </Button>
-              )}
-            </td> */}
+
             <td>
               <div className="form-control-wrap">
                 <div className="form-file">
@@ -264,9 +262,9 @@ const FormFour = () => {
                     accept=".pdf"
                     onChange={(e) => {
                       if (e.target.files[0].size > 1048576) {
-                        toast("File size must not exceed 1MB");
                         inputAICTEApproval.current.value = "";
                         setAICTEApproval();
+                        toast("File size must not exceed 1MB");
                         return;
                       }
                       setAICTEApproval(e.target.files[0]);
@@ -275,6 +273,13 @@ const FormFour = () => {
                   />
                 </div>
               </div>
+            </td>
+            <td>
+              {collegeData?.Documents?.AICTEApproval == true && (
+                <button onClick={() => handleDocDelete("AICTEApproval")} className="btn btn-sm btn-outline-danger">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+              )}
             </td>
           </tr>
           <tr>
@@ -290,17 +295,7 @@ const FormFour = () => {
                 </div>
               )}
             </td>
-            {/* <td>
-              {collegeData?.Documents?.AUAffiliation == true ? (
-                <Button className="btn btn-sm btn-success">
-                  <i class="bi bi-check-lg"></i>
-                </Button>
-              ) : (
-                <Button disabled className="btn btn-sm btn-dark">
-                  <i class="bi bi-x-lg"></i>
-                </Button>
-              )}
-            </td> */}
+
             <td>
               <div className="form-control-wrap">
                 <div className="form-file">
@@ -338,9 +333,9 @@ const FormFour = () => {
                     accept=".pdf"
                     onChange={(e) => {
                       if (e.target.files[0].size > 1048576) {
-                        toast("File size must not exceed 1MB");
                         inputAUAffiliation.current.value = "";
                         setAUAffiliation();
+                        toast("File size must not exceed 1MB");
                         return;
                       }
                       setAUAffiliation(e.target.files[0]);
@@ -349,6 +344,13 @@ const FormFour = () => {
                   />
                 </div>
               </div>
+            </td>
+            <td>
+              {collegeData?.Documents?.AUAffiliation == true && (
+                <button onClick={() => handleDocDelete("AUAffiliation")} className="btn btn-sm btn-outline-danger">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+              )}
             </td>
           </tr>
           <tr>
@@ -364,17 +366,6 @@ const FormFour = () => {
                 </div>
               )}
             </td>
-            {/* <td>
-              {collegeData?.Documents?.Accredation == true ? (
-                <Button className="btn btn-sm btn-success">
-                  <i class="bi bi-check-lg"></i>
-                </Button>
-              ) : (
-                <Button disabled className="btn btn-sm btn-dark">
-                  <i class="bi bi-x-lg"></i>
-                </Button>
-              )}
-            </td> */}
             <td>
               <div className="form-control-wrap">
                 <div className="form-file">
@@ -412,9 +403,9 @@ const FormFour = () => {
                     accept=".pdf"
                     onChange={(e) => {
                       if (e.target.files[0].size > 1048576) {
-                        toast("File size must not exceed 1MB");
                         inputAccredation.current.value = "";
                         setAccredation();
+                        toast("File size must not exceed 1MB");
                         return;
                       }
                       setAccredation(e.target.files[0]);
@@ -423,6 +414,13 @@ const FormFour = () => {
                   />
                 </div>
               </div>
+            </td>
+            <td>
+              {collegeData?.Documents?.Accredation == true && (
+                <button onClick={() => handleDocDelete("Accredation")} className="btn btn-sm btn-outline-danger">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+              )}
             </td>
           </tr>
           <tr>
@@ -438,17 +436,6 @@ const FormFour = () => {
                 </div>
               )}
             </td>
-            {/* <td>
-              {collegeData?.Documents?.Autonomous == true ? (
-                <Button className="btn btn-sm btn-success">
-                  <i class="bi bi-check-lg"></i>
-                </Button>
-              ) : (
-                <Button disabled className="btn btn-sm btn-dark">
-                  <i class="bi bi-x-lg"></i>
-                </Button>
-              )}
-            </td> */}
             <td>
               <div className="form-control-wrap">
                 <div className="form-file">
@@ -486,9 +473,9 @@ const FormFour = () => {
                     accept=".pdf"
                     onChange={(e) => {
                       if (e.target.files[0].size > 1048576) {
-                        toast("File size must not exceed 1MB");
                         inputAutonomous.current.value = "";
                         setAutonomous();
+                        toast("File size must not exceed 1MB");
                         return;
                       }
                       setAutonomous(e.target.files[0]);
@@ -498,6 +485,13 @@ const FormFour = () => {
                 </div>
               </div>
             </td>
+            <td>
+              {collegeData?.Documents?.Autonomous == true && (
+                <button onClick={() => handleDocDelete("Autonomous")} className="btn btn-sm btn-outline-danger">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+              )}
+            </td>
           </tr>
         </tbody>
       </table>
@@ -506,6 +500,7 @@ const FormFour = () => {
         {" "}
         Submit{" "}
       </Button>
+      <ToastContainer />
     </Block>
   );
 };
