@@ -43,7 +43,7 @@ const FormThree = () => {
   const updateDeclarationFlag = async (value) => {
     setdeclarationFlag(value);
     const response = await axios.post(
-      "http://localhost:5555/declaration",
+      `${backendURL}//declaration`,
       { flag: value },
       {
         headers: {
