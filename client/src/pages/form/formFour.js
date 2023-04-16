@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "reactstrap";
 import { Block } from "../../components/block/Block";
 import axios from "axios";
@@ -24,37 +24,47 @@ const FormFour = () => {
   const handleSubmit = async () => {
     try {
       var formData = new FormData();
-      if (seatMatrix) {
+      if (seatMatrix.length == undefined) {
         formData.append("seatMatrix", seatMatrix);
       }
-      if (AICTEApproval) {
+      if (AICTEApproval.length == undefined) {
         formData.append("AICTEApproval", AICTEApproval);
       }
-      if (AUAffiliation) {
+      if (AUAffiliation.length == undefined) {
         formData.append("AUAffiliation", AUAffiliation);
       }
-      if (Accredation) {
+      if (Accredation.length == undefined) {
         formData.append("Accredation", Accredation);
       }
-      if (Autonomous) {
+      if (Autonomous.length == undefined) {
         formData.append("Autonomous", Autonomous);
       }
-      const res = await axios.post(`${backendURL}/DocUpload`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-      });
-      if (res.data.status) {
-        const notify = () => {
-          toast("Data added successfully");
-        };
-        notify();
-        setSeatMatrix({});
-        setAICTEApproval({});
-        setAUAffiliation({});
-        setAccredation({});
-        setAutonomous({});
+      let Keys = [];
+      for (var [key, value] of formData.entries()) {
+        Keys.push(key);
+      }
+      if (Keys.length > 0) {
+        const res = await axios.post(`${backendURL}/DocUpload`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        });
+        if (res.data.status) {
+          setSeatMatrix();
+          inputseatMatrix.current.value = "";
+          setAICTEApproval();
+          inputAICTEApproval.current.value = "";
+          setAUAffiliation();
+          inputAUAffiliation.current.value = "";
+          setAccredation();
+          inputAccredation.current.value = "";
+          setAutonomous();
+          inputAutonomous.current.value = "";
+        }
+      } else {
+        toast("Select atleast one field");
+        return;
       }
     } catch (error) {
       console.log(error);
@@ -77,30 +87,56 @@ const FormFour = () => {
     setSignedUrls(url.data);
   };
 
-
   useEffect(() => {
-    getCollegeData();
     getDocUrls();
   }, []);
 
+  useEffect(() => {
+    getCollegeData();
+  }, [collegeData]);
+
   const GenerateButtons = ({ type }) => {
     return (
-      <a class="btn btn-success" style={{ textDecoration: "none" }} href={signedUrls[`${type}.pdf`]} target="_blank">
-        <i style={{ fontSize: "20px", fontWeight: "bold" }} class="bi bi-download"></i> {/* </Button> */}
+      <a
+        class="btn btn-sm btn-primary"
+        style={{ textDecoration: "none" }}
+        href={signedUrls[`${type}.pdf`]}
+        target="_blank"
+      >
+        <span>Click here to download </span>
+        <i style={{ fontSize: "20px", fontWeight: "bold", marginLeft: "5px" }} class="bi bi-download"></i>
       </a>
+    );
+  };
+
+  const inputseatMatrix = useRef(null);
+  const inputAICTEApproval = useRef(null);
+  const inputAUAffiliation = useRef(null);
+  const inputAccredation = useRef(null);
+  const inputAutonomous = useRef(null);
+
+  const handleDocDelete = async (type) => {
+    const response = await axios.post(
+      `${backendURL}/deleteDoc`,
+      { key: type },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      }
     );
   };
 
   return (
     <Block size="lg" className="container-fluid align-items-center justify-content-center">
-      <ToastContainer />
       <table className="table">
         <thead>
           <tr>
             <th scope="col">#</th>
             <th scope="col">Details</th>
             <th scope="col">PDF Download</th>
-            <th scope="col">PDF Upload</th>
+            <th scope="col">Upload/Update</th>
+            <th scope="col">Delete</th>
           </tr>
         </thead>
         <tbody>
@@ -111,22 +147,68 @@ const FormFour = () => {
               {collegeData?.Documents?.seatMatrix == true ? (
                 <GenerateButtons type={"seatMatrix"} />
               ) : (
-                <div>Upload first</div>
+                <div>
+                  No document available
+                  <br /> Upload first
+                </div>
               )}
             </td>
+
             <td>
               <div className="form-control-wrap">
                 <div className="form-file">
+                  {collegeData?.Documents?.seatMatrix == true ? (
+                    <button
+                      style={{ marginRight: "5px" }}
+                      class="btn btn-sm btn-outline-dark"
+                      onClick={() => inputseatMatrix.current.click()}
+                    >
+                      Update
+                    </button>
+                  ) : (
+                    <button
+                      style={{ marginRight: "5px" }}
+                      class="btn btn-sm btn-outline-dark"
+                      onClick={() => inputseatMatrix.current.click()}
+                    >
+                      Add
+                    </button>
+                  )}
+
+                  {seatMatrix && (
+                    <button
+                      class="btn btn-sm btn-outline-dark"
+                      onClick={() => {
+                        inputseatMatrix.current.value = "";
+                        setSeatMatrix();
+                      }}
+                    >
+                      Remove
+                    </button>
+                  )}
                   <input
-                    id="seatMatrix"
-                    onChange={(e) => setSeatMatrix(e.target.files[0])}
                     type="file"
                     accept=".pdf"
-                    name="file"
-                    className="form-control"
+                    onChange={(e) => {
+                      if (e.target.files[0].size > 1048576) {
+                        inputseatMatrix.current.value = "";
+                        setSeatMatrix();
+                        toast("File size must not exceed 1MB", { autoClose: 3000 });
+                        return;
+                      }
+                      setSeatMatrix(e.target.files[0]);
+                    }}
+                    ref={inputseatMatrix}
                   />
                 </div>
               </div>
+            </td>
+            <td>
+              {collegeData?.Documents?.seatMatrix == true && (
+                <button onClick={() => handleDocDelete("seatMatrix")} className="btn btn-sm btn-outline-danger">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+              )}
             </td>
           </tr>
           <tr>
@@ -136,21 +218,68 @@ const FormFour = () => {
               {collegeData?.Documents?.AICTEApproval == true ? (
                 <GenerateButtons type={"AICTEApproval"} />
               ) : (
-                <div>Upload first</div>
+                <div>
+                  No document available
+                  <br /> Upload first
+                </div>
               )}
             </td>
+
             <td>
               <div className="form-control-wrap">
                 <div className="form-file">
+                  {collegeData?.Documents?.AICTEApproval == true ? (
+                    <button
+                      style={{ marginRight: "5px" }}
+                      class="btn btn-sm btn-outline-dark"
+                      onClick={() => inputAICTEApproval.current.click()}
+                    >
+                      Update
+                    </button>
+                  ) : (
+                    <button
+                      style={{ marginRight: "5px" }}
+                      class="btn btn-sm btn-outline-dark"
+                      onClick={() => inputAICTEApproval.current.click()}
+                    >
+                      Add
+                    </button>
+                  )}
+
+                  {AICTEApproval && (
+                    <button
+                      class="btn btn-sm btn-outline-dark"
+                      onClick={() => {
+                        inputAICTEApproval.current.value = "";
+                        setAICTEApproval();
+                      }}
+                    >
+                      Remove
+                    </button>
+                  )}
                   <input
-                    id="AICTE"
-                    onChange={(e) => setAICTEApproval(e.target.files[0])}
                     type="file"
                     accept=".pdf"
-                    className="form-control"
+                    onChange={(e) => {
+                      if (e.target.files[0].size > 1048576) {
+                        inputAICTEApproval.current.value = "";
+                        setAICTEApproval();
+                        toast("File size must not exceed 1MB");
+                        return;
+                      }
+                      setAICTEApproval(e.target.files[0]);
+                    }}
+                    ref={inputAICTEApproval}
                   />
                 </div>
               </div>
+            </td>
+            <td>
+              {collegeData?.Documents?.AICTEApproval == true && (
+                <button onClick={() => handleDocDelete("AICTEApproval")} className="btn btn-sm btn-outline-danger">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+              )}
             </td>
           </tr>
           <tr>
@@ -160,21 +289,68 @@ const FormFour = () => {
               {collegeData?.Documents?.AUAffiliation == true ? (
                 <GenerateButtons type={"AUAffiliation"} />
               ) : (
-                <div>Upload first</div>
+                <div>
+                  No document available
+                  <br /> Upload first
+                </div>
               )}
             </td>
+
             <td>
               <div className="form-control-wrap">
                 <div className="form-file">
+                  {collegeData?.Documents?.AUAffiliation == true ? (
+                    <button
+                      style={{ marginRight: "5px" }}
+                      class="btn btn-sm btn-outline-dark"
+                      onClick={() => inputAUAffiliation.current.click()}
+                    >
+                      Update
+                    </button>
+                  ) : (
+                    <button
+                      style={{ marginRight: "5px" }}
+                      class="btn btn-sm btn-outline-dark"
+                      onClick={() => inputAUAffiliation.current.click()}
+                    >
+                      Add
+                    </button>
+                  )}
+
+                  {AUAffiliation && (
+                    <button
+                      class="btn btn-sm btn-outline-dark"
+                      onClick={() => {
+                        inputAUAffiliation.current.value = "";
+                        setAUAffiliation();
+                      }}
+                    >
+                      Remove
+                    </button>
+                  )}
                   <input
-                    id="AUAffiliation"
                     type="file"
                     accept=".pdf"
-                    onChange={(e) => setAUAffiliation(e.target.files[0])}
-                    className="form-control"
+                    onChange={(e) => {
+                      if (e.target.files[0].size > 1048576) {
+                        inputAUAffiliation.current.value = "";
+                        setAUAffiliation();
+                        toast("File size must not exceed 1MB");
+                        return;
+                      }
+                      setAUAffiliation(e.target.files[0]);
+                    }}
+                    ref={inputAUAffiliation}
                   />
                 </div>
               </div>
+            </td>
+            <td>
+              {collegeData?.Documents?.AUAffiliation == true && (
+                <button onClick={() => handleDocDelete("AUAffiliation")} className="btn btn-sm btn-outline-danger">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+              )}
             </td>
           </tr>
           <tr>
@@ -184,21 +360,67 @@ const FormFour = () => {
               {collegeData?.Documents?.Accredation == true ? (
                 <GenerateButtons type={"Accredation"} />
               ) : (
-                <div>Upload first</div>
+                <div>
+                  No document available
+                  <br /> Upload first
+                </div>
               )}
             </td>
             <td>
               <div className="form-control-wrap">
                 <div className="form-file">
+                  {collegeData?.Documents?.Accredation == true ? (
+                    <button
+                      style={{ marginRight: "5px" }}
+                      class="btn btn-sm btn-outline-dark"
+                      onClick={() => inputAccredation.current.click()}
+                    >
+                      Update
+                    </button>
+                  ) : (
+                    <button
+                      style={{ marginRight: "5px" }}
+                      class="btn btn-sm btn-outline-dark"
+                      onClick={() => inputAccredation.current.click()}
+                    >
+                      Add
+                    </button>
+                  )}
+
+                  {Accredation && (
+                    <button
+                      class="btn btn-sm btn-outline-dark"
+                      onClick={() => {
+                        inputAccredation.current.value = "";
+                        setAccredation();
+                      }}
+                    >
+                      Remove
+                    </button>
+                  )}
                   <input
-                    id="Accredation"
-                    onChange={(e) => setAccredation(e.target.files[0])}
                     type="file"
                     accept=".pdf"
-                    className="form-control"
+                    onChange={(e) => {
+                      if (e.target.files[0].size > 1048576) {
+                        inputAccredation.current.value = "";
+                        setAccredation();
+                        toast("File size must not exceed 1MB");
+                        return;
+                      }
+                      setAccredation(e.target.files[0]);
+                    }}
+                    ref={inputAccredation}
                   />
                 </div>
               </div>
+            </td>
+            <td>
+              {collegeData?.Documents?.Accredation == true && (
+                <button onClick={() => handleDocDelete("Accredation")} className="btn btn-sm btn-outline-danger">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+              )}
             </td>
           </tr>
           <tr>
@@ -208,21 +430,67 @@ const FormFour = () => {
               {collegeData?.Documents?.Autonomous == true ? (
                 <GenerateButtons type={"Autonomous"} />
               ) : (
-                <div>Upload first</div>
+                <div>
+                  No document available
+                  <br /> Upload first
+                </div>
               )}
             </td>
             <td>
               <div className="form-control-wrap">
                 <div className="form-file">
+                  {collegeData?.Documents?.Autonomous == true ? (
+                    <button
+                      style={{ marginRight: "5px" }}
+                      class="btn btn-sm btn-outline-dark"
+                      onClick={() => inputAutonomous.current.click()}
+                    >
+                      Update
+                    </button>
+                  ) : (
+                    <button
+                      style={{ marginRight: "5px" }}
+                      class="btn btn-sm btn-outline-dark"
+                      onClick={() => inputAutonomous.current.click()}
+                    >
+                      Add
+                    </button>
+                  )}
+
+                  {Autonomous && (
+                    <button
+                      class="btn btn-sm btn-outline-dark"
+                      onClick={() => {
+                        inputAutonomous.current.value = "";
+                        setAutonomous();
+                      }}
+                    >
+                      Remove
+                    </button>
+                  )}
                   <input
-                    id="Autonomous"
-                    onChange={(e) => setAutonomous(e.target.files[0])}
                     type="file"
                     accept=".pdf"
-                    className="form-control"
+                    onChange={(e) => {
+                      if (e.target.files[0].size > 1048576) {
+                        inputAutonomous.current.value = "";
+                        setAutonomous();
+                        toast("File size must not exceed 1MB");
+                        return;
+                      }
+                      setAutonomous(e.target.files[0]);
+                    }}
+                    ref={inputAutonomous}
                   />
                 </div>
               </div>
+            </td>
+            <td>
+              {collegeData?.Documents?.Autonomous == true && (
+                <button onClick={() => handleDocDelete("Autonomous")} className="btn btn-sm btn-outline-danger">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+              )}
             </td>
           </tr>
         </tbody>
@@ -232,6 +500,7 @@ const FormFour = () => {
         {" "}
         Submit{" "}
       </Button>
+      <ToastContainer />
     </Block>
   );
 };

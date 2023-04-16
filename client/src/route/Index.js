@@ -12,8 +12,6 @@ const Pages = () => {
   return (
     <Suspense fallback={<div />}>
       <Switch>
-      
-        
         <Route exact path={`${process.env.PUBLIC_URL}/`} component={Homepage}></Route>
         <Route component={RedirectAs404}></Route>
       </Switch>

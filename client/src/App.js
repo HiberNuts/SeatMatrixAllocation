@@ -8,6 +8,7 @@ import Error504Modern from "./pages/error/504-modern";
 import Login from "./pages/auth/Login";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import PdfDisplay from "./pages/PdfDisplay";
 const App = (props) => {
   return (
     <Switch>
@@ -17,6 +18,7 @@ const App = (props) => {
       {/*Error Pages*/}
       <Route exact path={`${process.env.PUBLIC_URL}/504`} component={Error504Modern}></Route>
       <Route exact path={`${process.env.PUBLIC_URL}/404`} component={Error404Modern}></Route>
+      <Route exact path={"/pdf"} component={PdfDisplay}></Route>
 
       {/*Main Routes*/}
       <PrivateRoute exact path="" component={Layout}></PrivateRoute>

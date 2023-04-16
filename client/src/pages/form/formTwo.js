@@ -7,7 +7,7 @@ import { backendURL } from "../../backendurl";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Select from "react-select";
-const CourseList = [
+const StaticCourseList = [
   { label: "ARTIFICIAL INTELLIGENCE AND DATA SCIENCE", value: "AD" },
   { label: "AERONAUTICAL ENGINEERING", value: "AE" },
   { label: "AGRICULTURAL ENGINEERING", value: "AG" },
@@ -128,7 +128,6 @@ const GOVTSeats = {
   TELUGU: 50,
   UNIV: 100,
   IRTT: 65,
-
 };
 const FormTwo = ({ alter, id }) => {
   const courseSchema = {
@@ -145,7 +144,7 @@ const FormTwo = ({ alter, id }) => {
   const { errors, register, handleSubmit } = useForm();
   const [errSurrender, seterrSurrender] = useState(false);
   const [clgCAT, setclgCAT] = useState("NM");
-  const [clgCode,setclgCode] = useState("");
+  const [CourseList, setCourseList] = useState(StaticCourseList);
   const onFormSubmit = (data) => {
     fetch(`${backendURL}/setCourseDetails`, {
       method: "Post",
@@ -193,13 +192,11 @@ const FormTwo = ({ alter, id }) => {
       .then((data) => {
         console.log(data);
         setCourse(data.CourseDetails ? data.CourseDetails : []);
-        removeCourseOnFetch(data.ccode);
-        if (data.ccode === '2709') {
-          setclgCAT("IRTT");
-        }
-        else {
-          setclgCAT(data.Category);
 
+        if (data.ccode == "2709") {
+          setclgCAT("IRTT");
+        } else {
+          setclgCAT(data.Category);
         }
         
       })
@@ -241,8 +238,7 @@ const FormTwo = ({ alter, id }) => {
   const handleCourseChange = (event, index) => {
     let data = [...Course];
     let ind = CourseList.indexOf(event);
-    if (ind !== -1)
-      CourseList.splice(ind, 1);
+    if (ind !== -1) CourseList.splice(ind, 1);
     if (data[index]["courseCode"]) {
       CourseList.splice(0, 0, data[index]["courseName"]);
     }
@@ -265,10 +261,8 @@ const FormTwo = ({ alter, id }) => {
     data[index]["Surrender"] = 0;
     if (data[index]["courseName"].label.includes("(SS)")) {
       data[index]["Govt"] = Math.floor(data[index]["intake"] * 0.01 * 70);
-
     } else {
       data[index]["Govt"] = Math.floor(data[index]["intake"] * 0.01 * GOVTSeats[clgCAT]);
-
     }
     data[index]["Management"] = data[index]["intake"] - data[index]["Govt"];
     data[index]["SWS"] = data[index]["Govt"];
@@ -297,7 +291,7 @@ const FormTwo = ({ alter, id }) => {
       // } else {
       //   data[index]["Govt"] = Math.floor(data[index]["intake"] * 0.01 * GOVTSeats[clgCAT]) + surrender;
       // }
-      data[index]["Management"] = data[index]["intake"] - data[index]["Govt"]-surrender;
+      data[index]["Management"] = data[index]["intake"] - data[index]["Govt"] - surrender;
       data[index]["SWS"] = data[index]["Govt"] + surrender;
 
       setCourse(data);
@@ -305,21 +299,24 @@ const FormTwo = ({ alter, id }) => {
   };
   const checkErr = () => {
     let val = true;
-    Course.forEach(e => {
-      if (e.Govt >= 0 && e.SWS === e.Govt + e.Surrender && e.Govt + e.Surrender + e.Management === e.intake && e.courseCode != null && e.accredation != null) {
+    Course.forEach((e) => {
+      if (
+        e.Govt >= 0 &&
+        e.SWS === e.Govt + e.Surrender &&
+        e.Govt + e.Surrender + e.Management === e.intake &&
+        e.courseCode != null &&
+        e.accredation != null
+      ) {
         val = val && true;
-      }
-      else {
-
+      } else {
         toast.error("Please Fill all Fields, to add New Course");
 
         val = val && false;
       }
-    })
+    });
     return val;
+  };
 
-
-  }
   const addCourse = () => {
     let data = [...Course];
     if (checkErr()) {
@@ -348,6 +345,8 @@ const FormTwo = ({ alter, id }) => {
     // if(checkErr())
     onFormSubmit(data);
   };
+
+  useEffect(() => {}, []);
 
   const AccredationOptions = [
     { value: "ACC", label: "Accredited" },

@@ -178,6 +178,30 @@ UserRouter.post(
   }
 );
 
+UserRouter.post("/deleteDoc", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
+  try {
+    const { key } = req.body;
+    console.log(key);
+    console.log(req.auth);
+    var params = { Bucket: "tneaseatmatrix", Key: `${req.auth.ccode}/${key}.pdf` };
+    s3.deleteObject(params, async function (err, data) {
+      if (err) res.json({ status: false }); // error
+      else {
+        const CollegeData = await users.findById(req.auth.id);
+        let document = CollegeData.Documents;
+        document[key] = false;
+        const College = await users.findByIdAndUpdate(req.auth.id, { Documents: document });
+        if (College) {
+          res.json({ status: true });
+        }
+      } // deleted
+    });
+  } catch (error) {
+    res.json({ status: false, error: error });
+    console.log(error);
+  }
+});
+
 UserRouter.get("/documents", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
   try {
     var params = {
