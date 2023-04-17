@@ -1,4 +1,4 @@
 # SeatMatrixAllocation
 
-frontend uri : https://tnea.netlify.app/
-backend uri : https://seatmatrixallocationbackend.onrender.com/
+frontend uri : http://seatmatrix.jeremyasirwaad.tech:3000
+backend uri : http://seatmatrix.jeremyasirwaad.tech:8080
