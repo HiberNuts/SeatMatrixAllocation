@@ -9,6 +9,22 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { PDFViewer } from "@react-pdf/renderer";
 import PdfDcoument from "../../utils/PdfUtils/generatorPdf";
+const FULLFORM = {
+  "CENTRAL GOVT": "CENTRAL GOVERNMENT",
+  CHRISTIAN: "CHRISTIAN",
+  GOVT: "GOVERNMENT",
+  "GOVT AIDED": "GOVERNMENT AIDED",
+  HINDI: "HINDI",
+  JAIN: "JAIN",
+  MALAYALAM: "MALAYALAM",
+  "MALAYALAM LINGUISTIC": "MALAYALAM LINGUISTIC",
+  MIN: "MINORITY",
+  MUSLIM: "MUSLIM",
+  NM: "NON MINORITY",
+  SOWRASHTRA: "SOWRASHTRA",
+  TELUGU: "TELUGU",
+  UNIV: "UNIVERSITY",
+};
 const FormOne = ({ alter, toggleIconTab }) => {
   const [loading, setLoading] = useState(true);
   const { errors, register, handleSubmit } = useForm();
@@ -97,7 +113,7 @@ const FormOne = ({ alter, toggleIconTab }) => {
         setLoading(false);
         setcollegeName(data.can);
         setcollegeCode(data.ccode);
-        setCollegeType(data.Category);
+        setCollegeType(FULLFORM[data.Category]);
         setpersonalDetailFlag(data.PersonalDetailFlag);
         setprincipalName(data.PrincipalName);
         setPhone(data.PhoneNumber);
@@ -186,7 +202,7 @@ const FormOne = ({ alter, toggleIconTab }) => {
                 </Label>
                 <div className="form-control-wrap">
                   <input
-                    disabled={!editFlag}
+                    
                     ref={register({ required: true })}
                     type="text"
                     id="fv-subject"
@@ -206,7 +222,7 @@ const FormOne = ({ alter, toggleIconTab }) => {
                 </Label>
                 <div className="form-control-wrap">
                   <input
-                    disabled={!editFlag}
+                 
                     ref={register({
                       required: true,
                       pattern: {
@@ -237,7 +253,6 @@ const FormOne = ({ alter, toggleIconTab }) => {
                 </Label>
                 <div className="form-control-wrap">
                   <input
-                    disabled={!editFlag}
                     ref={register({
                       required: true,
                       pattern: {
@@ -275,7 +290,7 @@ const FormOne = ({ alter, toggleIconTab }) => {
                         message: "Invalid District Name",
                       },
                     })}
-                    disabled={!editFlag}
+                    
                     type="text"
                     id="fv-district"
                     name="district"
@@ -310,7 +325,7 @@ const FormOne = ({ alter, toggleIconTab }) => {
                     id="fv-pincode"
                     name="pincode"
                     className="form-control"
-                    disabled={!editFlag}
+                   
                     onChange={(e) => (editFlag ? setPincode(e.target.value) : null)}
                     value={pincode}
                   />
@@ -335,7 +350,7 @@ const FormOne = ({ alter, toggleIconTab }) => {
                     })}
                     type="text"
                     id="fv-website"
-                    disabled={!editFlag}
+                    
                     name="website"
                     className="form-control"
                     onChange={(e) => (editFlag ? setWebsite(e.target.value) : null)}
@@ -350,7 +365,7 @@ const FormOne = ({ alter, toggleIconTab }) => {
             <Col md="6">
               <div className="form-group">
                 <Label className="form-label" htmlFor="fv-website">
-                  Website
+                  Autonomous Status
                 </Label>
 
                 <div className="form-control-select" style={{ width: "400px" }}>
@@ -358,7 +373,7 @@ const FormOne = ({ alter, toggleIconTab }) => {
                     id="autonomous"
                     name="autonomous"
                     classNamePrefix="react-select"
-                    isDisabled={!editFlag}
+                  
                     onChange={(e) => (editFlag ? setAutonomous(e) : null)}
                     options={AutonomousOptions}
                     value={Autonomous}

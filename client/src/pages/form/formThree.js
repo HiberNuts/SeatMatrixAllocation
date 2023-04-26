@@ -110,6 +110,9 @@ const FormThree = () => {
         <span style={{ color: "red" }}>*Important: </span>Please download the pdf from above and upload the same file in
         next section with principal signature in it.
       </div>
+      <button disabled={!declarationFlag} className="btn btn-danger">
+        Freeze
+      </button>
     </div>
   );
 };

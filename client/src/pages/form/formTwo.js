@@ -113,33 +113,34 @@ const SSCourse = [{ label: "APPAREL TECHNOLOGY (SS)", value: "AP" },
 { label: "ROBOTICS AND AUTOMATION (SS)", value: "RA" },
 { label: "TEXTILE TECHNOLOGY (SS)", value: "TT" }]
 const GOVTSeats = {
-  "CENTRAL GOVT": 50,
-  CHRISTIAN: 50,
-  GOVT: 100,
-  "GOVT AIDED": 100,
-  HINDI: 50,
-  JAIN: 50,
-  MALAYALAM: 50,
-  "MALAYALAM LINGUISTIC": 50,
-  MIN: 50,
-  MUSLIM: 50,
-  NM: 65,
-  SOWRASHTRA: 50,
-  TELUGU: 50,
-  UNIV: 100,
-  IRTT: 65,
+  "CENTRAL GOVT": 0.5,
+  CHRISTIAN: 0.5,
+  GOVT: 1,
+  "GOVT AIDED": 1,
+  HINDI: 0.5,
+  JAIN: 0.5,
+  MALAYALAM: 0.5,
+  "MALAYALAM LINGUISTIC": 0.5,
+  MIN: 0.5,
+  MUSLIM: 0.5,
+  NM: 0.65,
+  SOWRASHTRA: 0.5,
+  TELUGU: 0.5,
+  UNIV: 1,
+  IRTT: 0.65,
 
 };
-const FormTwo = ({ alter, id }) => {
+const FormTwo = ({ alter, toggleIconTab }) => {
   const courseSchema = {
     courseName: null,
     courseCode: null,
     accredation: null,
-    intake: 0,
-    Govt: 0,
-    Surrender: 0,
-    Management: 0,
-    SWS: 0,
+    intake: null,
+    Govt: null,
+    Surrender: null,
+    Management: null,
+    SWS: null,
+    Pending: 0
   };
   const [Course, setCourse] = useState([courseSchema]);
   const { errors, register, handleSubmit } = useForm();
@@ -253,47 +254,44 @@ const FormTwo = ({ alter, id }) => {
     setCourse(data);
   };
   const handleinTakeChange = (event, index) => {
-    let intake = parseInt(event.target.value);
+    let intake = Math.floor(event.target.value);
     if (intake < 0) intake = -intake;
-    if (!intake) intake = 0;
-    console.log(event);
     let data = [...Course];
-    data[index]["intake"] = intake;
+    data[index]["intake"] = Math.floor(intake);
     data[index]["Surrender"] = 0;
     if (data[index]["courseName"].label.includes("(SS)")) {
-      data[index]["Govt"] = Math.floor(data[index]["intake"] * 0.01 * 70);
-
+      data[index]["Govt"] = Math.floor(intake * 0.7);
+      data[index]["Pending"] = (intake * 0.7) % 1;
     } else {
-      data[index]["Govt"] = Math.floor(data[index]["intake"] * 0.01 * GOVTSeats[clgCAT]);
+      data[index]["Govt"] = Math.floor(intake * GOVTSeats[clgCAT]);
+      data[index]["Pending"] = (intake * GOVTSeats[clgCAT]) % 1;
+      console.log(intake * GOVTSeats[clgCAT]);
+    }
+    data[index]["Management"] = intake - data[index]["Govt"];
+    data[index]["SWS"] = data[index]["Govt"];
+    if (!intake) {
+      data[index]["Govt"] = 0;
+      data[index]["Management"] = 0;
+      data[index]["Surrender"] = 0;
+      data[index]["SWS"] = 0;
 
     }
-    data[index]["Management"] = data[index]["intake"] - data[index]["Govt"];
-    data[index]["SWS"] = data[index]["Govt"];
-
     setCourse(data);
   };
   const handleSurrenderChange = (event, index) => {
     let data = [...Course];
-    let surrender = parseInt(event.target.value);
-    if (!surrender) surrender = 0;
+    let surrender = Math.floor(event.target.value);
+    if (!surrender) {
+      surrender = 0;
+    }
     data[index]["Surrender"] = surrender;
     if (data[index]["Surrender"] > data[index]["Management"]) {
-      // if (data[index]["courseName"].label.includes("(SS)")) {
-      //   data[index]["Govt"] = Math.floor(data[index]["intake"] * 0.01 * 70);
-      // } else {
-      //   data[index]["Govt"] = Math.floor(data[index]["intake"] * 0.01 * GOVTSeats[clgCAT]);
-      // }
       data[index]["Management"] = data[index]["intake"] - data[index]["Govt"];
       data[index]["SWS"] = data[index]["Govt"];
-
       seterrSurrender(true);
+
     } else {
       seterrSurrender(false);
-      // if (data[index]["courseName"].label.includes("(SS)")) {
-      //   data[index]["Govt"] = Math.floor(data[index]["intake"] * 0.01 * 70) + surrender;
-      // } else {
-      //   data[index]["Govt"] = Math.floor(data[index]["intake"] * 0.01 * GOVTSeats[clgCAT]) + surrender;
-      // }
       data[index]["Management"] = data[index]["intake"] - data[index]["Govt"] - surrender;
       data[index]["SWS"] = data[index]["Govt"] + surrender;
 
@@ -310,6 +308,25 @@ const FormTwo = ({ alter, id }) => {
 
         toast.error("Please Fill all Fields, to add New Course");
 
+        val = val && false;
+      }
+    })
+    return val;
+
+
+  }
+  const proceedNextBool = () => {
+    let val = true;
+    Course.forEach(e => {
+      if (e.Govt >= 0 &&
+        e.SWS === e.Govt + e.Surrender &&
+        e.Govt + e.Surrender + e.Management === e.intake &&
+        e.courseCode != null &&
+        e.accredation != null &&
+        e.intake != 0) {
+        val = val && true;
+      }
+      else {
         val = val && false;
       }
     })
@@ -469,14 +486,25 @@ const FormTwo = ({ alter, id }) => {
             </Button>
           </Col>
         </Row>
-        <Button
-          type="submit"
-          onClick={handleSubmit((data) => updateHandler(data))}
-          className="text-center m-4"
-          color="success"
-        >
-          Save Progress
-        </Button>
+        <div className="d-flex justify-content-between">
+          <Button
+            type="submit"
+            onClick={() => { toggleIconTab("5"); }}
+            className="text-center m-4"
+            color="danger"
+          >
+            &lt; Back
+          </Button>
+          <Button
+            type="submit"
+            onClick={() => { handleSubmit((data) => updateHandler(data)); toggleIconTab("7"); }}
+            className="text-center m-4"
+            color="success"
+            disabled={!proceedNextBool()}
+          >
+            Proceed to Next &gt;
+          </Button>
+        </div>
       </Form>
     </React.Fragment>
   );
