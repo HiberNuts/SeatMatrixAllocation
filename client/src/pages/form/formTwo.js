@@ -225,7 +225,7 @@ const FormTwo = ({ alter, toggleIconTab }) => {
       CourseList.push(...SSCourse);
     }
     console.log(Course);
-    Course.forEach(element => {
+    Course?.forEach(element => {
       let ind = CourseList.findIndex(p => p.value === element.courseCode);
       if (ind !== -1)
         console.log(CourseList.splice(ind, 1));
