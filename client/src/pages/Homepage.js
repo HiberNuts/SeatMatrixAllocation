@@ -39,7 +39,7 @@ const Homepage = ({ ...props }) => {
                   className={classnames({ active: activeIconTab === "5" })}
                   onClick={(ev) => {
                     ev.preventDefault();
-                    // toggleIconTab("5");
+                    toggleIconTab("5");
                   }}
                 >
                   <Icon name="user-fill" /> <span>Personal Details</span>
@@ -52,7 +52,7 @@ const Homepage = ({ ...props }) => {
                   className={classnames({ active: activeIconTab === "6" })}
                   onClick={(ev) => {
                     ev.preventDefault();
-                    // toggleIconTab("6");
+                    toggleIconTab("6");
                   }}
                 >
                   <Icon name="book-fill" /> <span>Course Details</span>
@@ -65,7 +65,7 @@ const Homepage = ({ ...props }) => {
                   className={classnames({ active: activeIconTab === "7" })}
                   onClick={(ev) => {
                     ev.preventDefault();
-                    // toggleIconTab("7");
+                    toggleIconTab("7");
                   }}
                 >
                   <Icon name="check-fill-c" /> <span>Declaration</span>
@@ -78,7 +78,7 @@ const Homepage = ({ ...props }) => {
                   className={classnames({ active: activeIconTab === "8" })}
                   onClick={(ev) => {
                     ev.preventDefault();
-                    // toggleIconTab("8");
+                    toggleIconTab("8");
                   }}
                 >
                   <Icon name="upload" /> <span>Document Upload</span>

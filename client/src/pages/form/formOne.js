@@ -114,14 +114,14 @@ const FormOne = ({ alter, toggleIconTab }) => {
         setcollegeName(data.can);
         setcollegeCode(data.ccode);
         setCollegeType(FULLFORM[data.Category]);
-        setpersonalDetailFlag(data.PersonalDetailFlag);
-        setprincipalName(data.PrincipalName);
-        setPhone(data.PhoneNumber);
+        setpersonalDetailFlag(data?.PersonalDetailFlag);
+        setprincipalName(data?.PrincipalName);
+        setPhone(data?.PhoneNumber);
         setAutonomous(data.Autonomous ? AutonomousOptions[0] : AutonomousOptions[1]);
-        setDistrict(data.District);
-        setWebsite(data.Website);
-        setPincode(data.Pincode);
-        setEmail(data.Email);
+        setDistrict(data?.District);
+        setWebsite(data?.Website);
+        setPincode(data?.Pincode);
+        setEmail(data?.Email);
       })
       .catch((error) => {
         console.log(error);
@@ -136,6 +136,7 @@ const FormOne = ({ alter, toggleIconTab }) => {
     seteditFlag(false);
     onFormSubmit(data);
   };
+  console.log(editFlag);
   if (!loading)
     return (
       <React.Fragment>
@@ -202,7 +203,6 @@ const FormOne = ({ alter, toggleIconTab }) => {
                 </Label>
                 <div className="form-control-wrap">
                   <input
-                    
                     ref={register({ required: true })}
                     type="text"
                     id="fv-subject"
@@ -222,7 +222,6 @@ const FormOne = ({ alter, toggleIconTab }) => {
                 </Label>
                 <div className="form-control-wrap">
                   <input
-                 
                     ref={register({
                       required: true,
                       pattern: {
@@ -290,7 +289,6 @@ const FormOne = ({ alter, toggleIconTab }) => {
                         message: "Invalid District Name",
                       },
                     })}
-                    
                     type="text"
                     id="fv-district"
                     name="district"
@@ -325,7 +323,6 @@ const FormOne = ({ alter, toggleIconTab }) => {
                     id="fv-pincode"
                     name="pincode"
                     className="form-control"
-                   
                     onChange={(e) => (editFlag ? setPincode(e.target.value) : null)}
                     value={pincode}
                   />
@@ -350,7 +347,6 @@ const FormOne = ({ alter, toggleIconTab }) => {
                     })}
                     type="text"
                     id="fv-website"
-                    
                     name="website"
                     className="form-control"
                     onChange={(e) => (editFlag ? setWebsite(e.target.value) : null)}
@@ -373,7 +369,6 @@ const FormOne = ({ alter, toggleIconTab }) => {
                     id="autonomous"
                     name="autonomous"
                     classNamePrefix="react-select"
-                  
                     onChange={(e) => (editFlag ? setAutonomous(e) : null)}
                     options={AutonomousOptions}
                     value={Autonomous}
