@@ -249,18 +249,7 @@ UserRouter.post("/declaration", ejwt({ secret: secret, algorithms: ["HS256"] }),
   }
 });
 
-
-
 // *Route for admin panel dashboard - jermey*
-
-UserRouter.get("/list", async (req, res) => {
-  try {
-    const colleges = await users.find({});
-    res.json(colleges);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
 
 UserRouter.get("/list/college/:collegeCode", async (req, res) => {
   try {
@@ -271,28 +260,98 @@ UserRouter.get("/list/college/:collegeCode", async (req, res) => {
     res.status(500).json(err);
   }
 });
-
-UserRouter.get("/list/filled", async (req, res) => {
+UserRouter.get("/list/seats", async (req, res) => {
   try {
-    const college = await users.find({ DeclarationFlag: true });
+    let array = {};
+    let intake = 0;
+    let govt = 0;
+    let management = 0;
+    let sws = 0;
+    let freezeflag = 0;
+    let unfreezeflag = 0;
+    let personalDetail = 0;
+    let courseDetails = 0;
+    let declaration = 0;
+    let documentUploadFlag = 0;
+    const college = await users.find({});
+    console.log(college.length);
+    college.map((c) => {
+      if (c.FreezeFlag) {
+        freezeflag = freezeflag + 1;
+      } else {
+        unfreezeflag = unfreezeflag + 1;
+      }
+      if (c?.PersonalDetailFlag) {
+        personalDetail = personalDetail + 1;
+      }
+      if (c?.CourseDetails.length > 1) {
+        courseDetails = courseDetails + 1;
+      }
+      if (c?.DeclarationFlag) {
+        declaration = declaration + 1;
+      }
+      if (c?.DocumentUploadFlag) {
+        documentUploadFlag = documentUploadFlag + 1;
+      }
+      if (c.CourseDetails) {
+        c.CourseDetails.map((course) => {
+          intake = intake + course.intake;
+          govt = govt + course.Govt;
+          management = management + course.Management;
+          sws = sws + course.SWS;
+        });
+      }
+    });
+
+    res.json({
+      intake: intake,
+      govt: govt,
+      management: management,
+      sws: sws,
+      freezeflag: freezeflag,
+      unfreezeflag: unfreezeflag,
+      perd: personalDetail,
+      cour: courseDetails,
+      dec: declaration,
+      doc: documentUploadFlag,
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+UserRouter.get("/list/freeze", async (req, res) => {
+  try {
+    const college = await users.find({ FreezeFlag: true });
     res.json(college);
   } catch (err) {
     res.status(500).json(err);
   }
 });
-UserRouter.get("/list/notfilled", async (req, res) => {
+
+UserRouter.get("/list/notfreeze", async (req, res) => {
   try {
-    const college = await users.find({ DeclarationFlag: null });
+    // const college = await users.find({ FreezeFlag: null || false });
+    const college = await users.find({ $or: [{ FreezeFlag: false }, { FreezeFlag: { $exists: false } }] });
     res.json(college);
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
-UserRouter.get("/unlock/:collegeCode", async (req, res) => {
+UserRouter.post("/unlock/:collegeCode", async (req, res) => {
   try {
     const collegeCode = req.params.collegeCode;
     const college = await users.findOneAndUpdate({ ccode: collegeCode }, { FreezeFlag: false });
+    res.json(college);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+UserRouter.get("/lock/:collegeCode", async (req, res) => {
+  try {
+    const collegeCode = req.params.collegeCode;
+    const college = await users.findOneAndUpdate({ ccode: collegeCode }, { FreezeFlag: true });
     res.json(college);
   } catch (err) {
     res.status(500).json(err);
