@@ -57,12 +57,18 @@ const styles = StyleSheet.create({
     color: "red",
     fontSize: "12px",
   },
+  header: {
+    display: "flex",
+    flexDirection: "row",
+  },
 });
+
 const PdfDcoument = ({ collegeData }) => (
   <Document>
     <Page size="A4" style={styles.page}>
-      <View styles={styles.Center}>
+      <View styles={styles.header}>
         <Image style={styles.Logo} src={LogoDark2x} />
+        <Text style={styles.HeaderText}>Directorate of Technical Education - Chennai</Text>
         <Text style={styles.HeaderText}>Tamil Nadu Engineering Association</Text>
       </View>
       <View styles={styles.Center}>

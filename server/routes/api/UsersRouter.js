@@ -348,7 +348,7 @@ UserRouter.post("/unlock/:collegeCode", async (req, res) => {
     res.status(500).json(err);
   }
 });
-UserRouter.get("/lock/:collegeCode", async (req, res) => {
+UserRouter.post("/lock/:collegeCode", async (req, res) => {
   try {
     const collegeCode = req.params.collegeCode;
     const college = await users.findOneAndUpdate({ ccode: collegeCode }, { FreezeFlag: true });
