@@ -93,7 +93,7 @@ const FormFour = () => {
 
   useEffect(() => {
     getCollegeData();
-  }, [collegeData]);
+  }, []);
 
   const GenerateButtons = ({ type }) => {
     return (

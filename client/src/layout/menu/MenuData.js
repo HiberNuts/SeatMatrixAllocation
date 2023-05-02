@@ -4,8 +4,15 @@ const menu = [
     heading: "Dashboards",
   },
   {
-    icon: "home-fill",
-    text: "Home",
+    
+    icon: "book-fill",
+    text: "Booklet",
+    link: "/booklet",
+  }
+,
+  {
+    icon: "view-x3",
+    text: "Seat Matrix",
     link: "/",
   }
 ];

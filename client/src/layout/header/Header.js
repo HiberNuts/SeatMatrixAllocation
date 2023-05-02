@@ -6,6 +6,7 @@ import User from "./dropdown/user/User";
 import Notification from "./dropdown/notification/Notification";
 import HeaderSearch from "../header-search/HeaderSearch";
 
+
 const Header = ({ fixed, theme, className, setVisibility, ...props }) => {
   const headerClass = classNames({
     "nk-header": true,
@@ -18,24 +19,20 @@ const Header = ({ fixed, theme, className, setVisibility, ...props }) => {
     <div className={headerClass}>
       <div className="container-fluid">
         <div className="nk-header-wrap">
-          {/* <div className="nk-menu-trigger d-xl-none ms-n1">
+          <div className="nk-menu-trigger d-xl-none ms-n1">
             <Toggle
               className="nk-nav-toggle nk-quick-nav-icon d-xl-none ms-n1"
               icon="menu"
               click={props.sidebarToggle}
             />
-          </div> */}
-          <div className="nk-sidebar-brand">
+          </div>
+          <div className="nk-header-brand d-xl-none">
             <Logo />
           </div>
-          {/* <div className="nk-header-search ms-3 ms-xl-0">
-            <HeaderSearch />
-          </div> */}
-          <div className="nk-header-tools">
+        <div className="nk-header-tools">
             <ul className="nk-quick-nav">
-              {/* <li className="notification-dropdown me-n1"  onClick={() => setVisibility(false)}>
-                <Notification />
-              </li> */}
+
+          
               <li className="user-dropdown" onClick={() => setVisibility(false)}>
                 <User />
               </li>

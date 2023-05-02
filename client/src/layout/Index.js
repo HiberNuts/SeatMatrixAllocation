@@ -9,7 +9,7 @@ import classNames from "classnames";
 const Layout = () => {
   //Sidebar
   const [mobileView, setMobileView] = useState();
-  const [visibility, setVisibility] = useState(false);
+  const [visibility, setVisibility] = useState(true);
   const [themeState] = useState({
     main: "default",
     sidebar: "white",
@@ -71,6 +71,14 @@ const Layout = () => {
       <Head title="Loading" />
       <div className="nk-app-root">
         <div className="nk-main">
+          <Sidebar
+            
+            sidebarToggle={toggleSidebar}
+            fixed
+            mobileView={mobileView}
+            theme={themeState.sidebar}
+            className={sidebarClass}
+          />
           {visibility && mobileView && <div className="nk-sidebar-overlay" onClick={toggleSidebar}></div>}
           <div className="nk-wrap">
             <Header sidebarToggle={toggleSidebar} fixed setVisibility={setVisibility} theme={themeState.header} />
