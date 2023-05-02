@@ -11,7 +11,6 @@ const FormThree = () => {
   const [collegeName, setcollegeName] = useState();
   const [principalName, setprincipalName] = useState();
   const [declarationFlag, setdeclarationFlag] = useState(false);
-  console.log(collegeData);
 
   const getCollegeInfo = async () => {
     fetch(`${backendURL}/collegeData`, {
@@ -26,7 +25,6 @@ const FormThree = () => {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         setcollegeData(data);
         setcollegeName(data.can);
         setprincipalName(data.PrincipalName);

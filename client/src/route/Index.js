@@ -1,7 +1,7 @@
 import React, { Suspense, useLayoutEffect } from "react";
 import { Switch, Route } from "react-router-dom";
 import { RedirectAs404 } from "../utils/Utils";
-
+import Booklet from "../pages/Booklet";
 import Homepage from "../pages/Homepage";
 import PdfDisplay from "../pages/PdfDisplay";
 
@@ -15,6 +15,8 @@ const Pages = () => {
       <Switch>
         <Route exact path={"/pdf"} component={PdfDisplay}></Route>
         <Route exact path={`${process.env.PUBLIC_URL}/`} component={Homepage}></Route>
+        <Route exact path={`${process.env.PUBLIC_URL}/booklet`} component={Booklet}></Route>
+
         <Route component={RedirectAs404}></Route>
       </Switch>
     </Suspense>

@@ -134,7 +134,70 @@ UserRouter.post("/personalDetail", ejwt({ secret: secret, algorithms: ["HS256"] 
     res.status(500).json(err);
   }
 });
-
+UserRouter.post("/bookletData", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
+  try {
+    const { Booklet } = req.body;
+    console.log(req.body);
+    if (!Booklet) {
+      res.json({ status: false, message: "incomplete body set" });
+    } else {
+      const user = await users.findByIdAndUpdate(req.auth.id, {
+        'Booklet.Personal': Booklet
+      });
+      res.json({ status: true });
+    }
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+UserRouter.post("/bankData", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
+  try {
+    const { BankDetails } = req.body;
+    console.log(req.body);
+    if (!BankDetails) {
+      res.json({ status: false, message: "incomplete body set" });
+    } else {
+      const user = await users.findByIdAndUpdate(req.auth.id, {
+        'Booklet.BankDetails': BankDetails
+      });
+      res.json({ status: true });
+    }
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+UserRouter.post("/bookletCourse", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
+  try {
+    const { CourseDetails } = req.body;
+    console.log(req.body);
+    if (!CourseDetails) {
+      res.json({ status: false, message: "incomplete body set" });
+    } else {
+      const user = await users.findByIdAndUpdate(req.auth.id, {
+        'Booklet.CourseDetails': CourseDetails
+      });
+      res.json({ status: true });
+    }
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+UserRouter.post("/bookletInfrastructre", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
+  try {
+    const { Infra } = req.body;
+    console.log(req.body);
+    if (!Infra) {
+      res.json({ status: false, message: "incomplete body set" });
+    } else {
+      const user = await users.findByIdAndUpdate(req.auth.id, {
+        'Booklet.Infrastructure': Infra
+      });
+      res.json({ status: true });
+    }
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 UserRouter.post(
   "/DocUpload",
   multipleUpload,

@@ -27,7 +27,6 @@ const Login = () => {
   const toggleForm = () => setModalForm(!modalForm);
   const [collegeCode, setcollegeCode] = useState("");
   const [collegeCodeError, setcollegeCodeError] = useState(false);
-  console.log("colegecoe", collegeCode);
 
   const onFormSubmit = (formData) => {
     setcollegeCode(formData.name);

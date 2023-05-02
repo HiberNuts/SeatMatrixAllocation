@@ -112,35 +112,15 @@ const SSCourse = [{ label: "APPAREL TECHNOLOGY (SS)", value: "AP" },
 { label: "PRODUCTION ENGINEERING (SANDWICH) (SS)", value: "PS" },
 { label: "ROBOTICS AND AUTOMATION (SS)", value: "RA" },
 { label: "TEXTILE TECHNOLOGY (SS)", value: "TT" }]
-const GOVTSeats = {
-  "CENTRAL GOVT": 0.5,
-  CHRISTIAN: 0.5,
-  GOVT: 1,
-  "GOVT AIDED": 1,
-  HINDI: 0.5,
-  JAIN: 0.5,
-  MALAYALAM: 0.5,
-  "MALAYALAM LINGUISTIC": 0.5,
-  MIN: 0.5,
-  MUSLIM: 0.5,
-  NM: 0.65,
-  SOWRASHTRA: 0.5,
-  TELUGU: 0.5,
-  UNIV: 1,
-  IRTT: 0.65,
-
-};
-const FormTwo = ({ alter, toggleIconTab }) => {
+const CourseDetails = ({ alter, toggleIconTab }) => {
   const courseSchema = {
     courseName: null,
     courseCode: null,
     accredation: null,
     intake: null,
-    Govt: null,
-    Surrender: null,
-    Management: null,
-    SWS: null,
-    Pending: 0
+    year: null,
+    accUpto: null
+
   };
   const [Course, setCourse] = useState([courseSchema]);
   const { errors, register, handleSubmit } = useForm();
@@ -148,7 +128,8 @@ const FormTwo = ({ alter, toggleIconTab }) => {
   const [clgCAT, setclgCAT] = useState("NM");
   const [clgCode, setclgCode] = useState("");
   const onFormSubmit = (data) => {
-    fetch(`${backendURL}/setCourseDetails`, {
+    console.log(Course)
+    fetch(`${backendURL}/bookletCourse`, {
       method: "Post",
       headers: {
         "Content-Type": "application/json",
@@ -165,9 +146,9 @@ const FormTwo = ({ alter, toggleIconTab }) => {
         return response.json();
       })
       .then((data) => {
-    
+
         if (data.status) {
-       
+
           const notify = () => {
             toast.success("Data added successfully");
           };
@@ -192,16 +173,10 @@ const FormTwo = ({ alter, toggleIconTab }) => {
         return response.json();
       })
       .then((data) => {
-       
-        setCourse(data.CourseDetails ? data.CourseDetails : []);
-        if (data.ccode === '2709') {
-          setclgCAT("IRTT");
-        }
-        else {
-          setclgCAT(data.Category);
-
-        }
-        removeCourseOnFetch(data.CourseDetails, data.ccode);
+        console.log(data);
+        setCourse(data.Booklet.CourseDetails ? data.Booklet.CourseDetails : [courseSchema]);
+        setclgCAT(data.Category);
+        removeCourseOnFetch(data.Booklet.CourseDetails, data.ccode);
 
       })
       .catch((error) => {
@@ -224,18 +199,14 @@ const FormTwo = ({ alter, toggleIconTab }) => {
     if (["1", "2", "4", "2006", "2007", "5008"].includes(clgCode)) {
       CourseList.push(...SSCourse);
     }
-   
+
     Course?.forEach(element => {
       let ind = CourseList.findIndex(p => p.value === element.courseCode);
       if (ind !== -1)
         CourseList.splice(ind, 1);
     });
   }
-  const handleFormChange = (event, index) => {
-    let data = [...Course];
-    data[index][event.target.name] = event.target.value;
-    setCourse(data);
-  };
+
   const handleCourseChange = (event, index) => {
     let data = [...Course];
     let ind = CourseList.indexOf(event);
@@ -254,60 +225,29 @@ const FormTwo = ({ alter, toggleIconTab }) => {
     setCourse(data);
   };
   const handleinTakeChange = (event, index) => {
-    let intake = Math.floor(event.target.value);
-    if (intake < 0) intake = -intake;
     let data = [...Course];
-    data[index]["intake"] = Math.floor(intake);
-    data[index]["Surrender"] = 0;
-    if (data[index]["courseName"].label.includes("(SS)")) {
-      data[index]["Govt"] = Math.floor(intake * 0.7);
-      data[index]["Pending"] = (intake * 0.7) % 1;
-    } else {
-      data[index]["Govt"] = Math.floor(intake * GOVTSeats[clgCAT]);
-      data[index]["Pending"] = (intake * GOVTSeats[clgCAT]) % 1;
-      console.log(intake * GOVTSeats[clgCAT]);
-    }
-    data[index]["Management"] = intake - data[index]["Govt"];
-    data[index]["SWS"] = data[index]["Govt"];
-    if (!intake) {
-      data[index]["Govt"] = 0;
-      data[index]["Management"] = 0;
-      data[index]["Surrender"] = 0;
-      data[index]["SWS"] = 0;
-
-    }
+    data[index]["intake"] = event.target.value;
+    setCourse(data);
+    console.log(event.value);
+  };
+  const handlevalidChange = (event, index) => {
+    let data = [...Course];
+    data[index]["accUpto"] = event.target.value;
     setCourse(data);
   };
-  const handleSurrenderChange = (event, index) => {
+  const handleyearChange = (event, index) => {
     let data = [...Course];
-    let surrender = Math.floor(event.target.value);
-    if (!surrender) {
-      surrender = 0;
-    }
-    data[index]["Surrender"] = surrender;
-    if (data[index]["Surrender"] > data[index]["Management"]) {
-      data[index]["Management"] = data[index]["intake"] - data[index]["Govt"];
-      data[index]["SWS"] = data[index]["Govt"];
-      seterrSurrender(true);
-
-    } else {
-      seterrSurrender(false);
-      data[index]["Management"] = data[index]["intake"] - data[index]["Govt"] - surrender;
-      data[index]["SWS"] = data[index]["Govt"] + surrender;
-
-      setCourse(data);
-    }
-  };
+    data[index]["year"] = event.target.value;
+    setCourse(data);
+  }
   const checkErr = () => {
     let val = true;
     Course.forEach(e => {
-      if (e.Govt >= 0 && e.SWS === e.Govt + e.Surrender && e.Govt + e.Surrender + e.Management === e.intake && e.courseCode != null && e.accredation != null && e.intake != 0) {
+      if (e.courseCode != null && e.accredation != null && e.intake != 0 && e.year != 0 && e.valid != 0) {
         val = val && true;
       }
       else {
-
         toast.error("Please Fill all Fields, to add New Course");
-
         val = val && false;
       }
     })
@@ -318,12 +258,7 @@ const FormTwo = ({ alter, toggleIconTab }) => {
   const proceedNextBool = () => {
     let val = true;
     Course.forEach(e => {
-      if (e.Govt >= 0 &&
-        e.SWS === e.Govt + e.Surrender &&
-        e.Govt + e.Surrender + e.Management === e.intake &&
-        e.courseCode != null &&
-        e.accredation != null &&
-        e.intake != 0) {
+      if (e.courseCode != null && e.accredation != null && e.intake != 0 && e.year != 0 && e.valid != 0) {
         val = val && true;
       }
       else {
@@ -378,14 +313,12 @@ const FormTwo = ({ alter, toggleIconTab }) => {
               <thead>
                 <tr>
                   <th scope="col">#</th>
-                  <th scope="col">Course Name</th>
-                  <th scope="col">Course Code</th>
-                  <th scope="col">Accreditation</th>
-                  <th scope="col">Santioned Intake</th>
-                  <th scope="col">Govt</th>
-                  <th scope="col">Surrender</th>
-                  <th scope="col">Management</th>
-                  <th scope="col">SWS</th>
+                  <th scope="col">Branch Name</th>
+                  <th scope="col">Branch Code</th>
+                  <th scope="col">Approved Intake</th>
+                  <th scope="col">Year of Starting</th>
+                  <th scope="col">NBA Accredited</th>
+                  <th scope="col">Accredation Upto</th>
                   <th scope="col">Action</th>
                 </tr>
               </thead>
@@ -405,9 +338,26 @@ const FormTwo = ({ alter, toggleIconTab }) => {
                         </div>
                       </td>
                       <td>
-                        <div className="form-control-warp" style={{ width: "auto" }}>
+                        <div className="form-control-warp" style={{ width: "min-width" }}>
                           <input type="text" id="fv-subject" className="form-control" disabled value={e.courseCode} />
                         </div>
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          name="intake"
+                          id="fv-intake"
+                          ref={register({ required: true })}
+                          className="form-control"
+                          onChange={(event) => handleinTakeChange(event, index)}
+                          value={e.intake}
+                          color="light"
+                          outline
+                        />
+                      </td>
+                      <td>
+                        <input
+                          onChange={(event) => handleyearChange(event, index)} type="text" id="fv-subject" className="form-control" value={e.year} />
                       </td>
                       <td>
                         <div className="form-control-select">
@@ -421,42 +371,14 @@ const FormTwo = ({ alter, toggleIconTab }) => {
                       </td>
                       <td>
                         <input
-                          type="number"
-                          id="fv-intake"
-                          ref={register({ required: true })}
-                          className="form-control"
-                          onChange={(event) => handleinTakeChange(event, index)}
-                          value={e.intake}
-                          color="light"
-                          outline
-                        />
-                      </td>
-                      <td>
-                        <input type="text" id="fv-subject" className="form-control" disabled value={e.Govt} />
-                      </td>
-                      <td>
-                        <input
-                          onChange={(event) => handleSurrenderChange(event, index)}
+                          onChange={(event) => handlevalidChange(event, index)}
                           type="number"
                           id="fv-subject"
-                          name="Surrender"
+                          name="accredation"
                           ref={register({ required: true })}
                           className={`form-control ${errSurrender ? "error" : ""}`}
-                          value={e.Surrender}
+                          value={e.accUpto}
                         />
-                      </td>
-                      <td>
-                        <input
-                          type="number"
-                          onChange={(event) => handleFormChange(event, index)}
-                          value={e.Management}
-                          id="fv-subject"
-                          className="form-control"
-                          disabled
-                        />
-                      </td>
-                      <td>
-                        <input type="text" id="fv-subject" className="form-control" disabled value={e.SWS} />
                       </td>
                       <td>
                         <Button
@@ -489,15 +411,15 @@ const FormTwo = ({ alter, toggleIconTab }) => {
         <div className="d-flex justify-content-between">
           <Button
             type="submit"
-            onClick={() => { toggleIconTab("5"); }}
+            onClick={() => { toggleIconTab("Bank"); }}
             className="text-center m-4"
             color="danger"
           >
             &lt; Back
           </Button>
           <Button
-            type="submit"
-            onClick={() => { handleSubmit((data) => updateHandler(data)); toggleIconTab("7"); }}
+
+            onClick={(data) => onFormSubmit(data)}
             className="text-center m-4"
             color="success"
             disabled={!proceedNextBool()}
@@ -509,4 +431,4 @@ const FormTwo = ({ alter, toggleIconTab }) => {
     </React.Fragment>
   );
 };
-export default FormTwo;
+export default CourseDetails;
