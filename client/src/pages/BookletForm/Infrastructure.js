@@ -291,6 +291,8 @@ const Infrastructure = ({ alter, toggleIconTab }) => {
                       />
                     </div>
                   </td>
+                  <td hidden={acc.boys}>
+                  </td>
                   <td hidden={!acc.girls}>
                     <div className="form-control-select">
                       <Select
@@ -304,7 +306,8 @@ const Infrastructure = ({ alter, toggleIconTab }) => {
                     </div>
 
                   </td>
-
+                  <td hidden={acc.girls}>
+                  </td>
                 </tr>
                 <tr hidden={!acc.boys && !acc.girls}>
                   <td>
@@ -322,6 +325,7 @@ const Infrastructure = ({ alter, toggleIconTab }) => {
                       />
                     </div>
                   </td>
+                  <td hidden={acc.boys}></td>
                   <td hidden={!acc.girls}>
                     <div className="form-control-select">
                       <Select
@@ -333,9 +337,8 @@ const Infrastructure = ({ alter, toggleIconTab }) => {
                         options={MessType}
                       />
                     </div>
-
                   </td>
-
+                  <td hidden={acc.girls}></td>
                 </tr>
                 <tr hidden={!acc.boys && !acc.girls}>
                   <td>
@@ -355,6 +358,7 @@ const Infrastructure = ({ alter, toggleIconTab }) => {
                       {errors.billb && <span className="invalid">This field is required</span>}
                     </div>
                   </td>
+                  <td hidden={acc.boys}></td>
                   <td hidden={!acc.girls}>
 
                     <div className="form-control-wrap">
@@ -372,6 +376,7 @@ const Infrastructure = ({ alter, toggleIconTab }) => {
 
 
                   </td>
+                  <td hidden={acc.girls}></td>
 
                 </tr>
                 <tr hidden={!acc.boys && !acc.girls}>
@@ -392,6 +397,8 @@ const Infrastructure = ({ alter, toggleIconTab }) => {
                       {errors.rentb && <span className="invalid">This field is required</span>}
                     </div>
                   </td>
+                  <td hidden={acc.boys}></td>
+
                   <td hidden={!acc.girls}>
 
                     <div className="form-control-wrap">
@@ -409,6 +416,8 @@ const Infrastructure = ({ alter, toggleIconTab }) => {
 
 
                   </td>
+                  <td hidden={acc.girls}></td>
+
 
                 </tr>
                 <tr hidden={!acc.boys && !acc.girls}>
@@ -429,6 +438,8 @@ const Infrastructure = ({ alter, toggleIconTab }) => {
                       {errors.elecb && <span className="invalid">This field is required</span>}
                     </div>
                   </td>
+                  <td hidden={acc.boys}></td>
+
                   <td hidden={!acc.girls}>
                     <div className="form-control-wrap">
                       <input
@@ -445,7 +456,7 @@ const Infrastructure = ({ alter, toggleIconTab }) => {
 
 
                   </td>
-
+                  <td hidden={acc.girls}></td>
                 </tr>
                 <tr>
                   <td>
