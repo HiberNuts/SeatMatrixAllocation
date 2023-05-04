@@ -90,7 +90,7 @@ const Infrastructure = ({ alter, toggleIconTab }) => {
         if (data.status) {
 
           const notify = () => {
-            toast.success("Data added successfully", {
+            toast.success("Submitted successfully", {
               position: "bottom-right",
               autoClose: true,
               hideProgressBar: true,
@@ -128,9 +128,9 @@ const Infrastructure = ({ alter, toggleIconTab }) => {
       .then((data) => {
 
         setLoading(false);
-        data = data.Booklet.Infrastructure;
-        console.log(data);
-        if (data) {
+        if (data.Booklet) {
+          data = data.Booklet.Infrastructure;
+          console.log(data);
           setDHQ(data.DHQ);
           setDRS(data.DRS);
           setRailway(data.railway);
@@ -587,7 +587,15 @@ const Infrastructure = ({ alter, toggleIconTab }) => {
             </table>
           </Row>
 
-          <div className="pt-5 d-flex justify-content-center">
+          <div className="pt-5 d-flex justify-content-between">
+            <Button
+              type="submit"
+              onClick={() => { toggleIconTab("Branch"); }}
+
+              color="danger"
+            >
+              &lt; Back
+            </Button>
             <Button
               type="submit"
               name="Submit"

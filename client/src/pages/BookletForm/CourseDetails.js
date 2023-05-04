@@ -153,6 +153,7 @@ const CourseDetails = ({ alter, toggleIconTab }) => {
             toast.success("Data added successfully");
           };
           notify();
+          toggleIconTab("Infrastructure");
         }
       })
       .catch((error) => {
@@ -173,11 +174,14 @@ const CourseDetails = ({ alter, toggleIconTab }) => {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
-        setCourse(data.Booklet.CourseDetails ? data.Booklet.CourseDetails : [courseSchema]);
-        setclgCAT(data.Category);
-        removeCourseOnFetch(data.Booklet.CourseDetails, data.ccode);
+        if (data.Booklet) {
 
+
+          console.log(data);
+          setCourse(data.Booklet.CourseDetails ? data.Booklet.CourseDetails : [courseSchema]);
+          setclgCAT(data.Category);
+          removeCourseOnFetch(data.Booklet.CourseDetails, data.ccode);
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -417,6 +421,7 @@ const CourseDetails = ({ alter, toggleIconTab }) => {
           >
             &lt; Back
           </Button>
+
           <Button
 
             onClick={(data) => onFormSubmit(data)}

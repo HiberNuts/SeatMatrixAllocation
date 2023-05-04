@@ -37,7 +37,7 @@ const Booklet = ({ ...props }) => {
                                     className={classnames({ active: activeIconTab === "Personal" })}
                                     onClick={(ev) => {
                                         ev.preventDefault();
-                                        toggleIconTab("Personal");
+                                        // toggleIconTab("Personal");
                                     }}
                                 >
                                     <Icon name="user-fill" /> <span>College Details</span>
@@ -50,7 +50,7 @@ const Booklet = ({ ...props }) => {
                                     className={classnames({ active: activeIconTab === "Bank" })}
                                     onClick={(ev) => {
                                         ev.preventDefault();
-                                        toggleIconTab("Bank");
+                                        // toggleIconTab("Bank");
                                     }}
                                 >
                                     <Icon name="coins" /> <span>Bank Details</span>
@@ -63,7 +63,7 @@ const Booklet = ({ ...props }) => {
                                     className={classnames({ active: activeIconTab === "Branch" })}
                                     onClick={(ev) => {
                                         ev.preventDefault();
-                                        toggleIconTab("Branch");
+                                        // toggleIconTab("Branch");
                                     }}
                                 >
                                     <Icon name="tile-thumb-fill" /> <span>Branch Details</span>
@@ -76,7 +76,7 @@ const Booklet = ({ ...props }) => {
                                     className={classnames({ active: activeIconTab === "Infrastructure" })}
                                     onClick={(ev) => {
                                         ev.preventDefault();
-                                        toggleIconTab("Infrastructure");
+                                        // toggleIconTab("Infrastructure");
                                     }}
                                 >
                                     <Icon name="building-fill" /> <span>Infrastructure</span>

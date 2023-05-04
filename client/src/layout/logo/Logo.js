@@ -12,7 +12,6 @@ const Logo = () => {
       <img className="logo-dark logo-img" src={LogoDark2x} alt="logo" />
       <img className="logo-small logo-img logo-img-small" src={LogoSmall} alt="logo" />
       <img className="logo-small logo-img logo-img-small" src={LogoSmall} alt="logo" />
-      <img className="logo-large logo-img" src=""></img>
     </Link>
   );
 };
