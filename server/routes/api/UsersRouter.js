@@ -142,7 +142,7 @@ UserRouter.post("/bookletData", ejwt({ secret: secret, algorithms: ["HS256"] }),
       res.json({ status: false, message: "incomplete body set" });
     } else {
       const user = await users.findByIdAndUpdate(req.auth.id, {
-        'Booklet.Personal': Booklet
+        "Booklet.Personal": Booklet,
       });
       res.json({ status: true });
     }
@@ -158,7 +158,7 @@ UserRouter.post("/bankData", ejwt({ secret: secret, algorithms: ["HS256"] }), as
       res.json({ status: false, message: "incomplete body set" });
     } else {
       const user = await users.findByIdAndUpdate(req.auth.id, {
-        'Booklet.BankDetails': BankDetails
+        "Booklet.BankDetails": BankDetails,
       });
       res.json({ status: true });
     }
@@ -174,7 +174,7 @@ UserRouter.post("/bookletCourse", ejwt({ secret: secret, algorithms: ["HS256"] }
       res.json({ status: false, message: "incomplete body set" });
     } else {
       const user = await users.findByIdAndUpdate(req.auth.id, {
-        'Booklet.CourseDetails': CourseDetails
+        "Booklet.CourseDetails": CourseDetails,
       });
       res.json({ status: true });
     }
@@ -190,7 +190,7 @@ UserRouter.post("/bookletInfrastructre", ejwt({ secret: secret, algorithms: ["HS
       res.json({ status: false, message: "incomplete body set" });
     } else {
       const user = await users.findByIdAndUpdate(req.auth.id, {
-        'Booklet.Infrastructure': Infra
+        "Booklet.Infrastructure": Infra,
       });
       res.json({ status: true });
     }
@@ -425,7 +425,7 @@ UserRouter.post("/lock/:collegeCode", async (req, res) => {
 UserRouter.post("/setCourseDetails", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
   try {
     const { CourseDetails } = req.body;
-    console.log(req.body);
+    console.log("hrer", req.body);
     if (!CourseDetails) {
       res.json({ status: false, message: "incomplete body set" });
     } else {

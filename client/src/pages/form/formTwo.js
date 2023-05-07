@@ -81,37 +81,39 @@ const CourseList = [
   { label: "MECHANICAL ENGINEERING (TAMIL MEDIUM)", value: "XM" },
   { label: "COMPUTER SCIENCE AND ENGINEERING (TAMIL)", value: "XS" },
 ];
-const SSCourse = [{ label: "APPAREL TECHNOLOGY (SS)", value: "AP" },
-{ label: "AUTOMOBILE ENGINEERING (SS)", value: "AS" },
-{ label: "ARTIFICIAL INTELLIGENCE AND DATA SCIENCE (SS)", value: "AT" },
-{ label: "BIO TECHNOLOGY (SS)", value: "BS" },
-{ label: "BIO MEDICAL ENGINEERING  (SS)", value: "BY" },
-{ label: "CHEMICAL AND ELECTRO CHEMICAL  ENGINEERING (SS)", value: "CC" },
-{ label: "Computer Science and Engineering (Artificial Intelligence and Machine Learning) (SS)", value: "CG" },
-{ label: "CHEMICAL  ENGINEERING (SS)", value: "CL" },
-{ label: "COMPUTER SCIENCE AND ENGINEERING (SS)", value: "CM" },
-{ label: "CIVIL  ENGINEERING (SS)", value: "CN" },
-{ label: "CERAMIC TECHNOLOGY (SS)", value: "CR" },
-{ label: "Computer Science and Business System (SS)", value: "CW" },
-{ label: "ELECTRONICS AND COMMUNICATION ENGINEERING (SS)", value: "EM" },
-{ label: "ELECTRICAL AND ELECTRONICS (SANDWICH) (SS)", value: "ES" },
-{ label: "ELECTRICAL AND ELECTRONICS ENGINEERING (SS)", value: "EY" },
-{ label: "FOOD TECHNOLOGY (SS)", value: "FS" },
-{ label: "FASHION TECHNOLOGY (SS)", value: "FY" },
-{ label: "INFORMATION TECHNOLOGY (SS)", value: "IM" },
-{ label: "INDUSTRIAL BIO TECHNOLOGY (SS)", value: "IS" },
-{ label: "INSTRUMENTATION AND CONTROL ENGINEERING (SS)", value: "IY" },
-{ label: "MATERIAL SCIENCE AND ENGINEERING (SS)", value: "MA" },
-{ label: "MECHANICAL ENGINEERING (SS)", value: "MF" },
-{ label: "MECHATRONICS (SS)", value: "MG" },
-{ label: "MECHANICAL ENGINEERING (SANDWICH) (SS)", value: "MS" },
-{ label: "METALLURGICAL ENGINEERING (SS)", value: "MY" },
-{ label: "PHARMACEUTICAL TECHNOLOGY (SS)", value: "PM" },
-{ label: "PRODUCTION ENGINEERING (SS)", value: "PN" },
-{ label: "PETROLEUM ENGINEERING AND TECHNOLOGY (SS)", value: "PP" },
-{ label: "PRODUCTION ENGINEERING (SANDWICH) (SS)", value: "PS" },
-{ label: "ROBOTICS AND AUTOMATION (SS)", value: "RA" },
-{ label: "TEXTILE TECHNOLOGY (SS)", value: "TT" }]
+const SSCourse = [
+  { label: "APPAREL TECHNOLOGY (SS)", value: "AP" },
+  { label: "AUTOMOBILE ENGINEERING (SS)", value: "AS" },
+  { label: "ARTIFICIAL INTELLIGENCE AND DATA SCIENCE (SS)", value: "AT" },
+  { label: "BIO TECHNOLOGY (SS)", value: "BS" },
+  { label: "BIO MEDICAL ENGINEERING  (SS)", value: "BY" },
+  { label: "CHEMICAL AND ELECTRO CHEMICAL  ENGINEERING (SS)", value: "CC" },
+  { label: "Computer Science and Engineering (Artificial Intelligence and Machine Learning) (SS)", value: "CG" },
+  { label: "CHEMICAL  ENGINEERING (SS)", value: "CL" },
+  { label: "COMPUTER SCIENCE AND ENGINEERING (SS)", value: "CM" },
+  { label: "CIVIL  ENGINEERING (SS)", value: "CN" },
+  { label: "CERAMIC TECHNOLOGY (SS)", value: "CR" },
+  { label: "Computer Science and Business System (SS)", value: "CW" },
+  { label: "ELECTRONICS AND COMMUNICATION ENGINEERING (SS)", value: "EM" },
+  { label: "ELECTRICAL AND ELECTRONICS (SANDWICH) (SS)", value: "ES" },
+  { label: "ELECTRICAL AND ELECTRONICS ENGINEERING (SS)", value: "EY" },
+  { label: "FOOD TECHNOLOGY (SS)", value: "FS" },
+  { label: "FASHION TECHNOLOGY (SS)", value: "FY" },
+  { label: "INFORMATION TECHNOLOGY (SS)", value: "IM" },
+  { label: "INDUSTRIAL BIO TECHNOLOGY (SS)", value: "IS" },
+  { label: "INSTRUMENTATION AND CONTROL ENGINEERING (SS)", value: "IY" },
+  { label: "MATERIAL SCIENCE AND ENGINEERING (SS)", value: "MA" },
+  { label: "MECHANICAL ENGINEERING (SS)", value: "MF" },
+  { label: "MECHATRONICS (SS)", value: "MG" },
+  { label: "MECHANICAL ENGINEERING (SANDWICH) (SS)", value: "MS" },
+  { label: "METALLURGICAL ENGINEERING (SS)", value: "MY" },
+  { label: "PHARMACEUTICAL TECHNOLOGY (SS)", value: "PM" },
+  { label: "PRODUCTION ENGINEERING (SS)", value: "PN" },
+  { label: "PETROLEUM ENGINEERING AND TECHNOLOGY (SS)", value: "PP" },
+  { label: "PRODUCTION ENGINEERING (SANDWICH) (SS)", value: "PS" },
+  { label: "ROBOTICS AND AUTOMATION (SS)", value: "RA" },
+  { label: "TEXTILE TECHNOLOGY (SS)", value: "TT" },
+];
 const GOVTSeats = {
   "CENTRAL GOVT": 0.5,
   CHRISTIAN: 0.5,
@@ -128,7 +130,6 @@ const GOVTSeats = {
   TELUGU: 0.5,
   UNIV: 1,
   IRTT: 0.65,
-
 };
 const FormTwo = ({ alter, toggleIconTab }) => {
   const courseSchema = {
@@ -140,16 +141,18 @@ const FormTwo = ({ alter, toggleIconTab }) => {
     Surrender: null,
     Management: null,
     SWS: null,
-    Pending: 0
+    Pending: 0,
   };
   const [Course, setCourse] = useState([courseSchema]);
   const { errors, register, handleSubmit } = useForm();
   const [errSurrender, seterrSurrender] = useState(false);
   const [clgCAT, setclgCAT] = useState("NM");
   const [clgCode, setclgCode] = useState("");
-  const onFormSubmit = (data) => {
+  const [freezeFlag, setfreezeFlag] = useState(false);
+
+  const onFormSubmit = () => {
     fetch(`${backendURL}/setCourseDetails`, {
-      method: "Post",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -165,9 +168,7 @@ const FormTwo = ({ alter, toggleIconTab }) => {
         return response.json();
       })
       .then((data) => {
-    
         if (data.status) {
-       
           const notify = () => {
             toast.success("Data added successfully");
           };
@@ -192,26 +193,21 @@ const FormTwo = ({ alter, toggleIconTab }) => {
         return response.json();
       })
       .then((data) => {
-       
         setCourse(data.CourseDetails ? data.CourseDetails : []);
-        if (data.ccode === '2709') {
+        setfreezeFlag(data?.FreezeFlag ? data.FreezeFlag : false);
+        if (data.ccode === "2709") {
           setclgCAT("IRTT");
-        }
-        else {
+        } else {
           setclgCAT(data.Category);
-
         }
         removeCourseOnFetch(data.CourseDetails, data.ccode);
-
       })
       .catch((error) => {
         console.log(error);
       });
-
   };
   useEffect(() => {
     getCollegeInfo();
-
   }, []);
 
   const formClass = classNames({
@@ -219,18 +215,16 @@ const FormTwo = ({ alter, toggleIconTab }) => {
     "is-alter": alter,
   });
   const removeCourseOnFetch = (Course, clgCode) => {
-
     setclgCode(clgCode);
     if (["1", "2", "4", "2006", "2007", "5008"].includes(clgCode)) {
       CourseList.push(...SSCourse);
     }
-   
-    Course?.forEach(element => {
-      let ind = CourseList.findIndex(p => p.value === element.courseCode);
-      if (ind !== -1)
-        CourseList.splice(ind, 1);
+
+    Course?.forEach((element) => {
+      let ind = CourseList.findIndex((p) => p.value === element.courseCode);
+      if (ind !== -1) CourseList.splice(ind, 1);
     });
-  }
+  };
   const handleFormChange = (event, index) => {
     let data = [...Course];
     data[index][event.target.name] = event.target.value;
@@ -239,8 +233,7 @@ const FormTwo = ({ alter, toggleIconTab }) => {
   const handleCourseChange = (event, index) => {
     let data = [...Course];
     let ind = CourseList.indexOf(event);
-    if (ind !== -1)
-      CourseList.splice(ind, 1);
+    if (ind !== -1) CourseList.splice(ind, 1);
     if (data[index]["courseCode"]) {
       CourseList.splice(0, 0, data[index]["courseName"]);
     }
@@ -265,7 +258,6 @@ const FormTwo = ({ alter, toggleIconTab }) => {
     } else {
       data[index]["Govt"] = Math.floor(intake * GOVTSeats[clgCAT]);
       data[index]["Pending"] = (intake * GOVTSeats[clgCAT]) % 1;
-      console.log(intake * GOVTSeats[clgCAT]);
     }
     data[index]["Management"] = intake - data[index]["Govt"];
     data[index]["SWS"] = data[index]["Govt"];
@@ -274,7 +266,6 @@ const FormTwo = ({ alter, toggleIconTab }) => {
       data[index]["Management"] = 0;
       data[index]["Surrender"] = 0;
       data[index]["SWS"] = 0;
-
     }
     setCourse(data);
   };
@@ -289,7 +280,6 @@ const FormTwo = ({ alter, toggleIconTab }) => {
       data[index]["Management"] = data[index]["intake"] - data[index]["Govt"];
       data[index]["SWS"] = data[index]["Govt"];
       seterrSurrender(true);
-
     } else {
       seterrSurrender(false);
       data[index]["Management"] = data[index]["intake"] - data[index]["Govt"] - surrender;
@@ -300,40 +290,42 @@ const FormTwo = ({ alter, toggleIconTab }) => {
   };
   const checkErr = () => {
     let val = true;
-    Course.forEach(e => {
-      if (e.Govt >= 0 && e.SWS === e.Govt + e.Surrender && e.Govt + e.Surrender + e.Management === e.intake && e.courseCode != null && e.accredation != null && e.intake != 0) {
-        val = val && true;
-      }
-      else {
-
-        toast.error("Please Fill all Fields, to add New Course");
-
-        val = val && false;
-      }
-    })
-    return val;
-
-
-  }
-  const proceedNextBool = () => {
-    let val = true;
-    Course.forEach(e => {
-      if (e.Govt >= 0 &&
+    Course.forEach((e) => {
+      if (
+        e.Govt >= 0 &&
         e.SWS === e.Govt + e.Surrender &&
         e.Govt + e.Surrender + e.Management === e.intake &&
         e.courseCode != null &&
         e.accredation != null &&
-        e.intake != 0) {
+        e.intake != 0
+      ) {
         val = val && true;
-      }
-      else {
+      } else {
+        toast.error("Please Fill all Fields, to add New Course");
+
         val = val && false;
       }
-    })
+    });
     return val;
-
-
-  }
+  };
+  const proceedNextBool = () => {
+    let val = true;
+    Course.forEach((e) => {
+      if (
+        e.Govt >= 0 &&
+        e.SWS === e.Govt + e.Surrender &&
+        e.Govt + e.Surrender + e.Management === e.intake &&
+        e.courseCode != null &&
+        e.accredation != null &&
+        e.intake != 0
+      ) {
+        val = val && true;
+      } else {
+        val = val && false;
+      }
+    });
+    return val;
+  };
   const addCourse = () => {
     let data = [...Course];
     if (checkErr()) {
@@ -353,14 +345,15 @@ const FormTwo = ({ alter, toggleIconTab }) => {
       setCourse(updatedCourses);
     }
   };
-  const updateHandler = (data) => {
+  const updateHandler = async () => {
+    console.log("here");
     let val = [...Course];
     if (!val.at(Course.length - 1).courseCode) {
       val.splice(val.length - 1, 1);
     }
     setCourse(val);
     // if(checkErr())
-    onFormSubmit(data);
+    onFormSubmit();
   };
 
   const AccredationOptions = [
@@ -374,136 +367,163 @@ const FormTwo = ({ alter, toggleIconTab }) => {
       <Form className={formClass} onSubmit={(e) => e.preventDefault()}>
         <Row className="g-gs">
           <Col md="12">
-            <table className="table table-responsive  w-auto">
-              <thead>
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Course Name</th>
-                  <th scope="col">Course Code</th>
-                  <th scope="col">Accreditation</th>
-                  <th scope="col">Santioned Intake</th>
-                  <th scope="col">Govt</th>
-                  <th scope="col">Surrender</th>
-                  <th scope="col">Management</th>
-                  <th scope="col">SWS</th>
-                  <th scope="col">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Course.map((e, index) => {
-                  return (
-                    <tr key={index}>
-                      <th scope="row">{index + 1}</th>
-                      <td>
-                        <div className="form-control-select" style={{ width: "400px" }}>
-                          <Select
-                            onChange={(event) => handleCourseChange(event, index)}
-                            classNamePrefix="react-select"
-                            options={CourseList}
-                            value={e.courseName}
+            <div>
+              <table className="table table-hover  w-auto">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Course Name</th>
+                    <th scope="col">Course Code</th>
+                    <th scope="col">Accreditation</th>
+                    <th scope="col">Santioned Intake</th>
+                    <th scope="col">Govt</th>
+                    <th scope="col">Surrender</th>
+                    <th scope="col">Management</th>
+                    <th scope="col">SWS</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Course.map((e, index) => {
+                    return (
+                      <tr UseSubmitBehavior={false} onClick={(e) => e.preventDefault()} key={index}>
+                        <th scope="row">{index + 1}</th>
+                        <td>
+                          <div className="form-control-select" style={{ width: "400px" }}>
+                            <Select
+                              onChange={(event) => handleCourseChange(event, index)}
+                              classNamePrefix="react-select"
+                              options={CourseList}
+                              value={e.courseName}
+                            />
+                          </div>
+                        </td>
+                        <td>
+                          <div className="form-control-warp" style={{ width: "auto" }}>
+                            <input type="text" id="fv-subject" className="form-control" disabled value={e.courseCode} />
+                          </div>
+                        </td>
+                        <td>
+                          <div className="form-control-select">
+                            <Select
+                              style={{ zIndex: "10000", width: "auto" }}
+                              value={e.accredation}
+                              onChange={(event) => handleAccrChange(event, index)}
+                              classNamePrefix="react-select"
+                              options={AccredationOptions}
+                            />
+                          </div>
+                        </td>
+                        <td>
+                          <input
+                            type="number"
+                            id="fv-intake"
+                            name="intake"
+                            ref={register({ required: true })}
+                            className="form-control"
+                            onChange={(event) => handleinTakeChange(event, index)}
+                            value={e.intake}
+                            color="light"
+                            outline
                           />
-                        </div>
-                      </td>
-                      <td>
-                        <div className="form-control-warp" style={{ width: "auto" }}>
-                          <input type="text" id="fv-subject" className="form-control" disabled value={e.courseCode} />
-                        </div>
-                      </td>
-                      <td>
-                        <div className="form-control-select">
-                          <Select
-                            value={e.accredation}
-                            onChange={(event) => handleAccrChange(event, index)}
-                            classNamePrefix="react-select"
-                            options={AccredationOptions}
+                        </td>
+                        <td>
+                          <input type="text" id="fv-subject" className="form-control" disabled value={e.Govt} />
+                        </td>
+                        <td>
+                          <input
+                            onChange={(event) => handleSurrenderChange(event, index)}
+                            type="number"
+                            id="fv-subject"
+                            name="Surrender"
+                            ref={register({ required: true })}
+                            className={`form-control ${errSurrender ? "error" : ""}`}
+                            value={e.Surrender}
                           />
-                        </div>
-                      </td>
-                      <td>
-                        <input
-                          type="number"
-                          id="fv-intake"
-                          ref={register({ required: true })}
-                          className="form-control"
-                          onChange={(event) => handleinTakeChange(event, index)}
-                          value={e.intake}
-                          color="light"
-                          outline
-                        />
-                      </td>
-                      <td>
-                        <input type="text" id="fv-subject" className="form-control" disabled value={e.Govt} />
-                      </td>
-                      <td>
-                        <input
-                          onChange={(event) => handleSurrenderChange(event, index)}
-                          type="number"
-                          id="fv-subject"
-                          name="Surrender"
-                          ref={register({ required: true })}
-                          className={`form-control ${errSurrender ? "error" : ""}`}
-                          value={e.Surrender}
-                        />
-                      </td>
-                      <td>
-                        <input
-                          type="number"
-                          onChange={(event) => handleFormChange(event, index)}
-                          value={e.Management}
-                          id="fv-subject"
-                          className="form-control"
-                          disabled
-                        />
-                      </td>
-                      <td>
-                        <input type="text" id="fv-subject" className="form-control" disabled value={e.SWS} />
-                      </td>
-                      <td>
-                        <Button
-                          key={index}
-                          onClick={() => {
-                            removeCourse(index);
-                          }}
-                          class="btn btn-icon btn-outline-danger"
-                        >
-                          <em class="icon ni ni-cross-c"></em>
-                        </Button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                        </td>
+                        <td>
+                          <input
+                            type="number"
+                            onChange={(event) => handleFormChange(event, index)}
+                            value={e.Management}
+                            id="fv-subject"
+                            className="form-control"
+                            disabled
+                          />
+                        </td>
+                        <td>
+                          <input type="text" id="fv-subject" className="form-control" disabled value={e.SWS} />
+                        </td>
+                        <td>
+                          <Button
+                            UseSubmitBehavior={false}
+                            key={index}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              removeCourse(index);
+                            }}
+                            class="btn btn-icon btn-outline-danger"
+                          >
+                            <em class="icon ni ni-cross-c"></em>
+                          </Button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </Col>
-          <Col md="12" className="text-center">
-            <Button
-              className="container-fluid btn btn-secondary btn-md"
-              onClick={() => {
-                addCourse();
-              }}
-            >
-              <span className="text-xl-center">+ Add a New Course</span>
-            </Button>
-          </Col>
+          {freezeFlag == false && (
+            <Col md="12" className="text-center">
+              <Button
+                className="container-fluid btn btn-secondary btn-md"
+                onClick={() => {
+                  addCourse();
+                }}
+              >
+                <span className="text-xl-center">+ Add a New Course</span>
+              </Button>
+            </Col>
+          )}
         </Row>
         <div className="d-flex justify-content-between">
           <Button
             type="submit"
-            onClick={() => { toggleIconTab("5"); }}
+            onClick={() => {
+              toggleIconTab("5");
+            }}
             className="text-center m-4"
             color="danger"
           >
             &lt; Back
           </Button>
-          <Button
-            type="submit"
-            onClick={() => { handleSubmit((data) => updateHandler(data)); toggleIconTab("7"); }}
-            className="text-center m-4"
-            color="success"
-            disabled={!proceedNextBool()}
-          >
-            Proceed to Next &gt;
-          </Button>
+          {freezeFlag == true ? (
+            <Button
+              type="submit"
+              onClick={() => {
+                toggleIconTab("7");
+              }}
+              className="text-center m-4"
+              color="success"
+              disabled={!proceedNextBool()}
+            >
+              Next &gt;
+            </Button>
+          ) : (
+            <Button
+              type="submit"
+              onClick={() => {
+                updateHandler();
+                toggleIconTab("7");
+              }}
+              className="text-center m-4"
+              color="success"
+              disabled={!proceedNextBool()}
+            >
+              Save and Proceed to Next &gt;
+            </Button>
+          )}
         </div>
       </Form>
     </React.Fragment>
