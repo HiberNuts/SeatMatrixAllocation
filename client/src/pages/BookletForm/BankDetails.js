@@ -13,50 +13,58 @@ const BankDetails = ({ alter, toggleIconTab }) => {
     const [loading, setLoading] = useState(true);
     const [bank, setBank] = useState({ Name: "", IFSC: "", AccNo: "", Holder: "", Branch: "" })
     const [bank2, setBank2] = useState({ Name: "", IFSC: "", AccNo: "", Holder: "", Branch: "" })
-    const [editFlag, seteditFlag] = useState(true);
+    const [editFlag, seteditFlag] = useState(false);
     const { errors, register, handleSubmit } = useForm();
     const onFormSubmit = (data) => {
-        fetch(`${backendURL}/bankData`, {
-            method: "Post",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
-            body: JSON.stringify({
-                BankDetails: {
-                    Bank1: bank,
-                    Bank2: bank2
-                }
-            }),
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                return response.json();
+        if (editFlag) {
+            fetch(`${backendURL}/bankData`, {
+                method: "Post",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                },
+                body: JSON.stringify({
+                    BankDetails: {
+                        Bank1: bank,
+                        Bank2: bank2
+                    }
+                }),
             })
-            .then((data) => {
-                console.log(data);
-                if (data.status) {
-                    console.log("s");
-                    const notify = () => {
-                        toast.success("Data added successfully", {
-                            position: "bottom-right",
-                            autoClose: true,
-                            hideProgressBar: true,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: false,
-                        });
-                    };
-                    notify();
-                    toggleIconTab("Infrastructure")
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok");
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log(data);
+                    if (data.status) {
+                        console.log("s");
+                        const notify = () => {
+                            toast.success("Data added successfully", {
+                                position: "bottom-right",
+                                autoClose: true,
+                                toastId: "Bank",
+                                hideProgressBar: true,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: false,
+                            });
+                        };
+                        notify();
+                        seteditFlag(false);
+
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+
+        } else {
+            seteditFlag(true);
+        }
+
     };
     const formClass = classNames({
         "form-validate": false,
@@ -76,12 +84,20 @@ const BankDetails = ({ alter, toggleIconTab }) => {
                 return response.json();
             })
             .then((data) => {
-                if (data.Booklet.BankDetails) {
-                    setBank(data.Booklet.BankDetails.Bank1);
-                    setBank2(data.Booklet.BankDetails.Bank2);
-                    console.log(data);
+                console.log(data);
+                if (data.Booklet) {
+                    if (data.Booklet.BankDetails) {
+                        setBank(data.Booklet.BankDetails.Bank1);
+                        setBank2(data.Booklet.BankDetails.Bank2);
+                        console.log(data);
+                    }
+                    else {
+                        seteditFlag(true);
+                    }
                 }
-
+                else {
+                    seteditFlag(true);
+                }
                 setLoading(false);
             })
             .catch((error) => {
@@ -322,12 +338,21 @@ const BankDetails = ({ alter, toggleIconTab }) => {
                     </div>
                     <div className="pt-5 d-flex justify-content-between">
                         <Button
+                            type="submit"
+                            onClick={() => { toggleIconTab("Personal"); }}
+                            
+                            color="danger"
+                        >
+                            &lt; Back
+                        </Button>
+                        <Button
                             name="submit"
                             type="submit"
-                            color="warning"
+                            color={editFlag ? "warning" : "primary"}
                             size="lg"
                         >
-                            Save
+                            {editFlag ? "Save" : "Edit"}
+
                         </Button>
                         <Button
                             onClick={(e) => {
@@ -342,7 +367,9 @@ const BankDetails = ({ alter, toggleIconTab }) => {
                     </div>
                 </Form>
                 <ToastContainer />
+
             </div>
+
         );
     else
         return (

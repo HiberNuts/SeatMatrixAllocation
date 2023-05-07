@@ -27,7 +27,7 @@ const PersonalDetails = ({ alter, toggleIconTab }) => {
   const [minorityStatus, setMinorityStatus] = useState("");
   const [principalName, setprincipalName] = useState("");
   const [email, setEmail] = useState("");
-  const [editFlag, seteditFlag] = useState(true);
+  const [editFlag, seteditFlag] = useState(false);
 
   const AutonomousOptions = [
     { label: "Autonomous", value: true },
@@ -39,59 +39,67 @@ const PersonalDetails = ({ alter, toggleIconTab }) => {
   ];
   const onFormSubmit = (data) => {
     console.log("Here Data", data);
-    fetch(`${backendURL}/bookletData`, {
-      method: "Post",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-      body: JSON.stringify({
-        Booklet: {
-          PrincipalName: data.principalName,
-          Email: data.email,
-          PhoneNumber: phone,
-          Pincode: data.pincode,
-          District: data.district,
-          Website: data.website,
-          Taluk: data.taluk,
-          Autonomous: Autonomous.value,
-          NACC: {
-            Status: NACC.value,
-            ValidUpto: data.NACCValid,
-            Grade: data.NACCGrade
-          },
-          Address: data.address
-        }
-      }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
+    if (editFlag) {
+      fetch(`${backendURL}/bookletData`, {
+        method: "Post",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+        body: JSON.stringify({
+          Booklet: {
+            PrincipalName: data.principalName,
+            Email: data.email,
+            PhoneNumber: phone,
+            Pincode: data.pincode,
+            District: data.district,
+            Website: data.website,
+            Taluk: data.taluk,
+            Autonomous: Autonomous.value,
+            NACC: {
+              Status: NACC.value,
+              ValidUpto: data.NACCValid,
+              Grade: data.NACCGrade
+            },
+            Address: data.address
+          }
+        }),
       })
-      .then((data) => {
-        console.log(data);
-        if (data.status) {
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log(data);
+          if (data.status) {
 
-          const notify = () => {
-            toast.success("Data added successfully", {
-              position: "bottom-right",
-              autoClose: true,
-              hideProgressBar: true,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: false,
-            });
-          };
+            const notify = () => {
+              toast.success("Data added successfully", {
+                position: "bottom-right",
+                autoClose: true,
+                toastId: "personal",
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: false,
+              });
+            };
+            notify();
+            seteditFlag(false)
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
 
-          notify();
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    }
+    else {
+      seteditFlag(true);
+    }
+
   };
   const formClass = classNames({
     "form-validate": false,
@@ -119,8 +127,8 @@ const PersonalDetails = ({ alter, toggleIconTab }) => {
           setMinorityStatus("No");
         else
           setMinorityStatus("Yes");
-        data = data.Booklet.Personal;
-        if (data) {
+        if (data.Booklet) {
+          data = data.Booklet.Personal;
           setprincipalName(data?.PrincipalName);
           setPhone(data?.PhoneNumber);
           setAutonomous(data.Autonomous ? AutonomousOptions[0] : AutonomousOptions[1]);
@@ -135,6 +143,9 @@ const PersonalDetails = ({ alter, toggleIconTab }) => {
           setTaluk(data?.Taluk);
           setEmail(data?.Email);
           setAddress(data?.Address);
+        }
+        else {
+          seteditFlag(true);
         }
       })
       .catch((error) => {
@@ -434,6 +445,7 @@ const PersonalDetails = ({ alter, toggleIconTab }) => {
                   <Select
                     id="autonomous"
                     name="autonomous"
+                    isDisabled={!editFlag}
                     classNamePrefix="react-select"
                     onChange={(e) => (editFlag ? setAutonomous(e) : null)}
                     options={AutonomousOptions}
@@ -450,6 +462,7 @@ const PersonalDetails = ({ alter, toggleIconTab }) => {
 
                 <div className="form-control-select" style={{ width: "400px" }}>
                   <Select
+                    isDisabled={!editFlag}
                     id="nacc"
                     name="nacc"
                     classNamePrefix="react-select"
@@ -517,16 +530,18 @@ const PersonalDetails = ({ alter, toggleIconTab }) => {
             <Button
               name="submit"
               type="submit"
-              color="warning"
+              color={editFlag ? "warning" : "primary"}
               size="lg"
             >
-              Save
+              {editFlag ? "Save" : "Edit"}
+
             </Button>
             <Button
               onClick={(e) => {
                 e.preventDefault();
                 toggleIconTab("Bank");
               }}
+              disabled={editFlag}
               color="success"
               size="lg"
             >
