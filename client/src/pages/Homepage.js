@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Content from "../layout/content/Content";
 import Head from "../layout/head/Head";
 import Icon from "../components/icon/Icon";
@@ -12,12 +12,45 @@ import FormFour from "./form/formFour";
 import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 import PdfDcoument from "../utils/PdfUtils/generatorPdf";
 import FormThree from "./form/formThree";
+import { backendURL } from "../backendurl";
 
 const Homepage = ({ ...props }) => {
   const [activeIconTab, setActiveIconTab] = useState("5");
   const toggleIconTab = (icontab) => {
     if (activeIconTab !== icontab) setActiveIconTab(icontab);
   };
+
+  const [personalFlag, setpersonalFlag] = useState(false);
+  const [courseFlag, setcourseFlag] = useState(false);
+  const [declarationFlag, setdeclarationFlag] = useState(false);
+  const [docFlag, setdocFlag] = useState(false);
+
+  const getCollegeInfo = async () => {
+    fetch(`${backendURL}/collegeData`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setpersonalFlag(data?.PersonalDetailFlag == true ? true : false);
+        setcourseFlag(data?.CourseDetails?.length >= 1 ? true : false);
+        setdeclarationFlag(data?.DeclarationFlag == true ? true : false);
+        setdocFlag(data?.DocumentUploadFlag == true ? true : false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    getCollegeInfo();
+  }, []);
 
   return (
     <React.Fragment>
@@ -51,8 +84,16 @@ const Homepage = ({ ...props }) => {
                   href="#tab"
                   className={classnames({ active: activeIconTab === "6" })}
                   onClick={(ev) => {
-                    ev.preventDefault();
-                    toggleIconTab("6");
+                    if (personalFlag) {
+                      ev.preventDefault();
+                      toggleIconTab("6");
+                    } else {
+                      return;
+                    }
+                  }}
+                  style={{
+                    color: personalFlag == true ? "#526484" : "lightgray",
+                    cursor: personalFlag ? "pointer" : "not-allowed",
                   }}
                 >
                   <Icon name="book-fill" /> <span>Course Details</span>
@@ -62,10 +103,18 @@ const Homepage = ({ ...props }) => {
                 <NavLink
                   tag="a"
                   href="#tab"
+                  style={{
+                    color: personalFlag == true && courseFlag == true ? "#526484" : "lightgray",
+                    cursor: personalFlag && courseFlag == true ? "pointer" : "not-allowed",
+                  }}
                   className={classnames({ active: activeIconTab === "7" })}
                   onClick={(ev) => {
-                    ev.preventDefault();
-                    toggleIconTab("7");
+                    if (personalFlag && courseFlag) {
+                      ev.preventDefault();
+                      toggleIconTab("7");
+                    } else {
+                      return;
+                    }
                   }}
                 >
                   <Icon name="check-fill-c" /> <span>Declaration</span>
@@ -75,10 +124,18 @@ const Homepage = ({ ...props }) => {
                 <NavLink
                   tag="a"
                   href="#tab"
+                  style={{
+                    color: personalFlag == true && courseFlag == true && declarationFlag ? "#526484" : "lightgray",
+                    cursor: personalFlag && courseFlag == true && declarationFlag ? "pointer" : "not-allowed",
+                  }}
                   className={classnames({ active: activeIconTab === "8" })}
                   onClick={(ev) => {
-                    ev.preventDefault();
-                    toggleIconTab("8");
+                    if (personalFlag && courseFlag && declarationFlag) {
+                      toggleIconTab("8");
+                      ev.preventDefault();
+                    } else {
+                      return;
+                    }
                   }}
                 >
                   <Icon name="upload" /> <span>Document Upload</span>

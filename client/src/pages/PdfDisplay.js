@@ -6,9 +6,9 @@ import { useLocation, useParams } from "react-router";
 const PdfDisplay = (props) => {
   console.log(props.location.state);
   return (
-    <div>
+    <PDFViewer style={{ height: "1000px" }}>
       <PdfDcoument collegeData={props.location.state} />
-    </div>
+    </PDFViewer>
   );
 };
 

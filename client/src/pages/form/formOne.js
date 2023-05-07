@@ -40,6 +40,7 @@ const FormOne = ({ alter, toggleIconTab }) => {
   const [principalName, setprincipalName] = useState("");
   const [email, setEmail] = useState("");
   const [editFlag, seteditFlag] = useState(false);
+  const [freezeFlag, setfreezeFlag] = useState(false);
 
   const AutonomousOptions = [
     { label: "Autonomous", value: true },
@@ -69,9 +70,7 @@ const FormOne = ({ alter, toggleIconTab }) => {
         return response.json();
       })
       .then((data) => {
-
         if (data.status) {
-
           const notify = () => {
             toast.success("Data added successfully", {
               position: "bottom-right",
@@ -109,7 +108,6 @@ const FormOne = ({ alter, toggleIconTab }) => {
         return response.json();
       })
       .then((data) => {
-
         setLoading(false);
         setcollegeName(data.can);
         setcollegeCode(data.ccode);
@@ -122,6 +120,7 @@ const FormOne = ({ alter, toggleIconTab }) => {
         setWebsite(data?.Website);
         setPincode(data?.Pincode);
         setEmail(data?.Email);
+        setfreezeFlag(data?.FreezeFlag ? data.FreezeFlag : false);
       })
       .catch((error) => {
         console.log(error);
@@ -132,11 +131,13 @@ const FormOne = ({ alter, toggleIconTab }) => {
     getCollegeInfo();
   }, []);
 
+
+
   const updateHandler = (data) => {
     seteditFlag(false);
     onFormSubmit(data);
   };
-  
+
   if (!loading)
     return (
       <React.Fragment>
@@ -392,7 +393,7 @@ const FormOne = ({ alter, toggleIconTab }) => {
             </Col>
           </Row>
         </Form>
-        {personalDetailFlag && !editFlag && (
+        {freezeFlag != true && personalDetailFlag && !editFlag && (
           <Button onClick={() => seteditFlag(true)} color="danger" size="lg">
             Edit
           </Button>
