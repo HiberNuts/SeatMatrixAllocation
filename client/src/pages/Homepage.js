@@ -13,6 +13,7 @@ import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 import PdfDcoument from "../utils/PdfUtils/generatorPdf";
 import FormThree from "./form/formThree";
 import { backendURL } from "../backendurl";
+import { ToastContainer } from "react-toastify";
 
 const Homepage = ({ ...props }) => {
   const [activeIconTab, setActiveIconTab] = useState("5");
@@ -159,6 +160,7 @@ const Homepage = ({ ...props }) => {
           </PreviewCard>
         </Block>
       </Content>
+      <ToastContainer />
     </React.Fragment>
   );
 };

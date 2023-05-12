@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import { Button, Modal, ModalBody, ModalFooter } from "reactstrap";
 import { Block } from "../../components/block/Block";
 import axios from "axios";
 import FormData from "form-data";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { backendURL } from "../../backendurl";
 
@@ -28,21 +28,24 @@ const FormFour = () => {
   const handleSubmit = async () => {
     try {
       var formData = new FormData();
-      if (seatMatrix.length == undefined) {
-        formData.append("seatMatrix", seatMatrix);
-      } else {
-        toast.warning("Seat matrix form is compulsory");
+      if (collegeData?.Documents["seatMatrix"] != true) {
+        if (seatMatrix.length == undefined) {
+          formData.append("seatMatrix", seatMatrix);
+        } else {
+          toast.warning("Seat matrix form is compulsory");
+        }
       }
-      if (AICTEApproval.length == undefined) {
+
+      if (AICTEApproval?.length == undefined) {
         formData.append("AICTEApproval", AICTEApproval);
       }
-      if (AUAffiliation.length == undefined) {
+      if (AUAffiliation?.length == undefined) {
         formData.append("AUAffiliation", AUAffiliation);
       }
-      if (Accredation.length == undefined) {
+      if (Accredation?.length == undefined) {
         formData.append("Accredation", Accredation);
       }
-      if (Autonomous.length == undefined) {
+      if (Autonomous?.length == undefined) {
         formData.append("Autonomous", Autonomous);
       }
       let Keys = [];
@@ -68,6 +71,8 @@ const FormFour = () => {
           setAutonomous();
           inputAutonomous.current.value = "";
         }
+        getCollegeData();
+        toast.success("Files added successfully");
       } else {
         toast.warning("Select atleast one field");
         return;
@@ -132,11 +137,16 @@ const FormFour = () => {
         },
       }
     );
+    if (response.data.status) {
+      getCollegeData();
+      toast.success("Document deleted");
+    } else {
+      toast.error("An error occured, please try again");
+    }
   };
 
   const handleClose = () => setShow(false);
   const handleShow = () => {
-    console.log("hi");
     setShow(true);
   };
 
@@ -230,7 +240,7 @@ const FormFour = () => {
                           if (e.target.files[0].size > 1048576) {
                             inputseatMatrix.current.value = "";
                             setSeatMatrix();
-                            toast("File size must not exceed 1MB", { autoClose: 3000 });
+                            toast.warning("File size must not exceed 1MB", { autoClose: 3000 });
                             return;
                           }
                           setSeatMatrix(e.target.files[0]);
@@ -242,7 +252,7 @@ const FormFour = () => {
                 </div>
               </td>
               <td>
-                {freezeFlag ? (
+                {/* {freezeFlag ? (
                   <span></span>
                 ) : (
                   collegeData?.Documents?.seatMatrix == true && (
@@ -250,7 +260,7 @@ const FormFour = () => {
                       <i class="bi bi-x-lg"></i>
                     </button>
                   )
-                )}
+                )} */}
               </td>
             </tr>
             <tr>
@@ -309,7 +319,7 @@ const FormFour = () => {
                           if (e.target.files[0].size > 1048576) {
                             inputAICTEApproval.current.value = "";
                             setAICTEApproval();
-                            toast("File size must not exceed 1MB");
+                            toast.warning("File size must not exceed 1MB");
                             return;
                           }
                           setAICTEApproval(e.target.files[0]);
@@ -388,7 +398,7 @@ const FormFour = () => {
                           if (e.target.files[0].size > 1048576) {
                             inputAUAffiliation.current.value = "";
                             setAUAffiliation();
-                            toast("File size must not exceed 1MB");
+                            toast.warning("File size must not exceed 1MB");
                             return;
                           }
                           setAUAffiliation(e.target.files[0]);
@@ -466,7 +476,7 @@ const FormFour = () => {
                           if (e.target.files[0].size > 1048576) {
                             inputAccredation.current.value = "";
                             setAccredation();
-                            toast("File size must not exceed 1MB");
+                            toast.warning("File size must not exceed 1MB");
                             return;
                           }
                           setAccredation(e.target.files[0]);
@@ -544,7 +554,7 @@ const FormFour = () => {
                           if (e.target.files[0].size > 1048576) {
                             inputAutonomous.current.value = "";
                             setAutonomous();
-                            toast("File size must not exceed 1MB");
+                            toast.warning("File size must not exceed 1MB");
                             return;
                           }
                           setAutonomous(e.target.files[0]);
@@ -576,8 +586,6 @@ const FormFour = () => {
           Submit Changes
         </Button>
       )}
-
-      <ToastContainer />
       <div
         style={{
           marginTop: "50px",

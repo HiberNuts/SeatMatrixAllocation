@@ -131,8 +131,6 @@ const FormOne = ({ alter, toggleIconTab }) => {
     getCollegeInfo();
   }, []);
 
-
-
   const updateHandler = (data) => {
     seteditFlag(false);
     onFormSubmit(data);
@@ -206,6 +204,7 @@ const FormOne = ({ alter, toggleIconTab }) => {
                   <input
                     ref={register({ required: true })}
                     type="text"
+                    disabled={freezeFlag}
                     id="fv-subject"
                     name="principalName"
                     className="form-control"
@@ -233,6 +232,7 @@ const FormOne = ({ alter, toggleIconTab }) => {
                     type="email"
                     id="fv-email"
                     name="email"
+                    disabled={freezeFlag}
                     className="form-control"
                     onChange={(e) => (editFlag ? setEmail(e.target.value) : null)}
                     value={email}
@@ -260,6 +260,7 @@ const FormOne = ({ alter, toggleIconTab }) => {
                         message: "Invalid Phone Number",
                       },
                     })}
+                    disabled={freezeFlag}
                     type="phone"
                     id="fv-phone"
                     name="phone"
@@ -293,6 +294,7 @@ const FormOne = ({ alter, toggleIconTab }) => {
                     type="text"
                     id="fv-district"
                     name="district"
+                    disabled={freezeFlag}
                     className="form-control"
                     onChange={(e) => (editFlag ? setDistrict(e.target.value) : null)}
                     value={district}
@@ -323,6 +325,7 @@ const FormOne = ({ alter, toggleIconTab }) => {
                     type="text"
                     id="fv-pincode"
                     name="pincode"
+                    disabled={freezeFlag}
                     className="form-control"
                     onChange={(e) => (editFlag ? setPincode(e.target.value) : null)}
                     value={pincode}
@@ -348,6 +351,7 @@ const FormOne = ({ alter, toggleIconTab }) => {
                     })}
                     type="text"
                     id="fv-website"
+                    disabled={freezeFlag}
                     name="website"
                     className="form-control"
                     onChange={(e) => (editFlag ? setWebsite(e.target.value) : null)}
@@ -365,10 +369,11 @@ const FormOne = ({ alter, toggleIconTab }) => {
                   Autonomous Status
                 </Label>
 
-                <div className="form-control-select" style={{ width: "400px" }}>
+                <div className="form-control-select" style={{ width: "300px" }}>
                   <Select
                     id="autonomous"
                     name="autonomous"
+                    disabled={freezeFlag}
                     classNamePrefix="react-select"
                     onChange={(e) => (editFlag ? setAutonomous(e) : null)}
                     options={AutonomousOptions}
@@ -411,7 +416,6 @@ const FormOne = ({ alter, toggleIconTab }) => {
             Next &gt;
           </Button>
         </div>
-        <ToastContainer />
       </React.Fragment>
     );
   else

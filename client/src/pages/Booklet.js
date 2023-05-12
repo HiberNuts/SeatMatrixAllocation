@@ -13,112 +13,112 @@ import CourseDetails from "./BookletForm/CourseDetails";
 import PDF from "./BookletForm/PDF";
 
 const Booklet = ({ ...props }) => {
-    const [activeIconTab, setActiveIconTab] = useState("Personal");
-    const toggleIconTab = (icontab) => {
-        if (activeIconTab !== icontab) setActiveIconTab(icontab);
-    };
+  const [activeIconTab, setActiveIconTab] = useState("Personal");
+  const toggleIconTab = (icontab) => {
+    if (activeIconTab !== icontab) setActiveIconTab(icontab);
+  };
 
-    return (
-        <React.Fragment>
-            <Head title="Booklet" />
-            <Content>
-                <Block>
-                    <BlockHead>
-                        <BlockHeadContent>
-                            <BlockTitle tag="h5">Booklet Data Collection</BlockTitle>
-                            <p>Please fill the form within the due date</p>
-                        </BlockHeadContent>
-                    </BlockHead>
-                    <PreviewCard>
-                        <Nav tabs>
-                            <NavItem>
-                                <NavLink
-                                    tag="a"
-                                    href="#tab"
-                                    className={classnames({ active: activeIconTab === "Personal" })}
-                                    onClick={(ev) => {
-                                        ev.preventDefault();
-                                        // toggleIconTab("Personal");
-                                    }}
-                                >
-                                    <Icon name="user-fill" /> <span>College Details</span>
-                                </NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <NavLink
-                                    tag="a"
-                                    href="#tab"
-                                    className={classnames({ active: activeIconTab === "Bank" })}
-                                    onClick={(ev) => {
-                                        ev.preventDefault();
-                                        // toggleIconTab("Bank");
-                                    }}
-                                >
-                                    <Icon name="coins" /> <span>Bank Details</span>
-                                </NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <NavLink
-                                    tag="a"
-                                    href="#tab"
-                                    className={classnames({ active: activeIconTab === "Branch" })}
-                                    onClick={(ev) => {
-                                        ev.preventDefault();
-                                        // toggleIconTab("Branch");
-                                    }}
-                                >
-                                    <Icon name="tile-thumb-fill" /> <span>Branch Details</span>
-                                </NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <NavLink
-                                    tag="a"
-                                    href="#tab"
-                                    className={classnames({ active: activeIconTab === "Infrastructure" })}
-                                    onClick={(ev) => {
-                                        ev.preventDefault();
-                                        // toggleIconTab("Infrastructure");
-                                    }}
-                                >
-                                    <Icon name="building-fill" /> <span>Infrastructure</span>
-                                </NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <NavLink
-                                    tag="a"
-                                    href="#tab"
-                                    className={classnames({ active: activeIconTab === "PDF" })}
-                                    onClick={(ev) => {
-                                        ev.preventDefault();
-                                        toggleIconTab("PDF");
-                                    }}
-                                >
-                                    <Icon name="file-pdf" /> <span>PDF</span>
-                                </NavLink>
-                            </NavItem>
-                        </Nav>
-                        <TabContent activeTab={activeIconTab}>
-                            <TabPane tabId="Personal">
-                                <PersonalDetails id="form-1" toggleIconTab={toggleIconTab} alter />
-                            </TabPane>
-                            <TabPane tabId="Bank">
-                                <BankDetails id="form-2" toggleIconTab={toggleIconTab} alter />
-                            </TabPane>
-                            <TabPane tabId="Branch">
-                                <CourseDetails toggleIconTab={toggleIconTab} />
-                            </TabPane>
-                            <TabPane toggleIconTab={toggleIconTab} tabId="Infrastructure">
-                                <Infrastructure toggleIconTab={toggleIconTab} />
-                            </TabPane>
-                            <TabPane toggleIconTab={toggleIconTab} tabId="PDF">
-                                <PDF toggleIconTab={toggleIconTab} />
-                            </TabPane>
-                        </TabContent>
-                    </PreviewCard>
-                </Block>
-            </Content>
-        </React.Fragment>
-    );
+  return (
+    <React.Fragment>
+      <Head title="Booklet" />
+      <Content>
+        <Block>
+          <BlockHead>
+            <BlockHeadContent>
+              <BlockTitle tag="h5">Booklet Data Collection</BlockTitle>
+              <p>Please fill the form within the due date</p>
+            </BlockHeadContent>
+          </BlockHead>
+          <PreviewCard>
+            <Nav tabs>
+              <NavItem>
+                <NavLink
+                  tag="a"
+                  href="#tab"
+                  className={classnames({ active: activeIconTab === "Personal" })}
+                  onClick={(ev) => {
+                    ev.preventDefault();
+                    // toggleIconTab("Personal");
+                  }}
+                >
+                  <Icon name="user-fill" /> <span>College Details</span>
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink
+                  tag="a"
+                  href="#tab"
+                  className={classnames({ active: activeIconTab === "Bank" })}
+                  onClick={(ev) => {
+                    ev.preventDefault();
+                    // toggleIconTab("Bank");
+                  }}
+                >
+                  <Icon name="coins" /> <span>Bank Details</span>
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink
+                  tag="a"
+                  href="#tab"
+                  className={classnames({ active: activeIconTab === "Branch" })}
+                  onClick={(ev) => {
+                    ev.preventDefault();
+                    // toggleIconTab("Branch");
+                  }}
+                >
+                  <Icon name="tile-thumb-fill" /> <span>Branch Details</span>
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink
+                  tag="a"
+                  href="#tab"
+                  className={classnames({ active: activeIconTab === "Infrastructure" })}
+                  onClick={(ev) => {
+                    ev.preventDefault();
+                    // toggleIconTab("Infrastructure");
+                  }}
+                >
+                  <Icon name="building-fill" /> <span>Infrastructure</span>
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink
+                  tag="a"
+                  href="#tab"
+                  className={classnames({ active: activeIconTab === "PDF" })}
+                  onClick={(ev) => {
+                    ev.preventDefault();
+                    toggleIconTab("PDF");
+                  }}
+                >
+                  <Icon name="file-pdf" /> <span>PDF</span>
+                </NavLink>
+              </NavItem>
+            </Nav>
+            <TabContent activeTab={activeIconTab}>
+              <TabPane tabId="Personal">
+                <PersonalDetails id="form-1" toggleIconTab={toggleIconTab} alter />
+              </TabPane>
+              <TabPane tabId="Bank">
+                <BankDetails id="form-2" toggleIconTab={toggleIconTab} alter />
+              </TabPane>
+              <TabPane tabId="Branch">
+                <CourseDetails toggleIconTab={toggleIconTab} />
+              </TabPane>
+              <TabPane toggleIconTab={toggleIconTab} tabId="Infrastructure">
+                <Infrastructure toggleIconTab={toggleIconTab} />
+              </TabPane>
+              <TabPane toggleIconTab={toggleIconTab} tabId="PDF">
+                <PDF toggleIconTab={toggleIconTab} />
+              </TabPane>
+            </TabContent>
+          </PreviewCard>
+        </Block>
+      </Content>
+    </React.Fragment>
+  );
 };
 
 export default Booklet;

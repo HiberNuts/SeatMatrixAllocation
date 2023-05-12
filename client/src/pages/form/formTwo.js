@@ -131,6 +131,12 @@ const GOVTSeats = {
   UNIV: 1,
   IRTT: 0.65,
 };
+
+const AccredationOptions = [
+  { value: "ACC", label: "Accredited", disabled: true },
+  { value: "NACC", label: "Non - Accredited", disabled: true },
+];
+
 const FormTwo = ({ alter, toggleIconTab }) => {
   const courseSchema = {
     courseName: null,
@@ -356,14 +362,8 @@ const FormTwo = ({ alter, toggleIconTab }) => {
     onFormSubmit();
   };
 
-  const AccredationOptions = [
-    { value: "ACC", label: "Accredited" },
-    { value: "NACC", label: "Non - Accredited" },
-  ];
-
   return (
     <React.Fragment>
-      <ToastContainer />
       <Form className={formClass} onSubmit={(e) => e.preventDefault()}>
         <Row className="g-gs">
           <Col md="12">
@@ -385,17 +385,23 @@ const FormTwo = ({ alter, toggleIconTab }) => {
                 </thead>
                 <tbody>
                   {Course.map((e, index) => {
+                    console.log(e);
                     return (
                       <tr UseSubmitBehavior={false} onClick={(e) => e.preventDefault()} key={index}>
                         <th scope="row">{index + 1}</th>
                         <td>
                           <div className="form-control-select" style={{ width: "400px" }}>
-                            <Select
-                              onChange={(event) => handleCourseChange(event, index)}
-                              classNamePrefix="react-select"
-                              options={CourseList}
-                              value={e.courseName}
-                            />
+                            {freezeFlag ? (
+                              <input disabled={true} className="form-control" value={e.courseName.label}></input>
+                            ) : (
+                              <Select
+                                isOptionDisabled={(option) => (freezeFlag ? option.disabled : false)}
+                                onChange={(event) => handleCourseChange(event, index)}
+                                classNamePrefix="react-select"
+                                options={CourseList}
+                                value={e.courseName}
+                              />
+                            )}
                           </div>
                         </td>
                         <td>
@@ -406,6 +412,7 @@ const FormTwo = ({ alter, toggleIconTab }) => {
                         <td>
                           <div className="form-control-select">
                             <Select
+                              isOptionDisabled={(option) => (freezeFlag ? option.disabled : false)}
                               style={{ zIndex: "10000", width: "auto" }}
                               value={e.accredation}
                               onChange={(event) => handleAccrChange(event, index)}
@@ -419,6 +426,7 @@ const FormTwo = ({ alter, toggleIconTab }) => {
                             type="number"
                             id="fv-intake"
                             name="intake"
+                            disabled={freezeFlag}
                             ref={register({ required: true })}
                             className="form-control"
                             onChange={(event) => handleinTakeChange(event, index)}
@@ -436,6 +444,7 @@ const FormTwo = ({ alter, toggleIconTab }) => {
                             type="number"
                             id="fv-subject"
                             name="Surrender"
+                            disabled={freezeFlag}
                             ref={register({ required: true })}
                             className={`form-control ${errSurrender ? "error" : ""}`}
                             value={e.Surrender}
@@ -455,17 +464,19 @@ const FormTwo = ({ alter, toggleIconTab }) => {
                           <input type="text" id="fv-subject" className="form-control" disabled value={e.SWS} />
                         </td>
                         <td>
-                          <Button
-                            UseSubmitBehavior={false}
-                            key={index}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              removeCourse(index);
-                            }}
-                            class="btn btn-icon btn-outline-danger"
-                          >
-                            <em class="icon ni ni-cross-c"></em>
-                          </Button>
+                          {freezeFlag != true && (
+                            <Button
+                              UseSubmitBehavior={false}
+                              key={index}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                removeCourse(index);
+                              }}
+                              class="btn btn-icon btn-outline-danger"
+                            >
+                              <em class="icon ni ni-cross-c"></em>
+                            </Button>
+                          )}
                         </td>
                       </tr>
                     );
