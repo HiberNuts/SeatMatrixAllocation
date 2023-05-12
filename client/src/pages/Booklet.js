@@ -10,6 +10,7 @@ import { Block, BlockHead, BlockHeadContent, BlockTitle, BlockDes, BackTo } from
 import { PreviewCard } from "../components/preview/Preview";
 import Infrastructure from "./BookletForm/Infrastructure";
 import CourseDetails from "./BookletForm/CourseDetails";
+import PDF from "./BookletForm/PDF";
 
 const Booklet = ({ ...props }) => {
     const [activeIconTab, setActiveIconTab] = useState("Personal");
@@ -82,6 +83,19 @@ const Booklet = ({ ...props }) => {
                                     <Icon name="building-fill" /> <span>Infrastructure</span>
                                 </NavLink>
                             </NavItem>
+                            <NavItem>
+                                <NavLink
+                                    tag="a"
+                                    href="#tab"
+                                    className={classnames({ active: activeIconTab === "PDF" })}
+                                    onClick={(ev) => {
+                                        ev.preventDefault();
+                                        toggleIconTab("PDF");
+                                    }}
+                                >
+                                    <Icon name="file-pdf" /> <span>PDF</span>
+                                </NavLink>
+                            </NavItem>
                         </Nav>
                         <TabContent activeTab={activeIconTab}>
                             <TabPane tabId="Personal">
@@ -95,6 +109,9 @@ const Booklet = ({ ...props }) => {
                             </TabPane>
                             <TabPane toggleIconTab={toggleIconTab} tabId="Infrastructure">
                                 <Infrastructure toggleIconTab={toggleIconTab} />
+                            </TabPane>
+                            <TabPane toggleIconTab={toggleIconTab} tabId="PDF">
+                                <PDF toggleIconTab={toggleIconTab} />
                             </TabPane>
                         </TabContent>
                     </PreviewCard>

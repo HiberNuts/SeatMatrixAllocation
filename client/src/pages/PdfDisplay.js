@@ -1,15 +1,48 @@
 import { PDFViewer } from "@react-pdf/renderer";
 import React from "react";
-import PdfDcoument from "../utils/PdfUtils/generatorPdf";
+import PdfDcoument from "../utils/BookletPDF/generatorPdf";
 import { useLocation, useParams } from "react-router";
+import { useState, useEffect } from "react";
+import { backendURL } from "../backendurl";
+
 
 const PdfDisplay = (props) => {
-  console.log(props.location.state);
-  return (
-    <div>
-      <PdfDcoument collegeData={props.location.state} />
-    </div>
-  );
+  const [collegedata, setcollegeData] = useState();
+  const getCollegeInfo = async () => {
+    fetch(`${backendURL}/collegeData`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        setcollegeData(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    getCollegeInfo();
+  }, []);
+  if (collegedata) {
+    return (
+      <div>
+        <PDFViewer  width="100%" height="1000px">
+        <PdfDcoument collegedata={collegedata}/>
+      </PDFViewer>
+      </div>
+    );
+  } else {
+    return null;    
+  }
+ 
 };
 
 export default PdfDisplay;
