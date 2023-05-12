@@ -205,6 +205,7 @@ UserRouter.post(
   async (req, res, next) => {
     try {
       const { files } = req;
+
       let allFiles = [];
       Object.values(files).map((file) => {
         allFiles.push(file[0]);
@@ -244,7 +245,7 @@ UserRouter.post(
 UserRouter.post("/deleteDoc", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
   try {
     const { key } = req.body;
-    console.log(key);
+
     console.log(req.auth);
     var params = { Bucket: "tneaseatmatrix", Key: `${req.auth.ccode}/${key}.pdf` };
     s3.deleteObject(params, async function (err, data) {
