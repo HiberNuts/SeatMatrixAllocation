@@ -28,7 +28,7 @@ const FormFour = () => {
   const handleSubmit = async () => {
     try {
       var formData = new FormData();
-      if (collegeData?.Documents["seatMatrix"] != true) {
+      if (typeof collegeData.Documents === "undefined") {
         if (seatMatrix.length == undefined) {
           formData.append("seatMatrix", seatMatrix);
         } else {
