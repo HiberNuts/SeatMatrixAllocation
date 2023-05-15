@@ -9,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Button } from "../../components/Component";
 
 
-const BankDetails = ({ alter, toggleIconTab }) => {
+const BankDetails = ({alter,Data, toggleIconTab }) => {
     const [loading, setLoading] = useState(true);
     const [bank, setBank] = useState({ Name: "", IFSC: "", AccNo: "", Holder: "", Branch: "" })
     const [editFlag, seteditFlag] = useState(false);
@@ -70,19 +70,8 @@ const BankDetails = ({ alter, toggleIconTab }) => {
         "is-alter": alter,
     });
 
-    const getCollegeInfo = async () => {
-        fetch(`${backendURL}/collegeData`, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                return response.json();
-            })
-            .then((data) => {
+    const getCollegeInfo = async (data) => {
+        
                 console.log(data);
                 if (data.Booklet) {
                     if (data.Booklet.BankDetails) {
@@ -97,18 +86,14 @@ const BankDetails = ({ alter, toggleIconTab }) => {
                 else {
                     seteditFlag(true);
                 }
-                setLoading(false);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+                
+           
     };
 
     useEffect(() => {
-        getCollegeInfo();
+        getCollegeInfo(Data);
     }, []);
 
-    if (!loading)
         return (
             <div>
                 <Form className={formClass} onSubmit={handleSubmit((data) => onFormSubmit(data))}>
@@ -257,12 +242,6 @@ const BankDetails = ({ alter, toggleIconTab }) => {
                 </Form>
             </div>
 
-        );
-    else
-        return (
-            <div className="d-flex justify-content-center">
-                <Spinner style={{ width: "5rem", height: "5rem" }} color="primary" />
-            </div>
         );
 };
 export default BankDetails;

@@ -4,6 +4,8 @@ import Head from "../layout/head/Head";
 import Icon from "../components/icon/Icon";
 import classnames from "classnames";
 import PersonalDetails from "./BookletForm/PersonalDetails";
+import {Spinner} from "reactstrap";
+import { backendURL } from "../backendurl";
 import BankDetails from "./BookletForm/BankDetails";
 import { Nav, NavItem, NavLink, Row, Col, TabContent, TabPane } from "reactstrap";
 import { Block, BlockHead, BlockHeadContent, BlockTitle, BlockDes, BackTo } from "../components/block/Block";
@@ -16,7 +18,9 @@ const Booklet = ({ ...props }) => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState();
   const [activeIconTab, setActiveIconTab] = useState("Personal");
-
+const spinner=(<div className="d-flex justify-content-center">
+<Spinner style={{ width: "5rem", height: "5rem" }} color="primary" />
+</div>);
   const getCollegeInfo = async () => {
     fetch(`${backendURL}/collegeData`, {
         headers: {
@@ -124,26 +128,37 @@ useEffect(() => {
                 </NavLink>
               </NavItem>
             </Nav>
-            {
-              console.log("Inside Booklet",data)
-            }
             <TabContent activeTab={activeIconTab}>
               <TabPane tabId="Personal">
-               
-                <PersonalDetails Data={data} id="form-1" toggleIconTab={toggleIconTab} alter />
-           
+                {loading ? (
+                        spinner          
+                ):            
+                (<PersonalDetails Data={data} id="form-1" toggleIconTab={toggleIconTab} alter />)}
               </TabPane>
               <TabPane tabId="Bank">
-                <BankDetails id="form-2" toggleIconTab={toggleIconTab} alter />
+              {loading ? (
+                        spinner          
+                ):            
+                (<BankDetails Data={data} id="form-2" toggleIconTab={toggleIconTab} alter />)}
+               
               </TabPane>
               <TabPane tabId="Branch">
-                <CourseDetails toggleIconTab={toggleIconTab} />
+              {loading ? (
+                        spinner          
+                ):            
+                (<CourseDetails Data={data} id="form-3" toggleIconTab={toggleIconTab} alter />)}
               </TabPane>
               <TabPane toggleIconTab={toggleIconTab} tabId="Infrastructure">
-                <Infrastructure toggleIconTab={toggleIconTab} />
+              {loading ? (
+                        spinner          
+                ):            
+                (<Infrastructure Data={data} id="form-4" toggleIconTab={toggleIconTab} alter />)}
               </TabPane>
               <TabPane toggleIconTab={toggleIconTab} tabId="PDF">
-                <PDF toggleIconTab={toggleIconTab} />
+              {loading ? (
+                        spinner          
+                ):            
+                (<PDF Data={data} id="form-4" toggleIconTab={toggleIconTab} alter />)}
               </TabPane>
             </TabContent>
           </PreviewCard>

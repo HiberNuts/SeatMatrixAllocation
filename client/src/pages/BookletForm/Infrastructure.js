@@ -8,7 +8,7 @@ import classNames from "classnames";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const Infrastructure = ({ alter, toggleIconTab }) => {
+const Infrastructure = ({ alter,Data,toggleIconTab }) => {
   const [loading, setLoading] = useState(true);
   const { errors, register, handleSubmit } = useForm();
   const [editFlag, seteditFlag] = useState(true);
@@ -113,21 +113,10 @@ const Infrastructure = ({ alter, toggleIconTab }) => {
     "is-alter": alter,
   });
 
-  const getCollegeInfo = async () => {
-    fetch(`${backendURL}/collegeData`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
+  const getCollegeInfo = async (data) => {
 
-        setLoading(false);
+
+      
         if (data.Booklet) {
           data = data.Booklet.Infrastructure;
           console.log(data);
@@ -148,21 +137,18 @@ const Infrastructure = ({ alter, toggleIconTab }) => {
           setMintrans(data.mintrans);
           setMaxtrans(data.maxtrans);
         }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+
   };
 
   useEffect(() => {
-    getCollegeInfo();
+    getCollegeInfo(Data);
   }, []);
 
   const updateHandler = (data) => {
     seteditFlag(false);
     onFormSubmit(data);
   };
-  if (!loading)
+
     return (
       <React.Fragment>
         <Form className={formClass} onSubmit={handleSubmit((data) => onFormSubmit(data))}>
@@ -609,11 +595,6 @@ const Infrastructure = ({ alter, toggleIconTab }) => {
     
       </React.Fragment >
     );
-  else
-    return (
-      <div className="d-flex justify-content-center">
-        <Spinner style={{ width: "5rem", height: "5rem" }} color="primary" />
-      </div>
-    );
+  
 };
 export default Infrastructure;

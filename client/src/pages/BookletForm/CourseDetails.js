@@ -112,7 +112,7 @@ const SSCourse = [{ label: "APPAREL TECHNOLOGY (SS)", value: "AP" },
 { label: "PRODUCTION ENGINEERING (SANDWICH) (SS)", value: "PS" },
 { label: "ROBOTICS AND AUTOMATION (SS)", value: "RA" },
 { label: "TEXTILE TECHNOLOGY (SS)", value: "TT" }]
-const CourseDetails = ({ alter, toggleIconTab }) => {
+const CourseDetails = ({ alter,Data, toggleIconTab }) => {
   const courseSchema = {
     courseName: null,
     courseCode: null,
@@ -161,35 +161,19 @@ const CourseDetails = ({ alter, toggleIconTab }) => {
       });
   };
 
-  const getCollegeInfo = async () => {
-    fetch(`${backendURL}/collegeData`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
+  const getCollegeInfo = async (data) => {
+   
         if (data.Booklet) {
-
-
           console.log(data);
           setCourse(data.Booklet.CourseDetails ? data.Booklet.CourseDetails : [courseSchema]);
           setclgCAT(data.Category);
           removeCourseOnFetch(data.Booklet.CourseDetails, data.ccode);
         }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    
 
   };
   useEffect(() => {
-    getCollegeInfo();
+    getCollegeInfo(Data);
 
   }, []);
 

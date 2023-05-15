@@ -6,38 +6,25 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import PdfDcoument from "../../utils/BookletPDF/generatorPdf";
 import axios from "axios";
 
-const PDF = ({ alter, toggleIconTab }) => {
+const PDF = ({ alter,Data, toggleIconTab }) => {
   const [collegeData, setcollegeData] = useState();
   const [collegeName, setcollegeName] = useState();
   const [principalName, setprincipalName] = useState();
   const [declarationFlag, setdeclarationFlag] = useState(false);
   const [freezeFlag, setfreezeFlag] = useState(false);
 
-  const getCollegeInfo = async () => {
-    fetch(`${backendURL}/collegeData`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
+  const getCollegeInfo = async (data) => {
+
+  
         setcollegeData(data);
         setcollegeName(data.can);
         setprincipalName(data.Booklet.Personal.PrincipalName);
         setdeclarationFlag(data.Booklet.DeclarationFlag);
         setfreezeFlag(data?.Booklet.FreezeFlag ? data.Booklet.FreezeFlag : false);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    
   };
   useEffect(() => {
-    getCollegeInfo();
+    getCollegeInfo(Data);
   }, []);
 
   const updateDeclarationFlag = async (value) => {
