@@ -367,8 +367,8 @@ const FormTwo = ({ alter, toggleIconTab }) => {
       <Form className={formClass} onSubmit={(e) => e.preventDefault()}>
         <Row className="g-gs">
           <Col md="12">
-            <div>
-              <table className="table table-hover  w-auto">
+            <div style={{ overflowY: "auto" }}>
+              <table className="table table-responsive table-hover  w-auto">
                 <thead>
                   <tr>
                     <th scope="col">#</th>
@@ -395,6 +395,7 @@ const FormTwo = ({ alter, toggleIconTab }) => {
                               <input disabled={true} className="form-control" value={e.courseName.label}></input>
                             ) : (
                               <Select
+                               
                                 isOptionDisabled={(option) => (freezeFlag ? option.disabled : false)}
                                 onChange={(event) => handleCourseChange(event, index)}
                                 classNamePrefix="react-select"

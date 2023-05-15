@@ -83,12 +83,14 @@ const userSchema = new mongoose.Schema(
     Booklet: {
       type: Object,
       required: false,
-    }
+    },
+    bookletDeclaration: {
+      type: Boolean,
+    },
   },
   {
     timestamps: true,
-  },
-
+  }
 );
 
 module.exports = users = mongoose.model("users", userSchema);
