@@ -16,8 +16,8 @@ const Infrastructure = ({ alter, toggleIconTab }) => {
   const [DRS, setDRS] = useState("");
   const [railway, setRailway] = useState("");
   const [acc, setAcc] = useState({ boys: true, girls: true });
-  const [htype, setHtype] = useState({ boys: "", girls: "" });
-  const [mess, setMess] = useState({ boys: "", girls: "" })
+  const [htype, setHtype] = useState({ boys:"Rental", girls: "Rental" });
+  const [mess, setMess] = useState({ boys: "Both", girls: "Both" })
   const [bill, setBill] = useState({ boys: 0, girls: 0 });
   const [rent, setRent] = useState({ boys: 0, girls: 0 });
   const [elec, setElec] = useState({ boys: 0, girls: 0 });
@@ -88,7 +88,6 @@ const Infrastructure = ({ alter, toggleIconTab }) => {
       .then((data) => {
         console.log(data);
         if (data.status) {
-
           const notify = () => {
             toast.success("Submitted successfully", {
               position: "bottom-right",
@@ -102,6 +101,7 @@ const Infrastructure = ({ alter, toggleIconTab }) => {
           };
 
           notify();
+          toggleIconTab("PDF");
         }
       })
       .catch((error) => {
@@ -253,7 +253,7 @@ const Infrastructure = ({ alter, toggleIconTab }) => {
                         value={acc.boys ? BooleanOption[0] : BooleanOption[1]}
                         onChange={(event) => {
                           setAcc({ ...acc, boys: event.value });
-                          console.log(a)
+                       
                         }}
                         classNamePrefix="react-select"
                         options={BooleanOption}
@@ -266,7 +266,7 @@ const Infrastructure = ({ alter, toggleIconTab }) => {
                         value={acc.girls ? BooleanOption[0] : BooleanOption[1]}
                         onChange={(event) => {
                           setAcc({ ...acc, girls: event.value });
-                          console.log(a)
+                    
                         }}
                         classNamePrefix="react-select"
                         options={BooleanOption}
@@ -606,7 +606,7 @@ const Infrastructure = ({ alter, toggleIconTab }) => {
             </Button>
           </div>
         </Form>
-        <ToastContainer />
+    
       </React.Fragment >
     );
   else

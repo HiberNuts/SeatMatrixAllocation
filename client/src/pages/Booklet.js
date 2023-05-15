@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Content from "../layout/content/Content";
 import Head from "../layout/head/Head";
 import Icon from "../components/icon/Icon";
@@ -11,9 +11,36 @@ import { PreviewCard } from "../components/preview/Preview";
 import Infrastructure from "./BookletForm/Infrastructure";
 import CourseDetails from "./BookletForm/CourseDetails";
 import PDF from "./BookletForm/PDF";
-
+import { ToastContainer } from "react-toastify";
 const Booklet = ({ ...props }) => {
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState();
   const [activeIconTab, setActiveIconTab] = useState("Personal");
+
+  const getCollegeInfo = async () => {
+    fetch(`${backendURL}/collegeData`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            console.log(data);
+            setData(data);
+            setLoading(false);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+};
+useEffect(() => {
+  getCollegeInfo();
+},[])
   const toggleIconTab = (icontab) => {
     if (activeIconTab !== icontab) setActiveIconTab(icontab);
   };
@@ -97,9 +124,14 @@ const Booklet = ({ ...props }) => {
                 </NavLink>
               </NavItem>
             </Nav>
+            {
+              console.log("Inside Booklet",data)
+            }
             <TabContent activeTab={activeIconTab}>
               <TabPane tabId="Personal">
-                <PersonalDetails id="form-1" toggleIconTab={toggleIconTab} alter />
+               
+                <PersonalDetails Data={data} id="form-1" toggleIconTab={toggleIconTab} alter />
+           
               </TabPane>
               <TabPane tabId="Bank">
                 <BankDetails id="form-2" toggleIconTab={toggleIconTab} alter />
@@ -116,6 +148,7 @@ const Booklet = ({ ...props }) => {
             </TabContent>
           </PreviewCard>
         </Block>
+        <ToastContainer />
       </Content>
     </React.Fragment>
   );

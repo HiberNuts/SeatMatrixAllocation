@@ -247,11 +247,23 @@ const CourseDetails = ({ alter, toggleIconTab }) => {
   const checkErr = () => {
     let val = true;
     Course.forEach(e => {
-      if (e.courseCode != null && e.accredation != null && e.intake != 0 && e.year != 0 && e.valid != 0) {
-        val = val && true;
+      if (e.courseCode != null && e.accredation != null && e.intake != 0 && e.year != 0 && e.valid != 0 && e.year>1000 && e.year<2024) {
+   
+        if (e.accredation.value=='ACC') {
+          if (e.accUpto > 2022) {
+          val = val && true;
+          }
+          else
+          {
+            val=val&& false;
+          }
+        }
+        else
+        {
+          val = val && true;
+        }
       }
       else {
-        toast.error("Please Fill all Fields, to add New Course");
         val = val && false;
       }
     })
@@ -262,8 +274,21 @@ const CourseDetails = ({ alter, toggleIconTab }) => {
   const proceedNextBool = () => {
     let val = true;
     Course.forEach(e => {
-      if (e.courseCode != null && e.accredation != null && e.intake != 0 && e.year != 0 && e.valid != 0) {
-        val = val && true;
+      if (e.courseCode != null && e.accredation != null && e.intake != 0 && e.year != 0 && e.valid != 0 && e.year>1000 && e.year<2024) {
+   
+        if (e.accredation.value=='ACC') {
+          if (e.accUpto > 2022) {
+          val = val && true;
+          }
+          else
+          {
+            val=val&& false;
+          }
+        }
+        else
+        {
+          val = val && true;
+        }
       }
       else {
         val = val && false;
@@ -309,7 +334,6 @@ const CourseDetails = ({ alter, toggleIconTab }) => {
 
   return (
     <React.Fragment>
-      <ToastContainer />
       <Form className={formClass} onSubmit={(e) => e.preventDefault()}>
         <Row className="g-gs">
           <Col md="12">
@@ -377,6 +401,7 @@ const CourseDetails = ({ alter, toggleIconTab }) => {
                         <input
                           onChange={(event) => handlevalidChange(event, index)}
                           type="number"
+
                           id="fv-subject"
                           name="accredation"
                           ref={register({ required: true })}

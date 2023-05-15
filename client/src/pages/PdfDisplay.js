@@ -33,11 +33,11 @@ const PdfDisplay = (props) => {
   }, []);
   if (collegedata) {
     return (
-      <PDFViewer style={{ height: "1000px" }}>
+    
         <PDFViewer  width="100%" height="1000px">
         <PdfDcoument collegedata={collegedata}/>
       </PDFViewer>
-      </PDFViewer>
+
     );
   } else {
     return null;    

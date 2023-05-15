@@ -8,7 +8,7 @@ import classNames from "classnames";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const PersonalDetails = ({ alter, toggleIconTab }) => {
+const PersonalDetails = ({alter,Data,toggleIconTab }) => {
   const [loading, setLoading] = useState(true);
   const { errors, register, handleSubmit } = useForm();
   const [collegeName, setcollegeName] = useState("");
@@ -154,6 +154,7 @@ const PersonalDetails = ({ alter, toggleIconTab }) => {
   };
 
   useEffect(() => {
+    console.log("From Props",Data);
     getCollegeInfo();
   }, []);
 
@@ -280,6 +281,13 @@ const PersonalDetails = ({ alter, toggleIconTab }) => {
                     id="fv-phone"
                     name="phone"
                     className="form-control"
+                    ref={register({
+                      required: true,
+                      pattern: {
+                        value: /^[0-9]{10}$/i,
+                        message: "Invalid Phone Number",
+                      },
+                    })}
                     onChange={(e) => (editFlag ? setPhone(e.target.value) : null)}
                     value={phone}
                   />
@@ -301,10 +309,6 @@ const PersonalDetails = ({ alter, toggleIconTab }) => {
                   <textarea
                     ref={register({
                       required: true,
-                      pattern: {
-                        value: /^[A-Za-z]*$/i,
-                        message: "Invalid Address Name",
-                      },
                     })}
                     type="text"
                     id="fv-address"
@@ -315,9 +319,6 @@ const PersonalDetails = ({ alter, toggleIconTab }) => {
                   />
                   {errors.address && errors.address.type === "required" && (
                     <span className="invalid">This is required</span>
-                  )}
-                  {errors.address && errors.address.type === "pattern" && (
-                    <span className="invalid">{errors.district.message}</span>
                   )}
                 </div>
               </div>
@@ -549,7 +550,7 @@ const PersonalDetails = ({ alter, toggleIconTab }) => {
             </Button>
           </div>
         </Form>
-        <ToastContainer />
+      
       </React.Fragment >
     );
   else
