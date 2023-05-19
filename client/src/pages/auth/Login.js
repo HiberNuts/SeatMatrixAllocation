@@ -168,7 +168,7 @@ const Login = () => {
                       Password
                     </label>
                     <div className="form-control-wrap">
-                      <input type="text" className="form-control" id="passwordOne" />
+                      <input type="password" className="form-control" id="passwordOne" />
                       {collegeCodeError && <span className="invalid">New passowrd cannot be same as old one</span>}
                     </div>
                   </div>

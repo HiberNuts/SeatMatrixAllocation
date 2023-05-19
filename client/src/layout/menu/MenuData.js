@@ -7,13 +7,13 @@ const menu = [
     
     icon: "book-fill",
     text: "Booklet",
-    link: "/booklet",
+    link: "/",
   }
 ,
   {
     icon: "view-x3",
     text: "Seat Matrix",
-    link: "/",
+    link: "/seatMatrix",
   }
 ];
 export default menu;

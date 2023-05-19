@@ -112,7 +112,7 @@ const SSCourse = [{ label: "APPAREL TECHNOLOGY (SS)", value: "AP" },
 { label: "PRODUCTION ENGINEERING (SANDWICH) (SS)", value: "PS" },
 { label: "ROBOTICS AND AUTOMATION (SS)", value: "RA" },
 { label: "TEXTILE TECHNOLOGY (SS)", value: "TT" }]
-const CourseDetails = ({ alter,Data, toggleIconTab }) => {
+const CourseDetails = ({ alter,Data, toggleIconTab,updateCollegeInfo }) => {
   const courseSchema = {
     courseName: null,
     courseCode: null,
@@ -127,8 +127,14 @@ const CourseDetails = ({ alter,Data, toggleIconTab }) => {
   const [errSurrender, seterrSurrender] = useState(false);
   const [clgCAT, setclgCAT] = useState("NM");
   const [clgCode, setclgCode] = useState("");
+  const [frozen,setFrozen] = useState(false);
   const onFormSubmit = (data) => {
     console.log(Course)
+    if (frozen) {
+      toggleIconTab("Infrastructure");
+    }
+    else {
+
     fetch(`${backendURL}/bookletCourse`, {
       method: "Post",
       headers: {
@@ -153,18 +159,22 @@ const CourseDetails = ({ alter,Data, toggleIconTab }) => {
             toast.success("Data added successfully");
           };
           notify();
+          updateCollegeInfo();
           toggleIconTab("Infrastructure");
         }
       })
       .catch((error) => {
         console.log(error);
       });
+    }
   };
+
 
   const getCollegeInfo = async (data) => {
    
         if (data.Booklet) {
           console.log(data);
+          setFrozen(data.Booklet.Frozen);
           setCourse(data.Booklet.CourseDetails ? data.Booklet.CourseDetails : [courseSchema]);
           setclgCAT(data.Category);
           removeCourseOnFetch(data.Booklet.CourseDetails, data.ccode);
@@ -342,6 +352,7 @@ const CourseDetails = ({ alter,Data, toggleIconTab }) => {
                       <td>
                         <div className="form-control-select" style={{ width: "400px" }}>
                           <Select
+                            isDisabled={frozen}
                             onChange={(event) => handleCourseChange(event, index)}
                             classNamePrefix="react-select"
                             options={CourseList}
@@ -358,6 +369,7 @@ const CourseDetails = ({ alter,Data, toggleIconTab }) => {
                         <input
                           type="number"
                           name="intake"
+                          disabled={frozen}
                           id="fv-intake"
                           ref={register({ required: true })}
                           className="form-control"
@@ -369,11 +381,13 @@ const CourseDetails = ({ alter,Data, toggleIconTab }) => {
                       </td>
                       <td>
                         <input
+                        disabled={frozen}
                           onChange={(event) => handleyearChange(event, index)} type="text" id="fv-subject" className="form-control" value={e.year} />
                       </td>
                       <td>
                         <div className="form-control-select">
                           <Select
+                          isDisabled={frozen}
                             value={e.accredation}
                             onChange={(event) => handleAccrChange(event, index)}
                             classNamePrefix="react-select"
@@ -385,7 +399,7 @@ const CourseDetails = ({ alter,Data, toggleIconTab }) => {
                         <input
                           onChange={(event) => handlevalidChange(event, index)}
                           type="number"
-
+                          disabled={frozen}
                           id="fv-subject"
                           name="accredation"
                           ref={register({ required: true })}
@@ -395,6 +409,7 @@ const CourseDetails = ({ alter,Data, toggleIconTab }) => {
                       </td>
                       <td>
                         <Button
+                        disabled={frozen}
                           key={index}
                           onClick={() => {
                             removeCourse(index);
@@ -412,6 +427,7 @@ const CourseDetails = ({ alter,Data, toggleIconTab }) => {
           </Col>
           <Col md="12" className="text-center">
             <Button
+            disabled={frozen}
               className="container-fluid btn btn-secondary btn-md"
               onClick={() => {
                 addCourse();

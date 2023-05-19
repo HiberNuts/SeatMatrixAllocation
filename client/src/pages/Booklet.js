@@ -18,10 +18,14 @@ const Booklet = ({ ...props }) => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState();
   const [activeIconTab, setActiveIconTab] = useState("Personal");
+  const [personalFlag, setpersonalFlag] = useState(false);
+  const [courseFlag, setcourseFlag] = useState(false);
+  const [bankFlag, setBankFlag] = useState(false);
+  const [InfraFlag, setInfraFlag] = useState(false);
 const spinner=(<div className="d-flex justify-content-center">
 <Spinner style={{ width: "5rem", height: "5rem" }} color="primary" />
 </div>);
-  const getCollegeInfo = async () => {
+  const getCollegeInfo =() => {
     fetch(`${backendURL}/collegeData`, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -34,8 +38,15 @@ const spinner=(<div className="d-flex justify-content-center">
             return response.json();
         })
         .then((data) => {
-            console.log(data);
+        
+            console.log("Booklet",data);
             setData(data);
+            if (data.Booklet) {            
+            setpersonalFlag(data?.Booklet.PersonalDetailFlag == true ? true : false);
+            setBankFlag(data?.Booklet.BankDetailFlag == true ? true : false);
+            setInfraFlag(data?.Booklet.InfrastructureFlag == true ? true : false);
+            setcourseFlag(data?.Booklet.CourseDetailFlag== true ? true : false);
+            }
             setLoading(false);
         })
         .catch((error) => {
@@ -60,6 +71,7 @@ useEffect(() => {
               <p>Please fill the form within the due date</p>
             </BlockHeadContent>
           </BlockHead>
+          {loading?spinner:
           <PreviewCard>
             <Nav tabs>
               <NavItem>
@@ -69,7 +81,7 @@ useEffect(() => {
                   className={classnames({ active: activeIconTab === "Personal" })}
                   onClick={(ev) => {
                     ev.preventDefault();
-                    // toggleIconTab("Personal");
+                    toggleIconTab("Personal");
                   }}
                 >
                   <Icon name="user-fill" /> <span>College Details</span>
@@ -81,8 +93,14 @@ useEffect(() => {
                   href="#tab"
                   className={classnames({ active: activeIconTab === "Bank" })}
                   onClick={(ev) => {
-                    ev.preventDefault();
-                    // toggleIconTab("Bank");
+                    if (personalFlag) {
+                      ev.preventDefault();
+                      toggleIconTab("Bank");
+                    }
+                  }}
+                  style={{
+                    color: personalFlag == true ? "#526484" : "lightgray",
+                    cursor: personalFlag ? "pointer" : "not-allowed",
                   }}
                 >
                   <Icon name="coins" /> <span>Bank Details</span>
@@ -95,7 +113,14 @@ useEffect(() => {
                   className={classnames({ active: activeIconTab === "Branch" })}
                   onClick={(ev) => {
                     ev.preventDefault();
-                    // toggleIconTab("Branch");
+                    if (personalFlag && bankFlag) {
+                    toggleIconTab("Branch");
+                      
+                    }
+                  }}
+                  style={{
+                    color: personalFlag && bankFlag == true ? "#526484" : "lightgray",
+                    cursor: personalFlag && bankFlag ? "pointer" : "not-allowed",
                   }}
                 >
                   <Icon name="tile-thumb-fill" /> <span>Branch Details</span>
@@ -108,7 +133,14 @@ useEffect(() => {
                   className={classnames({ active: activeIconTab === "Infrastructure" })}
                   onClick={(ev) => {
                     ev.preventDefault();
-                    // toggleIconTab("Infrastructure");
+                    if (personalFlag && bankFlag && courseFlag) {
+                    toggleIconTab("Infrastructure");
+                      
+                    }
+                  }}
+                  style={{
+                    color: personalFlag && bankFlag && courseFlag == true ? "#526484" : "lightgray",
+                    cursor: personalFlag && bankFlag && courseFlag ? "pointer" : "not-allowed",
                   }}
                 >
                   <Icon name="building-fill" /> <span>Infrastructure</span>
@@ -133,35 +165,36 @@ useEffect(() => {
                 {loading ? (
                         spinner          
                 ):            
-                (<PersonalDetails Data={data} id="form-1" toggleIconTab={toggleIconTab} alter />)}
+                (<PersonalDetails updateCollegeInfo={getCollegeInfo} Data={data} id="form-1" toggleIconTab={toggleIconTab} alter />)}
               </TabPane>
               <TabPane tabId="Bank">
               {loading ? (
                         spinner          
                 ):            
-                (<BankDetails Data={data} id="form-2" toggleIconTab={toggleIconTab} alter />)}
+                (<BankDetails updateCollegeInfo={getCollegeInfo} Data={data} id="form-2" toggleIconTab={toggleIconTab} alter />)}
                
               </TabPane>
               <TabPane tabId="Branch">
               {loading ? (
                         spinner          
                 ):            
-                (<CourseDetails Data={data} id="form-3" toggleIconTab={toggleIconTab} alter />)}
+                (<CourseDetails updateCollegeInfo={getCollegeInfo}  Data={data} id="form-3" toggleIconTab={toggleIconTab} alter />)}
               </TabPane>
               <TabPane toggleIconTab={toggleIconTab} tabId="Infrastructure">
               {loading ? (
                         spinner          
                 ):            
-                (<Infrastructure Data={data} id="form-4" toggleIconTab={toggleIconTab} alter />)}
+                (<Infrastructure Data={data} id="form-4" updateCollegeInfo={getCollegeInfo} toggleIconTab={toggleIconTab} alter />)}
               </TabPane>
               <TabPane toggleIconTab={toggleIconTab} tabId="PDF">
               {loading ? (
                         spinner          
                 ):            
-                (<PDF Data={data} id="form-4" toggleIconTab={toggleIconTab} alter />)}
+                (<PDF Data={data} id="form-4"  updateCollegeInfo={getCollegeInfo} toggleIconTab={toggleIconTab} alter />)}
               </TabPane>
             </TabContent>
           </PreviewCard>
+}
         </Block>
         <ToastContainer />
       </Content>

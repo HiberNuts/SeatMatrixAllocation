@@ -8,7 +8,7 @@ import classNames from "classnames";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const PersonalDetails = ({alter,Data,toggleIconTab }) => {
+const PersonalDetails = ({alter,Data,toggleIconTab,updateCollegeInfo }) => {
   const [loading, setLoading] = useState(true);
   const { errors, register, handleSubmit } = useForm();
   const [collegeName, setcollegeName] = useState("");
@@ -28,6 +28,7 @@ const PersonalDetails = ({alter,Data,toggleIconTab }) => {
   const [principalName, setprincipalName] = useState("");
   const [email, setEmail] = useState("");
   const [editFlag, seteditFlag] = useState(false);
+  const [frozen,setFrozen]=useState(false);
 
   const AutonomousOptions = [
     { label: "Autonomous", value: true },
@@ -88,6 +89,7 @@ const PersonalDetails = ({alter,Data,toggleIconTab }) => {
               });
             };
             notify();
+            updateCollegeInfo();
             seteditFlag(false)
           }
         })
@@ -116,6 +118,7 @@ const PersonalDetails = ({alter,Data,toggleIconTab }) => {
         else
           setMinorityStatus("Yes");
         if (data.Booklet) {
+          setFrozen(data.Booklet.Frozen?true:false);
           data = data.Booklet.Personal;
           setprincipalName(data?.PrincipalName);
           setPhone(data?.PhoneNumber);
@@ -213,6 +216,7 @@ const PersonalDetails = ({alter,Data,toggleIconTab }) => {
                 </Label>
                 <div className="form-control-wrap">
                   <input
+                    disabled={frozen}
                     ref={register({ required: true })}
                     type="text"
                     id="fv-subject"
@@ -232,6 +236,7 @@ const PersonalDetails = ({alter,Data,toggleIconTab }) => {
                 </Label>
                 <div className="form-control-wrap">
                   <input
+                    disabled={frozen}
                     ref={register({
                       required: true,
                       pattern: {
@@ -262,6 +267,7 @@ const PersonalDetails = ({alter,Data,toggleIconTab }) => {
                 </Label>
                 <div className="form-control-wrap">
                   <input
+                    disabled={frozen}
                     type="number"
                     id="fv-phone"
                     name="phone"
@@ -295,6 +301,7 @@ const PersonalDetails = ({alter,Data,toggleIconTab }) => {
                     ref={register({
                       required: true,
                     })}
+                    disabled={frozen}
                     type="text"
                     id="fv-address"
                     name="address"
@@ -315,6 +322,7 @@ const PersonalDetails = ({alter,Data,toggleIconTab }) => {
                 </Label>
                 <div className="form-control-wrap">
                   <input
+                    disabled={frozen}
                     ref={register({
                       required: true,
                       pattern: {
@@ -345,6 +353,7 @@ const PersonalDetails = ({alter,Data,toggleIconTab }) => {
                 </Label>
                 <div className="form-control-wrap">
                   <input
+                    disabled={frozen}
                     ref={register({
                       required: true,
                       pattern: {
@@ -375,6 +384,7 @@ const PersonalDetails = ({alter,Data,toggleIconTab }) => {
                 </Label>
                 <div className="form-control-wrap">
                   <input
+                    disabled={frozen}
                     ref={register({
                       required: true,
                       pattern: {
@@ -408,6 +418,7 @@ const PersonalDetails = ({alter,Data,toggleIconTab }) => {
                     ref={register({
                       required: true,
                     })}
+                    disabled={frozen}
                     type="text"
                     id="fv-website"
                     name="website"
@@ -431,7 +442,7 @@ const PersonalDetails = ({alter,Data,toggleIconTab }) => {
                   <Select
                     id="autonomous"
                     name="autonomous"
-                    isDisabled={!editFlag}
+                    isDisabled={!editFlag||frozen}
                     classNamePrefix="react-select"
                     onChange={(e) => (editFlag ? setAutonomous(e) : null)}
                     options={AutonomousOptions}
@@ -448,7 +459,7 @@ const PersonalDetails = ({alter,Data,toggleIconTab }) => {
 
                 <div className="form-control-select" style={{ width: "400px" }}>
                   <Select
-                    isDisabled={!editFlag}
+                    isDisabled={!editFlag||frozen}
                     id="nacc"
                     name="nacc"
                     classNamePrefix="react-select"
@@ -469,6 +480,7 @@ const PersonalDetails = ({alter,Data,toggleIconTab }) => {
                 </Label>
                 <div className="form-control-wrap">
                   <input
+                    disabled={frozen}
                     ref={register({
                       required: NACCbool,
                     })}
@@ -493,6 +505,7 @@ const PersonalDetails = ({alter,Data,toggleIconTab }) => {
                 </Label>
                 <div className="form-control-wrap">
                   <input
+                    disabled={frozen}
                     ref={register({
                       required: NACCbool,
                     })}
@@ -515,6 +528,7 @@ const PersonalDetails = ({alter,Data,toggleIconTab }) => {
           <div className="pt-5 d-flex justify-content-between">
             <Button
               name="submit"
+              disabled={frozen}
               type="submit"
               color={editFlag ? "warning" : "primary"}
               size="lg"
@@ -527,7 +541,7 @@ const PersonalDetails = ({alter,Data,toggleIconTab }) => {
                 e.preventDefault();
                 toggleIconTab("Bank");
               }}
-              disabled={editFlag}
+              disabled={editFlag==true || !Data.Booklet?.PersonalDetailFlag}
               color="success"
               size="lg"
             >

@@ -143,6 +143,7 @@ UserRouter.post("/bookletData", ejwt({ secret: secret, algorithms: ["HS256"] }),
     } else {
       const user = await users.findByIdAndUpdate(req.auth.id, {
         "Booklet.Personal": Booklet,
+        "Booklet.PersonalDetailFlag": true,
       });
       res.json({ status: true });
     }
@@ -159,6 +160,7 @@ UserRouter.post("/bankData", ejwt({ secret: secret, algorithms: ["HS256"] }), as
     } else {
       const user = await users.findByIdAndUpdate(req.auth.id, {
         "Booklet.BankDetails": BankDetails,
+        "Booklet.BankDetailFlag": true,
       });
       res.json({ status: true });
     }
@@ -175,6 +177,23 @@ UserRouter.post("/bookletCourse", ejwt({ secret: secret, algorithms: ["HS256"] }
     } else {
       const user = await users.findByIdAndUpdate(req.auth.id, {
         "Booklet.CourseDetails": CourseDetails,
+        "Booklet.CourseDetailFlag": true,
+      });
+      res.json({ status: true });
+    }
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+UserRouter.post("/freezeBooklet", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
+  try {
+    const { freeze } = req.body;
+    console.log(req.body);
+    if (!freeze) {
+      res.json({ status: false, message: "incomplete body set" });
+    } else {
+      const user = await users.findByIdAndUpdate(req.auth.id, {
+        "Booklet.Frozen": freeze,
       });
       res.json({ status: true });
     }
@@ -191,6 +210,7 @@ UserRouter.post("/bookletInfrastructre", ejwt({ secret: secret, algorithms: ["HS
     } else {
       const user = await users.findByIdAndUpdate(req.auth.id, {
         "Booklet.Infrastructure": Infra,
+        "Booklet.InfrastructureFlag": true,
       });
       res.json({ status: true });
     }

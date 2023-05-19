@@ -8,7 +8,7 @@ import classNames from "classnames";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const Infrastructure = ({ alter,Data,toggleIconTab }) => {
+const Infrastructure = ({ alter,Data,toggleIconTab,updateCollegeInfo }) => {
   const [loading, setLoading] = useState(true);
   const { errors, register, handleSubmit } = useForm();
   const [editFlag, seteditFlag] = useState(true);
@@ -28,7 +28,7 @@ const Infrastructure = ({ alter,Data,toggleIconTab }) => {
   const [transportType, setTransportType] = useState("Optional");
   const [mintrans, setMintrans] = useState(0);
   const [maxtrans, setMaxtrans] = useState(0);
-
+  const [frozen,setFrozen]=useState(false);
 
   const HostelType = [
     { label: "Permanent", value: "Permanent" },
@@ -49,6 +49,10 @@ const Infrastructure = ({ alter,Data,toggleIconTab }) => {
   ];
   const onFormSubmit = (data) => {
     console.log("Here Data", data);
+    if (frozen) {
+          toggleIconTab("PDF");
+    }
+    else
     fetch(`${backendURL}/bookletInfrastructre`, {
       method: "Post",
       headers: {
@@ -101,6 +105,7 @@ const Infrastructure = ({ alter,Data,toggleIconTab }) => {
           };
 
           notify();
+        updateCollegeInfo();
           toggleIconTab("PDF");
         }
       })
@@ -118,6 +123,7 @@ const Infrastructure = ({ alter,Data,toggleIconTab }) => {
 
       
         if (data.Booklet) {
+          setFrozen(data.Booklet.Frozen);
           data = data.Booklet.Infrastructure;
           console.log(data);
           setDHQ(data.DHQ);
@@ -165,6 +171,7 @@ const Infrastructure = ({ alter,Data,toggleIconTab }) => {
                     id="fv-distanceHQ"
                     name="distanceHQ"
                     className="form-control"
+                    disabled={frozen}
                     onChange={(e) => (editFlag ? setDHQ(e.target.value) : null)}
                     value={DHQ}
                   />
@@ -185,6 +192,7 @@ const Infrastructure = ({ alter,Data,toggleIconTab }) => {
                     type="text"
                     id="fv-RS"
                     name="railway"
+                    disabled={frozen}
                     className="form-control"
                     onChange={(e) => (editFlag ? setRailway(e.target.value) : null)}
                     value={railway}
@@ -209,6 +217,7 @@ const Infrastructure = ({ alter,Data,toggleIconTab }) => {
                     type="number"
                     id="fv-distanceRS"
                     name="distanceRS"
+                    disabled={frozen}
                     className="form-control"
                     onChange={(e) => (editFlag ? setDRS(e.target.value) : null)}
                     value={DRS}
@@ -241,6 +250,7 @@ const Infrastructure = ({ alter,Data,toggleIconTab }) => {
                           setAcc({ ...acc, boys: event.value });
                        
                         }}
+                        isDisabled={frozen}
                         classNamePrefix="react-select"
                         options={BooleanOption}
                       />
@@ -254,6 +264,7 @@ const Infrastructure = ({ alter,Data,toggleIconTab }) => {
                           setAcc({ ...acc, girls: event.value });
                     
                         }}
+                        isDisabled={frozen}
                         classNamePrefix="react-select"
                         options={BooleanOption}
                       />
@@ -272,6 +283,7 @@ const Infrastructure = ({ alter,Data,toggleIconTab }) => {
                         onChange={(event) => {
                           setHtype({ ...htype, boys: event.value });
                         }}
+                        isDisabled={frozen}
                         classNamePrefix="react-select"
                         options={HostelType}
                       />
@@ -286,6 +298,7 @@ const Infrastructure = ({ alter,Data,toggleIconTab }) => {
                         onChange={(event) => {
                           setHtype({ ...htype, girls: event.value });
                         }}
+                        isDisabled={frozen}
                         classNamePrefix="react-select"
                         options={HostelType}
                       />
@@ -306,6 +319,7 @@ const Infrastructure = ({ alter,Data,toggleIconTab }) => {
                         onChange={(event) => {
                           setMess({ ...mess, boys: event.value });
                         }}
+                        isDisabled={frozen}
                         classNamePrefix="react-select"
                         options={MessType}
                       />
@@ -319,6 +333,7 @@ const Infrastructure = ({ alter,Data,toggleIconTab }) => {
                         onChange={(event) => {
                           setMess({ ...mess, girls: event.value });
                         }}
+                        isDisabled={frozen}
                         classNamePrefix="react-select"
                         options={MessType}
                       />
@@ -338,6 +353,7 @@ const Infrastructure = ({ alter,Data,toggleIconTab }) => {
                         id="fv-billb"
                         name="billb"
                         className="form-control"
+                        disabled={frozen}
                         onChange={(e) => (editFlag ? setBill({ ...bill, boys: e.target.value }) : null)}
                         value={bill.boys}
                       />
@@ -353,6 +369,7 @@ const Infrastructure = ({ alter,Data,toggleIconTab }) => {
                         type="number"
                         id="fv-billg"
                         name="billg"
+                        disabled={frozen}
                         className="form-control"
                         onChange={(e) => (editFlag ? setBill({ ...bill, girls: e.target.value }) : null)}
                         value={bill.girls}
@@ -376,6 +393,7 @@ const Infrastructure = ({ alter,Data,toggleIconTab }) => {
                         type="number"
                         id="fv-rentb"
                         name="rentb"
+                        disabled={frozen}
                         className="form-control"
                         onChange={(e) => (editFlag ? setRent({ ...rent, boys: e.target.value }) : null)}
                         value={rent.boys}
@@ -393,6 +411,7 @@ const Infrastructure = ({ alter,Data,toggleIconTab }) => {
                         type="number"
                         id="fv-rentg"
                         name="rentg"
+                        disabled={frozen}
                         className="form-control"
                         onChange={(e) => (editFlag ? setRent({ ...rent, girls: e.target.value }) : null)}
                         value={rent.girls}
@@ -417,6 +436,7 @@ const Infrastructure = ({ alter,Data,toggleIconTab }) => {
                         type="number"
                         id="fv-elecb"
                         name="elecb"
+                        disabled={frozen}
                         className="form-control"
                         onChange={(e) => (editFlag ? setElec({ ...elec, boys: e.target.value }) : null)}
                         value={elec.boys}
@@ -433,6 +453,7 @@ const Infrastructure = ({ alter,Data,toggleIconTab }) => {
                         type="number"
                         id="fv-rentg"
                         name="rentg"
+                        disabled={frozen}
                         className="form-control"
                         onChange={(e) => (editFlag ? setRent({ ...rent, girls: e.target.value }) : null)}
                         value={rent.girls}
@@ -455,6 +476,7 @@ const Infrastructure = ({ alter,Data,toggleIconTab }) => {
                         type="number"
                         id="fv-caution"
                         name="caution"
+                        disabled={frozen}
                         className="form-control"
                         onChange={(e) => (editFlag ? setCaution(e.target.value) : null)}
                         value={caution}
@@ -474,6 +496,7 @@ const Infrastructure = ({ alter,Data,toggleIconTab }) => {
                         type="number"
                         id="fv-estab"
                         name="estab"
+                        disabled={frozen}
                         className="form-control"
                         onChange={(e) => (editFlag ? setEstab(e.target.value) : null)}
                         value={estab}
@@ -493,6 +516,7 @@ const Infrastructure = ({ alter,Data,toggleIconTab }) => {
                         type="number"
                         id="fv-adm"
                         name="adm"
+                        disabled={frozen}
                         className="form-control"
                         onChange={(e) => (editFlag ? setAdm(e.target.value) : null)}
                         value={adm}
@@ -511,6 +535,7 @@ const Infrastructure = ({ alter,Data,toggleIconTab }) => {
                         value={transport ? BooleanOption[0] : BooleanOption[1]}
                         onChange={(event) => setTransport(event.value)}
                         classNamePrefix="react-select"
+                        isDisabled={frozen}
                         options={BooleanOption}
                       />
                     </div>
@@ -526,6 +551,7 @@ const Infrastructure = ({ alter,Data,toggleIconTab }) => {
                         value={transportType == "Optional" ? TransportOption[0] : TransportOption[1]}
                         onChange={(event) => setTransportType(event.value)}
                         classNamePrefix="react-select"
+                        isDisabled={frozen}
                         options={TransportOption}
                       />
                     </div>
@@ -542,6 +568,7 @@ const Infrastructure = ({ alter,Data,toggleIconTab }) => {
                         type="number"
                         id="fv-mintrans"
                         name="mintrans"
+                        disabled={frozen}
                         className="form-control"
                         onChange={(e) => (editFlag ? setMintrans(e.target.value) : null)}
                         value={mintrans}
@@ -561,6 +588,7 @@ const Infrastructure = ({ alter,Data,toggleIconTab }) => {
                         type="number"
                         id="fv-maxtrans"
                         name="maxtrans"
+                        disabled={frozen}
                         className="form-control"
                         onChange={(e) => (editFlag ? setMaxtrans(e.target.value) : null)}
                         value={maxtrans}
@@ -587,8 +615,10 @@ const Infrastructure = ({ alter,Data,toggleIconTab }) => {
               name="Submit"
               color="success"
               size="lg"
+              
             >
-              Submit
+              {frozen?("Next"):("Save and Proceed")}
+              
             </Button>
           </div>
         </Form>

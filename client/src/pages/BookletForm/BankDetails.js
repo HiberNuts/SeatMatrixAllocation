@@ -9,11 +9,12 @@ import "react-toastify/dist/ReactToastify.css";
 import { Button } from "../../components/Component";
 
 
-const BankDetails = ({alter,Data, toggleIconTab }) => {
+const BankDetails = ({alter,Data, toggleIconTab,updateCollegeInfo }) => {
     const [loading, setLoading] = useState(true);
     const [bank, setBank] = useState({ Name: "", IFSC: "", AccNo: "", Holder: "", Branch: "" })
     const [editFlag, seteditFlag] = useState(false);
     const { errors, register, handleSubmit } = useForm();
+    const [frozen,setFrozen]=useState(false);
     const onFormSubmit = (data) => {
         if (editFlag) {
             fetch(`${backendURL}/bankData`, {
@@ -52,6 +53,7 @@ const BankDetails = ({alter,Data, toggleIconTab }) => {
                             });
                         };
                         notify();
+                        updateCollegeInfo();
                         seteditFlag(false);
 
                     }
@@ -74,6 +76,7 @@ const BankDetails = ({alter,Data, toggleIconTab }) => {
         
                 console.log(data);
                 if (data.Booklet) {
+                    setFrozen(data.Booklet.Frozen);
                     if (data.Booklet.BankDetails) {
                         setBank(data.Booklet.BankDetails.Bank1);
                 
@@ -110,6 +113,7 @@ const BankDetails = ({alter,Data, toggleIconTab }) => {
                                     </label>
                                     <div className="form-control-wrap">
                                         <input
+                                        disabled={frozen}
                                             ref={register({
                                                 required: true
                                             })}
@@ -134,6 +138,8 @@ const BankDetails = ({alter,Data, toggleIconTab }) => {
                                             ref={register({
                                                 required: true
                                             })}
+                                        disabled={frozen}
+
                                             type="number"
                                             name="bankAcc"
                                             id="acc"
@@ -155,6 +161,8 @@ const BankDetails = ({alter,Data, toggleIconTab }) => {
                                                 required: true
                                             })}
                                             type="text"
+                                        disabled={frozen}
+
                                             name="bankHolder"
                                             id="bankHolder"
                                             className="form-control"
@@ -176,6 +184,8 @@ const BankDetails = ({alter,Data, toggleIconTab }) => {
                                             })}
                                             type="text"
                                             name="bankIFSC"
+                                        disabled={frozen}
+
                                             id="IFSC"
                                             className="form-control"
                                             value={bank.IFSC}
@@ -195,6 +205,8 @@ const BankDetails = ({alter,Data, toggleIconTab }) => {
                                                 required: true
                                             })}
                                             type="text"
+                                        disabled={frozen}
+
                                             name="bankAddr"
                                             id="bankAddr"
                                             className="form-control"
@@ -214,6 +226,7 @@ const BankDetails = ({alter,Data, toggleIconTab }) => {
                         <Button
                             type="submit"
                             onClick={() => { toggleIconTab("Personal"); }}
+                           
                             
                             color="danger"
                         >
@@ -224,6 +237,8 @@ const BankDetails = ({alter,Data, toggleIconTab }) => {
                             type="submit"
                             color={editFlag ? "warning" : "primary"}
                             size="lg"
+                            disabled={frozen}
+
                         >
                             {editFlag ? "Save" : "Edit"}
 
@@ -233,7 +248,7 @@ const BankDetails = ({alter,Data, toggleIconTab }) => {
                                 e.preventDefault();
                                 toggleIconTab("Branch");
                             }}
-                            color="success"
+                            disabled={editFlag|| !Data.Booklet?.BankDetailFlag}                            color="success"
                             size="lg"
                         >
                             Next &gt;
