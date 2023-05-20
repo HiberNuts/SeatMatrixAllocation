@@ -4,7 +4,7 @@ import Head from "../layout/head/Head";
 import Icon from "../components/icon/Icon";
 import classnames from "classnames";
 import PersonalDetails from "./BookletForm/PersonalDetails";
-import {Spinner} from "reactstrap";
+import { Spinner } from "reactstrap";
 import { backendURL } from "../backendurl";
 import BankDetails from "./BookletForm/BankDetails";
 import { Nav, NavItem, NavLink, Row, Col, TabContent, TabPane } from "reactstrap";
@@ -22,14 +22,16 @@ const Booklet = ({ ...props }) => {
   const [courseFlag, setcourseFlag] = useState(false);
   const [bankFlag, setBankFlag] = useState(false);
   const [InfraFlag, setInfraFlag] = useState(false);
-const spinner=(<div className="d-flex justify-content-center">
-<Spinner style={{ width: "5rem", height: "5rem" }} color="primary" />
-</div>);
+  const spinner = (
+    <div className="d-flex justify-content-center">
+      <Spinner style={{ width: "5rem", height: "5rem" }} color="primary" />
+    </div>
+  );
   const getCollegeInfo =() => {
     fetch(`${backendURL}/collegeData`, {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
     })
         .then((response) => {
             if (!response.ok) {

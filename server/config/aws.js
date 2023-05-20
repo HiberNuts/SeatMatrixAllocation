@@ -5,5 +5,5 @@ s3 = new AWS.S3({
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 });
 
-const BUCKET = "tneaseatmatrix";
+const BUCKET = "seatmatrix";
 module.exports = s3;

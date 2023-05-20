@@ -10,6 +10,8 @@ const s3 = require("../../config/aws");
 // Load User model
 const users = require("../../db/models/Users");
 
+const BUCKET = "tneaseatmatrix";
+
 var storage = multer.memoryStorage({
   destination: function (req, file, callback) {
     callback(null, "");
@@ -22,6 +24,7 @@ var multipleUpload = multer({ storage: storage }).fields([
   { name: "AUAffiliation" },
   { name: "Accredation" },
   { name: "Autonomous" },
+  { name: "bookletDeclaration" },
 ]);
 var upload = multer({ storage: storage }).single("file");
 
@@ -235,7 +238,7 @@ UserRouter.post(
       let document = College.Documents ? College.Documents : {};
       for (let i = 0; i < allFiles.length; i++) {
         var params = {
-          Bucket: "tneaseatmatrix",
+          Bucket: BUCKET,
           Body: allFiles[i].buffer,
           Key: `${req.auth.ccode}/${allFiles[i].fieldname}.pdf`,
         };
@@ -267,7 +270,7 @@ UserRouter.post("/deleteDoc", ejwt({ secret: secret, algorithms: ["HS256"] }), a
     const { key } = req.body;
 
     console.log(req.auth);
-    var params = { Bucket: "tneaseatmatrix", Key: `${req.auth.ccode}/${key}.pdf` };
+    var params = { Bucket: BUCKET, Key: `${req.auth.ccode}/${key}.pdf` };
     s3.deleteObject(params, async function (err, data) {
       if (err) res.json({ status: false }); // error
       else {
@@ -289,7 +292,7 @@ UserRouter.post("/deleteDoc", ejwt({ secret: secret, algorithms: ["HS256"] }), a
 UserRouter.get("/documents", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
   try {
     var params = {
-      Bucket: "tneaseatmatrix",
+      Bucket: BUCKET,
       Delimiter: "/",
       Prefix: `${req.auth.ccode}/`,
     };
@@ -303,7 +306,7 @@ UserRouter.get("/documents", ejwt({ secret: secret, algorithms: ["HS256"] }), as
         data.Contents.forEach((con) => keys.push(con["Key"]));
         for (let i = 0; i < keys.length; i++) {
           var params = {
-            Bucket: "tneaseatmatrix",
+            Bucket: BUCKET,
             Key: keys[i],
             Expires: 500,
           };
