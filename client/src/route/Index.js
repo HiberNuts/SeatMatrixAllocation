@@ -14,9 +14,9 @@ const Pages = () => {
     <Suspense fallback={<div />}>
       <Switch>
         {/* <Route exact path={"/pdf"} component={PdfDisplay}></Route> */}
-        <Route exact path={`${process.env.PUBLIC_URL}/`} component={Booklet}></Route>
+        <Route exact path={`${process.env.PUBLIC_URL}/`} component={Homepage}></Route>
         {/* <Route exact path={`${process.env.PUBLIC_URL}/booklet`} component={Booklet}></Route> */}
-        <Route exact path={`${process.env.PUBLIC_URL}/seatMatrix`} component={Error504Modern}></Route>
+        <Route exact path={`${process.env.PUBLIC_URL}/seatMatrix`} component={Homepage}></Route>
 
 
         <Route component={RedirectAs404}></Route>
