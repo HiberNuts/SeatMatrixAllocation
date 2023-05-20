@@ -385,7 +385,7 @@ const FormTwo = ({ alter, toggleIconTab }) => {
                 </thead>
                 <tbody>
                   {Course.map((e, index) => {
-                    console.log(e);
+              
                     return (
                       <tr UseSubmitBehavior={false} onClick={(e) => e.preventDefault()} key={index}>
                         <th scope="row">{index + 1}</th>

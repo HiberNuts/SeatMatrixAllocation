@@ -10,7 +10,7 @@ const s3 = require("../../config/aws");
 // Load User model
 const users = require("../../db/models/Users");
 
-const BUCKET = "tneaseatmatrix";
+const BUCKET = "seatmartix";
 
 var storage = multer.memoryStorage({
   destination: function (req, file, callback) {

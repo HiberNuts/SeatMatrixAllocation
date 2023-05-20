@@ -28,11 +28,16 @@ const FormFour = () => {
   const handleSubmit = async () => {
     try {
       var formData = new FormData();
-      if (typeof collegeData.Documents === "undefined") {
+      if (
+        typeof collegeData?.Documents === "undefined" ||
+        collegeData?.Documents["seatMatrix"] != true ||
+        collegeData?.Documents["seatMatrix"] == true
+      ) {
         if (seatMatrix.length == undefined) {
           formData.append("seatMatrix", seatMatrix);
         } else {
           toast.warning("Seat matrix form is compulsory");
+          return;
         }
       }
 
@@ -59,6 +64,7 @@ const FormFour = () => {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
         });
+        console.log(res);
         if (res.data.status) {
           setSeatMatrix();
           inputseatMatrix.current.value = "";
@@ -70,9 +76,9 @@ const FormFour = () => {
           inputAccredation.current.value = "";
           setAutonomous();
           inputAutonomous.current.value = "";
+          getCollegeData();
+          toast.success("Files added successfully");
         }
-        getCollegeData();
-        toast.success("Files added successfully");
       } else {
         toast.warning("Select atleast one field");
         return;
