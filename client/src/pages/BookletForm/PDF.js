@@ -22,7 +22,7 @@ const PDF = ({ alter, Data, getCollegeInfo, toggleIconTab }) => {
     setcollegeName(data.can);
     setprincipalName(data.Booklet.Personal.PrincipalName);
     setdeclarationFlag(data.Booklet.DeclarationFlag);
-    setfreezeFlag(data?.Booklet.FreezeFlag ? data.Booklet.FreezeFlag : false);
+    setfreezeFlag(data?.Booklet.Frozen ? data.Booklet.Frozen : false);
   };
   useEffect(() => {
     getCollegedata(Data);
@@ -53,10 +53,10 @@ const PDF = ({ alter, Data, getCollegeInfo, toggleIconTab }) => {
             toast.success("Frozen successfully");
           };
           notify();
-          updateCollegeInfo();
+          getCollegeInfo();
           // Reload webpage
           window.location.href="/";
-          // toggleIconTab("Infrastructure");
+
         }
       })
       .catch((error) => {
@@ -115,8 +115,10 @@ const PDF = ({ alter, Data, getCollegeInfo, toggleIconTab }) => {
           setbookletDeclaration();
           inputbookletDeclaration.current.value = "";
           getCollegeInfo();
+          window.location.href="/";
         }
         toast.success("Files added successfully");
+
       } else {
         toast.warning("Select atleast one field");
         return;
@@ -181,6 +183,7 @@ const PDF = ({ alter, Data, getCollegeInfo, toggleIconTab }) => {
       </div>
       <input
         style={{ fontSize: "20px" }}
+        disabled={freezeFlag}
         class="form-check-input"
         onClick={(e) => {
           if (freezeFlag) {
@@ -254,6 +257,7 @@ const PDF = ({ alter, Data, getCollegeInfo, toggleIconTab }) => {
                     {collegeData?.Documents?.bookletDeclaration == true ? (
                       <button
                         style={{ marginRight: "5px" }}
+                        disabled={freezeFlag}
                         class="btn btn-sm btn-outline-dark"
                         onClick={() => inputbookletDeclaration.current.click()}
                       >
@@ -262,6 +266,7 @@ const PDF = ({ alter, Data, getCollegeInfo, toggleIconTab }) => {
                     ) : (
                       <button
                         style={{ marginRight: "5px" }}
+                        disabled={freezeFlag}
                         class="btn btn-sm btn-outline-dark"
                         onClick={() => inputbookletDeclaration.current.click()}
                       >
@@ -272,6 +277,7 @@ const PDF = ({ alter, Data, getCollegeInfo, toggleIconTab }) => {
                     {bookletDeclaration && (
                       <button
                         class="btn btn-sm btn-outline-dark"
+                        disabled={freezeFlag}
                         onClick={() => {
                           inputbookletDeclaration.current.value = "";
                           setbookletDeclaration();
@@ -283,6 +289,7 @@ const PDF = ({ alter, Data, getCollegeInfo, toggleIconTab }) => {
                     <input
                       type="file"
                       accept=".pdf"
+                      disabled={freezeFlag}
                       onChange={(e) => {
                         if (e.target.files[0].size > 1048576) {
                           inputbookletDeclaration.current.value = "";
@@ -308,9 +315,21 @@ const PDF = ({ alter, Data, getCollegeInfo, toggleIconTab }) => {
           </tr>
         </tbody>
       </table>
-      <Button onClick={handleSubmit} color="primary">
+      <div className="d-flex justify-content-between">
+      <Button onClick={handleSubmit} 
+                        disabled={freezeFlag}
+                        color="primary">
         Submit Changes
       </Button>
+      {
+       declarationFlag||freezeFlag? (
+        <button disabled={freezeFlag} onClick={FreezeBooklet} className="btn btn-danger">{freezeFlag?
+          "Frozen" : "Freeze"}</button>
+            ) : (
+              null
+            )
+            }
+            </div>
     </div>
   );
 };

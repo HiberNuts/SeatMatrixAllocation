@@ -192,7 +192,7 @@ useEffect(() => {
               {loading ? (
                         spinner          
                 ):            
-                (<PDF Data={data} id="form-4"  updateCollegeInfo={getCollegeInfo} toggleIconTab={toggleIconTab} alter />)}
+                (<PDF Data={data} id="form-4"  getCollegeInfo={getCollegeInfo} toggleIconTab={toggleIconTab} alter />)}
               </TabPane>
             </TabContent>
           </PreviewCard>
