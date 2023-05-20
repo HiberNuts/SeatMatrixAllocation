@@ -357,8 +357,8 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
       <Form className={formClass} onSubmit={(e) => e.preventDefault()}>
         <Row className="g-gs">
           <Col md="12">
-            <div style={{ overflowY: "auto" }}>
-              <table className="table table-responsive table-hover  w-auto">
+          <div className={window.innerWidth <= 1150 ? "table-responsive " : ""}>
+              <table className={window.innerWidth <= 1150 ? "table table-responsive table-hover" : "table table-hover"}>
                 <thead>
                   <tr>
                     <th scope="col">#</th>

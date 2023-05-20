@@ -98,11 +98,15 @@ const FormOne = ({ alter, toggleIconTab,updateCollegeInfo,Data }) => {
 
   const getCollegeInfo = async () => {
         const data = Data;
+        console.log(data);
         setLoading(false);
         setcollegeName(data.can);
         setcollegeCode(data.ccode);
         setCollegeType(FULLFORM[data.Category]);
         setpersonalDetailFlag(data?.PersonalDetailFlag);
+        if(data?.PersonalDetailFlag==false){
+          seteditFlag(true)
+        }
         setprincipalName(data?.PrincipalName);
         setPhone(data?.PhoneNumber);
         setAutonomous(data.Autonomous ? AutonomousOptions[0] : AutonomousOptions[1]);
@@ -116,9 +120,10 @@ const FormOne = ({ alter, toggleIconTab,updateCollegeInfo,Data }) => {
 
   useEffect(() => {
     getCollegeInfo();
-    if(personalDetailFlag==false){
-      seteditFlag(true)
-    }
+    console.log(personalDetailFlag);
+    // if(personalDetailFlag==false){
+    //   seteditFlag(true)
+    // }
 
   }, []);
 
