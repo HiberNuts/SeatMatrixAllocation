@@ -25,7 +25,7 @@ const FULLFORM = {
   TELUGU: "TELUGU",
   UNIV: "UNIVERSITY",
 };
-const FormOne = ({ alter, toggleIconTab }) => {
+const FormOne = ({ alter, toggleIconTab,updateCollegeInfo,Data }) => {
   const [loading, setLoading] = useState(true);
   const { errors, register, handleSubmit } = useForm();
   const [collegeName, setcollegeName] = useState("");
@@ -84,6 +84,7 @@ const FormOne = ({ alter, toggleIconTab }) => {
           };
 
           notify();
+          updateCollegeInfo();
         }
       })
       .catch((error) => {
@@ -96,18 +97,7 @@ const FormOne = ({ alter, toggleIconTab }) => {
   });
 
   const getCollegeInfo = async () => {
-    fetch(`${backendURL}/collegeData`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
+        const data = Data;
         setLoading(false);
         setcollegeName(data.can);
         setcollegeCode(data.ccode);
@@ -121,14 +111,15 @@ const FormOne = ({ alter, toggleIconTab }) => {
         setPincode(data?.Pincode);
         setEmail(data?.Email);
         setfreezeFlag(data?.FreezeFlag ? data.FreezeFlag : false);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    
   };
 
   useEffect(() => {
     getCollegeInfo();
+    if(personalDetailFlag==false){
+      seteditFlag(true)
+    }
+
   }, []);
 
   const updateHandler = (data) => {

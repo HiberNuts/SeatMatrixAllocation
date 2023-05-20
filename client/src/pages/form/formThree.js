@@ -6,7 +6,7 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import PdfDcoument from "../../utils/PdfUtils/generatorPdf";
 import axios from "axios";
 
-const FormThree = ({ alter, toggleIconTab }) => {
+const FormThree = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
   const [collegeData, setcollegeData] = useState();
   const [collegeName, setcollegeName] = useState();
   const [principalName, setprincipalName] = useState();
@@ -14,27 +14,13 @@ const FormThree = ({ alter, toggleIconTab }) => {
   const [freezeFlag, setfreezeFlag] = useState(false);
 
   const getCollegeInfo = async () => {
-    fetch(`${backendURL}/collegeData`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
+        const data =Data;
         setcollegeData(data);
         setcollegeName(data.can);
         setprincipalName(data.PrincipalName);
         setdeclarationFlag(data.DeclarationFlag);
         setfreezeFlag(data?.FreezeFlag ? data.FreezeFlag : false);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      
   };
   useEffect(() => {
     getCollegeInfo();

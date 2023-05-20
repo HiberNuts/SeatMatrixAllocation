@@ -137,7 +137,7 @@ const AccredationOptions = [
   { value: "NACC", label: "Non - Accredited", disabled: true },
 ];
 
-const FormTwo = ({ alter, toggleIconTab }) => {
+const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
   const courseSchema = {
     courseName: null,
     courseCode: null,
@@ -179,6 +179,7 @@ const FormTwo = ({ alter, toggleIconTab }) => {
             toast.success("Data added successfully");
           };
           notify();
+          updateCollegeInfo();
         }
       })
       .catch((error) => {
@@ -187,18 +188,7 @@ const FormTwo = ({ alter, toggleIconTab }) => {
   };
 
   const getCollegeInfo = async () => {
-    fetch(`${backendURL}/collegeData`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
+        const data=Data;
         setCourse(data.CourseDetails ? data.CourseDetails : []);
         setfreezeFlag(data?.FreezeFlag ? data.FreezeFlag : false);
         if (data.ccode === "2709") {
@@ -207,10 +197,7 @@ const FormTwo = ({ alter, toggleIconTab }) => {
           setclgCAT(data.Category);
         }
         removeCourseOnFetch(data.CourseDetails, data.ccode);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+     
   };
   useEffect(() => {
     getCollegeInfo();
@@ -330,6 +317,9 @@ const FormTwo = ({ alter, toggleIconTab }) => {
         val = val && false;
       }
     });
+    if (Course.length == 0) {
+      return false;
+    }
     return val;
   };
   const addCourse = () => {

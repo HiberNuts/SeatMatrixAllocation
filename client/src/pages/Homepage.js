@@ -14,6 +14,8 @@ import PdfDcoument from "../utils/PdfUtils/generatorPdf";
 import FormThree from "./form/formThree";
 import { backendURL } from "../backendurl";
 import { ToastContainer } from "react-toastify";
+import { Spinner } from "reactstrap";
+
 
 const Homepage = ({ ...props }) => {
   const [activeIconTab, setActiveIconTab] = useState("5");
@@ -25,7 +27,8 @@ const Homepage = ({ ...props }) => {
   const [courseFlag, setcourseFlag] = useState(false);
   const [declarationFlag, setdeclarationFlag] = useState(false);
   const [docFlag, setdocFlag] = useState(false);
-
+  const [data,setData]=useState();
+  const [loading,setLoading]=useState(true);
   const getCollegeInfo = async () => {
     fetch(`${backendURL}/collegeData`, {
       headers: {
@@ -39,10 +42,12 @@ const Homepage = ({ ...props }) => {
         return response.json();
       })
       .then((data) => {
+        setData(data);
         setpersonalFlag(data?.PersonalDetailFlag == true ? true : false);
         setcourseFlag(data?.CourseDetails?.length >= 1 ? true : false);
         setdeclarationFlag(data?.DeclarationFlag == true ? true : false);
         setdocFlag(data?.DocumentUploadFlag == true ? true : false);
+        setLoading(false);
       })
       .catch((error) => {
         console.log(error);
@@ -53,6 +58,11 @@ const Homepage = ({ ...props }) => {
     getCollegeInfo();
   }, []);
 
+  const spinner = (
+    <div className="d-flex justify-content-center">
+      <Spinner style={{ width: "5rem", height: "5rem" }} color="primary" />
+    </div>
+  );
   return (
     <React.Fragment>
       <Head title="HomePage" />
@@ -145,16 +155,32 @@ const Homepage = ({ ...props }) => {
             </Nav>
             <TabContent activeTab={activeIconTab}>
               <TabPane tabId="5">
-                <FormOne id="form-1" toggleIconTab={toggleIconTab} alter />
+              {loading ? (
+                        spinner          
+                ):            
+                (<FormOne toggleIconTab={toggleIconTab} updateCollegeInfo={getCollegeInfo} Data={data} alter />)}
+                
               </TabPane>
               <TabPane tabId="6">
-                <FormTwo id="form-2" toggleIconTab={toggleIconTab} alter />
+              {loading ? (
+                        spinner          
+                ):            
+                (<FormTwo toggleIconTab={toggleIconTab} updateCollegeInfo={getCollegeInfo} Data={data} alter />)}
+                
               </TabPane>
-              <TabPane tabId="7">
-                <FormThree />
+              <TabPane tabId="7" >
+              {loading ? (
+                        spinner          
+                ):            
+                (<FormThree toggleIconTab={toggleIconTab} updateCollegeInfo={getCollegeInfo} Data={data} alter />)}
+                
               </TabPane>
-              <TabPane tabId="8">
-                <FormFour></FormFour>
+              <TabPane tabId="8" >
+              {loading ? (
+                        spinner          
+                ):            
+                (<FormFour toggleIconTab={toggleIconTab} updateCollegeInfo={getCollegeInfo} Data={data} alter />)}
+                
               </TabPane>
             </TabContent>
           </PreviewCard>
