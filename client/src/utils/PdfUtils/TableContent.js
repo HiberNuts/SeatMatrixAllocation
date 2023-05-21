@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
 const TableContent = ({ collegeData }) => {
   const rows = collegeData?.CourseDetails?.map((item, index) => (
     <View style={styles.container}>
-      <Text style={styles.common}>{index}</Text>
+      <Text style={styles.common}>{index + 1}</Text>
       <Text style={styles.courseName}>{item.courseName.label}</Text>
       <Text style={styles.common}>{item.courseCode}</Text>
       <Text style={styles.common}>{item.accredation.label}</Text>

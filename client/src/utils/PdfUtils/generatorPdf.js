@@ -87,9 +87,9 @@ const PdfDcoument = ({ collegeData }) => (
       <CourseTable collegeData={collegeData} />
       <View>
         <Text style={styles.decl}>
-          We, declare that I have thoroughly reviewed and verified all seat allocation matrix for TNEA. I have ensured
+          We, declare that we have thoroughly reviewed and verified all seat allocation matrix for TNEA. We have ensured
           that all seats have been allocated appropriately and that no further changes will be made to the allocation
-          matrix without proper authorization from the relevant authorities. I take full responsibility for any errors
+          matrix without proper authorization from the relevant authorities. We take full responsibility for any errors
           or omissions that may have occurred during the verification process and certify that all changes made to the
           matrix were necessary and within the scope of the project/task/assignment.
         </Text>
