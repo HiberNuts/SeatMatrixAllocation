@@ -23,6 +23,7 @@ const FormThree = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
       
   };
   useEffect(() => {
+    updateCollegeInfo();
     getCollegeInfo();
   }, []);
 

@@ -69,7 +69,7 @@ const PdfDcoument = ({ collegeData }) => (
       <View styles={styles.header}>
         <Image style={styles.Logo} src={LogoDark2x} />
         <Text style={styles.HeaderText}>Directorate of Technical Education - Chennai</Text>
-        <Text style={styles.HeaderText}>Tamil Nadu Engineering Association</Text>
+        <Text style={styles.HeaderText}>Tamil Nadu Engineering Admission</Text>
       </View>
       <View styles={styles.Center}>
         <View style={{ display: "flex" }}>

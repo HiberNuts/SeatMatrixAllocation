@@ -15,7 +15,7 @@ import FormThree from "./form/formThree";
 import { backendURL } from "../backendurl";
 import { ToastContainer } from "react-toastify";
 import { Spinner } from "reactstrap";
-
+import Verify from "./form/Verify";
 
 const Homepage = ({ ...props }) => {
   const [activeIconTab, setActiveIconTab] = useState("5");
@@ -118,6 +118,28 @@ const Homepage = ({ ...props }) => {
                     color: personalFlag == true && courseFlag == true ? "#526484" : "lightgray",
                     cursor: personalFlag && courseFlag == true ? "pointer" : "not-allowed",
                   }}
+                  className={classnames({ active: activeIconTab === "verify" })}
+                  onClick={(ev) => {
+                    if (personalFlag && courseFlag) {
+                      ev.preventDefault();
+                      toggleIconTab("verify");
+                    } else {
+                      return;
+                    }
+                  }}
+                >
+                  <Icon name="reload-alt" /> <span>Verify</span>
+                </NavLink>
+              </NavItem>
+              
+              <NavItem>
+                <NavLink
+                  tag="a"
+                  href="#tab"
+                  style={{
+                    color: personalFlag == true && courseFlag == true ? "#526484" : "lightgray",
+                    cursor: personalFlag && courseFlag == true ? "pointer" : "not-allowed",
+                  }}
                   className={classnames({ active: activeIconTab === "7" })}
                   onClick={(ev) => {
                     if (personalFlag && courseFlag) {
@@ -131,6 +153,7 @@ const Homepage = ({ ...props }) => {
                   <Icon name="check-fill-c" /> <span>Declaration</span>
                 </NavLink>
               </NavItem>
+            
               <NavItem>
                 <NavLink
                   tag="a"
@@ -166,6 +189,13 @@ const Homepage = ({ ...props }) => {
                         spinner          
                 ):            
                 (<FormTwo toggleIconTab={toggleIconTab} updateCollegeInfo={getCollegeInfo} Data={data} alter />)}
+                
+              </TabPane>
+              <TabPane tabId="verify">
+              {loading ? (
+                        spinner          
+                ):            
+                (<Verify toggleIconTab={toggleIconTab} updateCollegeInfo={getCollegeInfo} Data={data} alter />)}
                 
               </TabPane>
               <TabPane tabId="7" >

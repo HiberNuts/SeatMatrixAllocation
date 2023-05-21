@@ -7,113 +7,8 @@ import { backendURL } from "../../backendurl";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Select from "react-select";
-const CourseList = [
-  { label: "ARTIFICIAL INTELLIGENCE AND DATA SCIENCE", value: "AD" },
-  { label: "AERONAUTICAL ENGINEERING", value: "AE" },
-  { label: "AGRICULTURAL ENGINEERING", value: "AG" },
-  { label: "Artificial Intelligence and Machine Learning", value: "AL" },
-  { label: "COMPUTER SCIENCE AND ENGINEERING (ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING)", value: "AM" },
-  { label: "AEROSPACE ENGINEERING", value: "AO" },
-  { label: "AUTOMOBILE ENGINEERING", value: "AU" },
-  { label: "Bio Technology and Bio Chemical Engineering", value: "BC" },
-  { label: "BIO MEDICAL ENGINEERING ", value: "BM" },
-  { label: "B.Plan", value: "BP" },
-  { label: "BIO TECHNOLOGY", value: "BT" },
-  { label: "COMPUTER SCIENCE AND BUSSINESS SYSTEM", value: "CB" },
-  { label: "COMPUTER SCIENCE AND DESIGN", value: "CD" },
-  { label: "CIVIL  ENGINEERING ", value: "CE" },
-  { label: "COMPUTER SCIENCE AND ENGINEERING (DATA SCIENCE)", value: "CF" },
-  { label: "CHEMICAL  ENGINEERING ", value: "CH" },
-  { label: "Computer Science and Engineering (Internet of Things)", value: "CI" },
-  { label: "M.Tech. Computer Science and Engineering (Integrated 5 years)", value: "CJ" },
-  { label: "COMPUTER AND  COMMUNICATION ENGINEERING", value: "CO" },
-  { label: "COMPUTER SCIENCE AND ENGINEERING", value: "CS" },
-  { label: "COMPUTER TECHNOLOGY", value: "CT" },
-  { label: "Cyber Security", value: "CY" },
-  { label: "CIVIL AND STRUCTUTURAL ENGINEERING", value: "CZ" },
-  { label: "ELECTRONICS AND COMMUNICATION ENGINEERING", value: "EC" },
-  { label: "ELECTRICAL AND ELECTRONICS ENGINEERING", value: "EE" },
-  { label: "ELECTRONICS AND INSTRUMENTATION ENGINEERING", value: "EI" },
-  { label: "ENVIRONMENTAL ENGINEERING", value: "EN" },
-  { label: "ELECTRONICS AND  TELECOMMUNICATION ENGINEERING", value: "ET" },
-  { label: "FOOD TECHNOLOGY ", value: "FD" },
-  { label: "FASHION TECHNOLOGY", value: "FT" },
-  { label: "GEO INFORMATICS", value: "GI" },
-  { label: "HANDLOOM AND TEXTILE TECHNOLOGY", value: "HT" },
-  { label: "INDUSTRIAL BIO TECHNOLOGY", value: "IB" },
-  { label: "INSTRUMENTATION AND CONTROL ENGINEERING", value: "IC" },
-  { label: "INDUSTRIAL ENGINEERING", value: "IE" },
-  { label: "INDUSTRIAL ENGINEERING AND MANAGEMENT", value: "IN" },
-  { label: "INFORMATION TECHNOLOGY", value: "IT" },
-  { label: "LEATHER TECHNOLOGY", value: "LE" },
-  { label: "MECHATRONICS", value: "MC" },
-  { label: "MEDICAL ELECTRONICS ENGINEERING", value: "MD" },
-  { label: "MECHANICAL ENGINEERING", value: "ME" },
-  { label: "MECHANICAL ENGINEERING (SANDWICH)", value: "MH" },
-  { label: "MINING ENGINEERING", value: "MI" },
-  { label: "MECHANICAL ENGINEERING (MANUFACTURING)", value: "MM" },
-  { label: "MANUFACTURING ENGINEERING", value: "MN" },
-  { label: "Mechanical and Mechatronics Engineering (Additive Manufacturing)", value: "MO" },
-  { label: "MARINE ENGINEERING", value: "MR" },
-  { label: "METALLURGICAL ENGINEERING", value: "MT" },
-  { label: "MECHANICAL AND AUTOMATION ENGINEERING", value: "MU" },
-  { label: "Mechatronics Engineering", value: "MZ" },
-  { label: "PLASTIC TECHNOLOGY", value: "PA" },
-  { label: "PETRO CHEMICAL TECHNOLOGY", value: "PC" },
-  { label: "PETRO CHEMICAL ENGINEERING", value: "PD" },
-  { label: "PETROLEUM ENGINEERING", value: "PE" },
-  { label: "PHARMACEUTICAL TECHNOLOGY", value: "PH" },
-  { label: "PRODUCTION ENGINEERING", value: "PR" },
-  { label: "PRINTING AND PACKING TECHNOLOGY", value: "PT" },
-  { label: "ROBOTICS AND AUTOMATION", value: "RM" },
-  { label: "RUBBER AND PLASTIC TECHNOLOGY", value: "RP" },
-  {
-    label: "Computer Science and Engineering (Internet of Things and Cyber Security including Block Chain Technology)",
-    value: "SB",
-  },
-  { label: "Computer Science and Engineering (Cyber Security)", value: "SC" },
-  { label: "Information Science and Engineering", value: "SE" },
-  { label: "Safety and Fire Engineering", value: "SF" },
-  { label: "TEXTILE CHEMISTRY", value: "TC" },
-  { label: "Computer Science and Technology", value: "TS" },
-  { label: "TEXTILE TECHNOLOGY", value: "TX" },
-  { label: "CIVIL ENGINEERING (TAMIL MEDIUM)", value: "XC" },
-  { label: "MECHANICAL ENGINEERING (TAMIL MEDIUM)", value: "XM" },
-  { label: "COMPUTER SCIENCE AND ENGINEERING (TAMIL)", value: "XS" },
-];
-const SSCourse = [
-  { label: "APPAREL TECHNOLOGY (SS)", value: "AP" },
-  { label: "AUTOMOBILE ENGINEERING (SS)", value: "AS" },
-  { label: "ARTIFICIAL INTELLIGENCE AND DATA SCIENCE (SS)", value: "AT" },
-  { label: "BIO TECHNOLOGY (SS)", value: "BS" },
-  { label: "BIO MEDICAL ENGINEERING  (SS)", value: "BY" },
-  { label: "CHEMICAL AND ELECTRO CHEMICAL  ENGINEERING (SS)", value: "CC" },
-  { label: "Computer Science and Engineering (Artificial Intelligence and Machine Learning) (SS)", value: "CG" },
-  { label: "CHEMICAL  ENGINEERING (SS)", value: "CL" },
-  { label: "COMPUTER SCIENCE AND ENGINEERING (SS)", value: "CM" },
-  { label: "CIVIL  ENGINEERING (SS)", value: "CN" },
-  { label: "CERAMIC TECHNOLOGY (SS)", value: "CR" },
-  { label: "Computer Science and Business System (SS)", value: "CW" },
-  { label: "ELECTRONICS AND COMMUNICATION ENGINEERING (SS)", value: "EM" },
-  { label: "ELECTRICAL AND ELECTRONICS (SANDWICH) (SS)", value: "ES" },
-  { label: "ELECTRICAL AND ELECTRONICS ENGINEERING (SS)", value: "EY" },
-  { label: "FOOD TECHNOLOGY (SS)", value: "FS" },
-  { label: "FASHION TECHNOLOGY (SS)", value: "FY" },
-  { label: "INFORMATION TECHNOLOGY (SS)", value: "IM" },
-  { label: "INDUSTRIAL BIO TECHNOLOGY (SS)", value: "IS" },
-  { label: "INSTRUMENTATION AND CONTROL ENGINEERING (SS)", value: "IY" },
-  { label: "MATERIAL SCIENCE AND ENGINEERING (SS)", value: "MA" },
-  { label: "MECHANICAL ENGINEERING (SS)", value: "MF" },
-  { label: "MECHATRONICS (SS)", value: "MG" },
-  { label: "MECHANICAL ENGINEERING (SANDWICH) (SS)", value: "MS" },
-  { label: "METALLURGICAL ENGINEERING (SS)", value: "MY" },
-  { label: "PHARMACEUTICAL TECHNOLOGY (SS)", value: "PM" },
-  { label: "PRODUCTION ENGINEERING (SS)", value: "PN" },
-  { label: "PETROLEUM ENGINEERING AND TECHNOLOGY (SS)", value: "PP" },
-  { label: "PRODUCTION ENGINEERING (SANDWICH) (SS)", value: "PS" },
-  { label: "ROBOTICS AND AUTOMATION (SS)", value: "RA" },
-  { label: "TEXTILE TECHNOLOGY (SS)", value: "TT" },
-];
+import { CourseList,SSCourse } from "./CourseList";
+
 const GOVTSeats = {
   "CENTRAL GOVT": 0.5,
   CHRISTIAN: 0.5,
@@ -130,6 +25,7 @@ const GOVTSeats = {
   TELUGU: 0.5,
   UNIV: 1,
   IRTT: 0.65,
+  SS:0.7
 };
 
 const AccredationOptions = [
@@ -139,23 +35,24 @@ const AccredationOptions = [
 
 const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
   const courseSchema = {
-    courseName: null,
-    courseCode: null,
-    accredation: null,
-    intake: null,
-    Govt: null,
-    Surrender: null,
-    Management: null,
-    SWS: null,
-    Pending: 0,
+    courseName: "",
+    courseCode: "",
+    accredation: "",
+    intake: "",
+    Govt: "",
+    Surrender: "",
+    Management: "",
+    SWS: "",
+    Quota:"",
+    error:false,
   };
   const [Course, setCourse] = useState([courseSchema]);
   const { errors, register, handleSubmit } = useForm();
-  const [errSurrender, seterrSurrender] = useState(false);
+  // const [errSurrender, seterrSurrender] = useState(false);
   const [clgCAT, setclgCAT] = useState("NM");
   const [clgCode, setclgCode] = useState("");
   const [freezeFlag, setfreezeFlag] = useState(false);
-
+  
   const onFormSubmit = () => {
     fetch(`${backendURL}/setCourseDetails`, {
       method: "POST",
@@ -178,8 +75,8 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
           const notify = () => {
             toast.success("Data added successfully");
           };
-          notify();
           updateCollegeInfo();
+          notify();
         }
       })
       .catch((error) => {
@@ -189,7 +86,7 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
 
   const getCollegeInfo = async () => {
         const data=Data;
-        setCourse(data.CourseDetails ? data.CourseDetails : []);
+        setCourse(data.CourseDetails.length ? data.CourseDetails : [courseSchema]);
         setfreezeFlag(data?.FreezeFlag ? data.FreezeFlag : false);
         if (data.ccode === "2709") {
           setclgCAT("IRTT");
@@ -201,7 +98,7 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
   };
   useEffect(() => {
     getCollegeInfo();
-  }, []);
+  }, [Data]);
 
   const formClass = classNames({
     "form-validate": true,
@@ -230,9 +127,22 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
     if (data[index]["courseCode"]) {
       CourseList.splice(0, 0, data[index]["courseName"]);
     }
-    data[index]["courseName"] = event;
-    data[index]["courseCode"] = event.value;
+    console.log(data);
+    data[index]={
+      courseName: event,
+      courseCode: event.value,
+      accredation: null,
+      intake: 0,
+      Govt: 0,
+      Surrender: 0,
+      Management: 0,
+      SWS: 0,
+      Quota:0,
+      error:false
+    }
     setCourse(data);
+    console.log(data);
+
   };
   const handleAccrChange = (event, index) => {
     let data = [...Course];
@@ -245,92 +155,96 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
     let data = [...Course];
     data[index]["intake"] = Math.floor(intake);
     data[index]["Surrender"] = 0;
+    //SSCourse
     if (data[index]["courseName"].label.includes("(SS)")) {
       data[index]["Govt"] = Math.floor(intake * 0.7);
-      data[index]["Pending"] = (intake * 0.7) % 1;
-    } else {
+      data[index]["Quota"] = 0.7;
+    } 
+    //NormalCourse
+    else {
       data[index]["Govt"] = Math.floor(intake * GOVTSeats[clgCAT]);
-      data[index]["Pending"] = (intake * GOVTSeats[clgCAT]) % 1;
+      data[index]["Quota"] = GOVTSeats[clgCAT];
     }
     data[index]["Management"] = intake - data[index]["Govt"];
     data[index]["SWS"] = data[index]["Govt"];
     if (!intake) {
-      data[index]["Govt"] = 0;
-      data[index]["Management"] = 0;
-      data[index]["Surrender"] = 0;
-      data[index]["SWS"] = 0;
+      data[index]["Govt"] = "";
+      data[index]["Management"] = "";
+      data[index]["Surrender"] = "";
+      data[index]["SWS"] = "";
+      data[index]["intake"]="";
     }
     setCourse(data);
   };
   const handleSurrenderChange = (event, index) => {
     let data = [...Course];
     let surrender = Math.floor(event.target.value);
+    let Govt =  data[index]["Govt"]
+    let Intake = data[index]["intake"]
+    let Management =Intake-Govt;
     if (!surrender) {
-      surrender = 0;
+      surrender=0;      
+    data[index]["Surrender"] = "";
     }
+    else
+    {
     data[index]["Surrender"] = surrender;
-    if (data[index]["Surrender"] > data[index]["Management"]) {
-      data[index]["Management"] = data[index]["intake"] - data[index]["Govt"];
-      data[index]["SWS"] = data[index]["Govt"];
-      seterrSurrender(true);
+    }
+    if (surrender > Management) {
+      data[index]["Surrender"] = Math.floor(surrender/10);
     } else {
-      seterrSurrender(false);
+      data[index]["error"]=false;
       data[index]["Management"] = data[index]["intake"] - data[index]["Govt"] - surrender;
       data[index]["SWS"] = data[index]["Govt"] + surrender;
-
+      
       setCourse(data);
     }
   };
-  const checkErr = () => {
-    let val = true;
-    Course.forEach((e) => {
-      if (
-        e.Govt >= 0 &&
-        e.SWS === e.Govt + e.Surrender &&
-        e.Govt + e.Surrender + e.Management === e.intake &&
-        e.courseCode != null &&
-        e.accredation != null &&
-        e.intake != 0
-      ) {
-        val = val && true;
-      } else {
-        toast.error("Please Fill all Fields, to add New Course");
-
-        val = val && false;
-      }
-    });
-    return val;
-  };
-  const proceedNextBool = () => {
-    let val = true;
-    Course.forEach((e) => {
-      if (
-        e.Govt >= 0 &&
-        e.SWS === e.Govt + e.Surrender &&
-        e.Govt + e.Surrender + e.Management === e.intake &&
-        e.courseCode != null &&
-        e.accredation != null &&
-        e.intake != 0
-      ) {
-        val = val && true;
-      } else {
-        val = val && false;
-      }
-    });
-    if (Course.length == 0) {
-      return false;
+  const handleSurrenderBlur = (event, index) => {
+    let data = [...Course];
+    let surrender = Math.floor(event.target.value);
+    if (!surrender) {
+      data[index]["Surrender"] = 0;
+      setCourse(data);
     }
+  }
+  const checkErr = (tst) => {
+    let val = true;
+    console.log(Course);
+    Course.forEach((e) => {
+    // console.log(e.SWS === e.Govt + e.Surrender );
+
+      if (
+        e.Govt >= 0 &&
+        e.SWS === e.Govt + e.Surrender &&
+        e.Govt + e.Surrender + e.Management === e.intake &&
+        e.courseCode != null &&
+        e.accredation != null &&
+        e.intake != 0
+      ) {
+        val = val && true;
+      } else {
+        if (tst) {
+        toast.error("Please Fill all Fields, to add New Course");
+        }
+        val = val && false;
+      }
+    });
     return val;
   };
   const addCourse = () => {
     let data = [...Course];
-    if (checkErr()) {
+    if (checkErr(true)) {
       data.push(courseSchema);
       setCourse(data);
     }
   };
   const removeCourse = (e) => {
+    if (Course.length==1) {
+      return;
+    }
     const updatedCourses = [...Course];
+    console.log(updatedCourses);
     try {
       const courseObj = updatedCourses[e]["courseName"];
       if (courseObj) {
@@ -339,6 +253,8 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
     } finally {
       updatedCourses.splice(e, 1);
       setCourse(updatedCourses);
+    console.log(updatedCourses);
+
     }
   };
   const updateHandler = async () => {
@@ -351,6 +267,7 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
     // if(checkErr())
     onFormSubmit();
   };
+  
 
   return (
     <React.Fragment>
@@ -406,6 +323,7 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
                               isOptionDisabled={(option) => (freezeFlag ? option.disabled : false)}
                               style={{ zIndex: "10000", width: "auto" }}
                               value={e.accredation}
+                              isDisabled={e.courseCode==""}
                               onChange={(event) => handleAccrChange(event, index)}
                               classNamePrefix="react-select"
                               options={AccredationOptions}
@@ -417,7 +335,7 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
                             type="number"
                             id="fv-intake"
                             name="intake"
-                            disabled={freezeFlag}
+                            disabled={freezeFlag||e.courseCode==""}
                             ref={register({ required: true })}
                             className="form-control"
                             onChange={(event) => handleinTakeChange(event, index)}
@@ -431,13 +349,14 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
                         </td>
                         <td>
                           <input
+                            onBlur={(event) => handleSurrenderBlur(event, index)}
                             onChange={(event) => handleSurrenderChange(event, index)}
                             type="number"
                             id="fv-subject"
                             name="Surrender"
-                            disabled={freezeFlag}
+                            disabled={freezeFlag||e.courseCode==""}
                             ref={register({ required: true })}
-                            className={`form-control ${errSurrender ? "error" : ""}`}
+                            className={`form-control`}
                             value={e.Surrender}
                           />
                         </td>
@@ -504,11 +423,11 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
             <Button
               type="submit"
               onClick={() => {
-                toggleIconTab("7");
+                toggleIconTab("verify");
               }}
               className="text-center m-4"
               color="success"
-              disabled={!proceedNextBool()}
+              disabled={!checkErr(false)}
             >
               Next &gt;
             </Button>
@@ -517,11 +436,11 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
               type="submit"
               onClick={() => {
                 updateHandler();
-                toggleIconTab("7");
+                toggleIconTab("verify");
               }}
               className="text-center m-4"
               color="success"
-              disabled={!proceedNextBool()}
+              disabled={!checkErr(false)}
             >
               Save and Proceed to Next &gt;
             </Button>

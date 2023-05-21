@@ -98,13 +98,13 @@ const FormOne = ({ alter, toggleIconTab,updateCollegeInfo,Data }) => {
 
   const getCollegeInfo = async () => {
         const data = Data;
-        console.log(data);
+        console.log(data?.PersonalDetailFlag==false);
         setLoading(false);
         setcollegeName(data.can);
         setcollegeCode(data.ccode);
         setCollegeType(FULLFORM[data.Category]);
-        setpersonalDetailFlag(data?.PersonalDetailFlag);
-        if(data?.PersonalDetailFlag==false){
+        setpersonalDetailFlag(data?.PersonalDetailFlag?true:false);
+        if(data?.PersonalDetailFlag==false||data?.PersonalDetailFlag==undefined){
           seteditFlag(true)
         }
         setprincipalName(data?.PrincipalName);
@@ -120,6 +120,7 @@ const FormOne = ({ alter, toggleIconTab,updateCollegeInfo,Data }) => {
 
   useEffect(() => {
     getCollegeInfo();
+    updateCollegeInfo();
     console.log(personalDetailFlag);
     // if(personalDetailFlag==false){
     //   seteditFlag(true)
