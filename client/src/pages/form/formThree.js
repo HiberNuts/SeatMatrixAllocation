@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import PdfDcoument from "../../utils/PdfUtils/generatorPdf";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const FormThree = ({ alter, toggleIconTab, Data, updateCollegeInfo }) => {
   const [collegeData, setcollegeData] = useState();
@@ -13,8 +14,8 @@ const FormThree = ({ alter, toggleIconTab, Data, updateCollegeInfo }) => {
   const [declarationFlag, setdeclarationFlag] = useState(false);
   const [freezeFlag, setfreezeFlag] = useState(false);
 
+  const data = Data;
   const getCollegeInfo = async () => {
-    const data = Data;
     setcollegeData(data);
     setcollegeName(data.can);
     setprincipalName(data.PrincipalName);
@@ -22,21 +23,25 @@ const FormThree = ({ alter, toggleIconTab, Data, updateCollegeInfo }) => {
     setfreezeFlag(data?.FreezeFlag ? data.FreezeFlag : false);
   };
   useEffect(() => {
-    updateCollegeInfo();
+    // updateCollegeInfo();
     getCollegeInfo();
-  }, []);
+  }, [Data]);
 
   const updateDeclarationFlag = async (value) => {
-    setdeclarationFlag(value);
-    const response = await axios.post(
-      `${backendURL}/declaration`,
-      { flag: value },
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-      }
-    );
+    try {
+      setdeclarationFlag(value);
+      const response = await axios.post(
+        `${backendURL}/declaration`,
+        { flag: value },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+    } catch (error) {
+      toast.error("Something went wrong please try again");
+    }
   };
 
   return (
@@ -104,42 +109,42 @@ const FormThree = ({ alter, toggleIconTab, Data, updateCollegeInfo }) => {
         next section with principal signature in it.
       </div>
       <div className="d-flex justify-content-between">
+        <Button
+          type="submit"
+          onClick={() => {
+            toggleIconTab("verify");
+          }}
+          className="text-center m-4"
+          color="danger"
+        >
+          &lt; Back
+        </Button>
+        {freezeFlag == true ? (
           <Button
             type="submit"
             onClick={() => {
-              toggleIconTab("verify");
+              toggleIconTab("8");
             }}
             className="text-center m-4"
-            color="danger"
+            color="success"
+            disabled={!declarationFlag}
           >
-            &lt; Back
+            Next &gt;
           </Button>
-          {freezeFlag == true ? (
-            <Button
-              type="submit"
-              onClick={() => {
-                toggleIconTab("8");
-              }}
-              className="text-center m-4"
-              color="success"
-              disabled={!declarationFlag}
-                   >
-              Next &gt;
-            </Button>
-          ) : (
-            <Button
-              type="submit"
-              onClick={() => {
-                toggleIconTab("8");
-              }}
-              className="text-center m-4"
-              color="success"
-              disabled={!declarationFlag}
-            >
-              Save and Proceed to Next &gt;
-            </Button>
-          )}
-        </div>
+        ) : (
+          <Button
+            type="submit"
+            onClick={() => {
+              toggleIconTab("8");
+            }}
+            className="text-center m-4"
+            color="success"
+            disabled={!declarationFlag}
+          >
+            Save Proceed to Next &gt;
+          </Button>
+        )}
+      </div>
     </div>
   );
 };

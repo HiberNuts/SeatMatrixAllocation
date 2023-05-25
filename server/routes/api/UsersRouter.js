@@ -102,6 +102,7 @@ UserRouter.post("/resetPasswordInitial", ejwt({ secret: secret, algorithms: ["HS
 
 UserRouter.get("/collegeData", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
   try {
+    console.log("called college data");
     // Find the auth with the given ID
     const auth = await users.findById(req.auth.id);
 
@@ -449,7 +450,6 @@ UserRouter.post("/lock/:collegeCode", async (req, res) => {
 UserRouter.post("/setCourseDetails", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
   try {
     const { CourseDetails } = req.body;
-    console.log("hrer", req.body);
     if (!CourseDetails) {
       res.json({ status: false, message: "incomplete body set" });
     } else {
@@ -459,6 +459,7 @@ UserRouter.post("/setCourseDetails", ejwt({ secret: secret, algorithms: ["HS256"
       res.json({ status: true });
     }
   } catch (err) {
+    console.log(err);
     res.status(500).json(err);
   }
 });
