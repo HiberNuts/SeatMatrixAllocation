@@ -88,7 +88,6 @@ UserRouter.post("/login", async (req, res) => {
 UserRouter.post("/resetPasswordInitial", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
   try {
     // Find the auth with the given ID
-    console.log(req.auth);
     const auth = await users.findOneAndUpdate({ ccode: req.auth.ccode }, req.body);
 
     if (!auth) {
@@ -96,6 +95,7 @@ UserRouter.post("/resetPasswordInitial", ejwt({ secret: secret, algorithms: ["HS
     }
     res.json({ status: true });
   } catch (err) {
+    console.log("Error in resetPassword", err);
     res.status(500).json(err);
   }
 });
@@ -111,6 +111,7 @@ UserRouter.get("/collegeData", ejwt({ secret: secret, algorithms: ["HS256"] }), 
     }
     res.json(auth);
   } catch (err) {
+    console.log("Error in collegeData", err);
     res.status(500).json(err);
   }
 });
@@ -135,6 +136,7 @@ UserRouter.post("/personalDetail", ejwt({ secret: secret, algorithms: ["HS256"] 
       res.json({ status: true });
     }
   } catch (err) {
+    console.log("Error in personalDetail", err);
     res.status(500).json(err);
   }
 });
@@ -261,6 +263,7 @@ UserRouter.post(
       });
       res.json({ status: true });
     } catch (error) {
+      console.log("Error in Doc upload", err);
       res.status(500).json(error);
     }
   }
@@ -285,8 +288,8 @@ UserRouter.post("/deleteDoc", ejwt({ secret: secret, algorithms: ["HS256"] }), a
       } // deleted
     });
   } catch (error) {
+    console.log("Error in delete doc", err);
     res.json({ status: false, error: error });
-    console.log(error);
   }
 });
 
@@ -318,6 +321,7 @@ UserRouter.get("/documents", ejwt({ secret: secret, algorithms: ["HS256"] }), as
       }
     });
   } catch (error) {
+    console.log("Error in getting documents", err);
     console.log(error);
   }
 });
