@@ -43,14 +43,28 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
     try {
       var formData = new FormData();
       if (typeof collegeData?.Documents === "undefined" || collegeData?.Documents["seatMatrix"] != true) {
-        if (seatMatrix.length == undefined || collegeData?.Documents["seatMatrix"] == true) {
-          formData.append("seatMatrix", seatMatrix);
-        } else {
+        console.log(seatMatrix);
+        if (typeof seatMatrix == "undefined" || seatMatrix == "") {
           toast.warning("Seat matrix form is compulsory");
           return;
+        } else {
+          formData.append("seatMatrix", seatMatrix);
+        }
+      } else {
+        formData.append("seatMatrix", seatMatrix);
+      }
+      if (MinorityFlag) {
+        if (typeof collegeData?.Documents === "undefined" || collegeData?.Documents["Minority"] != true) {
+          if (typeof Minority == "undefined" || Minority == "") {
+            toast.warning("Minority document is compulsory");
+            return;
+          } else {
+            formData.append("Minority", Minority);
+          }
+        } else {
+          formData.append("Minority", Minority);
         }
       }
-
       if (AICTEApproval?.length == undefined) {
         formData.append("AICTEApproval", AICTEApproval);
       }
@@ -63,6 +77,7 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
       if (Autonomous?.length == undefined) {
         formData.append("Autonomous", Autonomous);
       }
+
       let Keys = [];
       for (var [key, value] of formData.entries()) {
         Keys.push(key);
@@ -86,6 +101,8 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
           inputAccredation.current.value = "";
           setAutonomous();
           inputAutonomous.current.value = "";
+          setMinority();
+          inputMinority.current.value = "";
           getCollegeData();
           getDocUrls();
           toast.success("Files added successfully");
@@ -119,11 +136,11 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
 
   useEffect(() => {
     getDocUrls();
-  }, []);
+  }, [Data]);
 
   useEffect(() => {
     getCollegeData();
-  }, []);
+  }, [Data]);
 
   const GenerateButtons = ({ type }) => {
     return (
@@ -282,6 +299,7 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
                 )} */}
               </td>
             </tr>
+
             <tr>
               <th scope="row">2</th>
               <td>AICTE Approval</td>
@@ -599,9 +617,11 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
             {MinorityFlag && (
               <tr>
                 <th scope="row">6</th>
-                <td>Minority Certification</td>
                 <td>
-                  {collegeData?.Documents?.Autonomous == true ? (
+                  Minority Certification <span style={{ color: "red" }}>*</span>
+                </td>
+                <td>
+                  {collegeData?.Documents?.Minority == true ? (
                     <GenerateButtons type={"Autonomous"} />
                   ) : (
                     <div>
@@ -616,11 +636,11 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
                       <span></span>
                     ) : (
                       <div className="form-file">
-                        {collegeData?.Documents?.Autonomous == true ? (
+                        {collegeData?.Documents?.Minority == true ? (
                           <button
                             style={{ marginRight: "5px" }}
                             class="btn btn-sm btn-outline-dark"
-                            onClick={() => inputAutonomous.current.click()}
+                            onClick={() => inputMinority.current.click()}
                           >
                             Update
                           </button>
@@ -628,18 +648,18 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
                           <button
                             style={{ marginRight: "5px" }}
                             class="btn btn-sm btn-outline-dark"
-                            onClick={() => inputAutonomous.current.click()}
+                            onClick={() => inputMinority.current.click()}
                           >
                             Add
                           </button>
                         )}
 
-                        {Autonomous && (
+                        {Minority && (
                           <button
                             class="btn btn-sm btn-outline-dark"
                             onClick={() => {
-                              inputAutonomous.current.value = "";
-                              setAutonomous();
+                              inputMinority.current.value = "";
+                              setMinority();
                             }}
                           >
                             Remove
@@ -650,29 +670,29 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
                           accept=".pdf"
                           onChange={(e) => {
                             if (e.target.files[0].size > 1048576) {
-                              inputAutonomous.current.value = "";
-                              setAutonomous();
+                              inputMinority.current.value = "";
+                              setMinority();
                               toast.warning("File size must not exceed 1MB");
                               return;
                             }
-                            setAutonomous(e.target.files[0]);
+                            setMinority(e.target.files[0]);
                           }}
-                          ref={inputAutonomous}
+                          ref={inputMinority}
                         />
                       </div>
                     )}
                   </div>
                 </td>
                 <td>
-                  {freezeFlag ? (
+                  {/* {freezeFlag ? (
                     <span></span>
                   ) : (
-                    collegeData?.Documents?.Autonomous == true && (
-                      <button onClick={() => handleDocDelete("Autonomous")} className="btn btn-sm btn-outline-danger">
+                    collegeData?.Documents?.Minority == true && (
+                      <button onClick={() => handleDocDelete("Minority")} className="btn btn-sm btn-outline-danger">
                         <i class="bi bi-x-lg"></i>
                       </button>
                     )
-                  )}
+                  )} */}
                 </td>
               </tr>
             )}
