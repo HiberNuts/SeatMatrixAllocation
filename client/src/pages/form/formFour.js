@@ -28,12 +28,8 @@ const FormFour = ({toggleIconTab,updateCollegeInfo,Data,alter}) => {
   const handleSubmit = async () => {
     try {
       var formData = new FormData();
-      if (
-        typeof collegeData?.Documents === "undefined" ||
-        collegeData?.Documents["seatMatrix"] != true ||
-        collegeData?.Documents["seatMatrix"] == true
-      ) {
-        if (seatMatrix.length == undefined) {
+      if (typeof collegeData?.Documents === "undefined" || collegeData?.Documents["seatMatrix"] != true) {
+        if (seatMatrix.length == undefined || collegeData?.Documents["seatMatrix"] == true) {
           formData.append("seatMatrix", seatMatrix);
         } else {
           toast.warning("Seat matrix form is compulsory");
@@ -77,6 +73,7 @@ const FormFour = ({toggleIconTab,updateCollegeInfo,Data,alter}) => {
           setAutonomous();
           inputAutonomous.current.value = "";
           getCollegeData();
+          getDocUrls();
           toast.success("Files added successfully");
         }
       } else {
@@ -88,6 +85,7 @@ const FormFour = ({toggleIconTab,updateCollegeInfo,Data,alter}) => {
     }
   };
   const getCollegeData = async () => {
+    console.log("four");
     const data = await axios.get(`${backendURL}/collegeData`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,

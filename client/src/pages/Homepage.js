@@ -27,8 +27,8 @@ const Homepage = ({ ...props }) => {
   const [courseFlag, setcourseFlag] = useState(false);
   const [declarationFlag, setdeclarationFlag] = useState(false);
   const [docFlag, setdocFlag] = useState(false);
-  const [data,setData]=useState();
-  const [loading,setLoading]=useState(true);
+  const [data, setData] = useState();
+  const [loading, setLoading] = useState(true);
   const getCollegeInfo = async () => {
     fetch(`${backendURL}/collegeData`, {
       headers: {
@@ -131,7 +131,7 @@ const Homepage = ({ ...props }) => {
                   <Icon name="reload-alt" /> <span>Verify</span>
                 </NavLink>
               </NavItem>
-              
+
               <NavItem>
                 <NavLink
                   tag="a"
@@ -144,6 +144,7 @@ const Homepage = ({ ...props }) => {
                   onClick={(ev) => {
                     if (personalFlag && courseFlag) {
                       ev.preventDefault();
+                      getCollegeInfo();
                       // toggleIconTab("7");
                     } else {
                       return;
@@ -153,7 +154,7 @@ const Homepage = ({ ...props }) => {
                   <Icon name="check-fill-c" /> <span>Declaration</span>
                 </NavLink>
               </NavItem>
-            
+
               <NavItem>
                 <NavLink
                   tag="a"
@@ -178,39 +179,39 @@ const Homepage = ({ ...props }) => {
             </Nav>
             <TabContent activeTab={activeIconTab}>
               <TabPane tabId="5">
-              {loading ? (
-                        spinner          
-                ):            
-                (<FormOne toggleIconTab={toggleIconTab} updateCollegeInfo={getCollegeInfo} Data={data} alter />)}
-                
+                {loading ? (
+                  spinner
+                ) : (
+                  <FormOne toggleIconTab={toggleIconTab} updateCollegeInfo={getCollegeInfo} Data={data} alter />
+                )}
               </TabPane>
               <TabPane tabId="6">
-              {loading ? (
-                        spinner          
-                ):            
-                (<FormTwo toggleIconTab={toggleIconTab} updateCollegeInfo={getCollegeInfo} Data={data} alter />)}
-                
+                {loading ? (
+                  spinner
+                ) : (
+                  <FormTwo toggleIconTab={toggleIconTab} updateCollegeInfo={getCollegeInfo} Data={data} alter />
+                )}
               </TabPane>
               <TabPane tabId="verify">
-              {loading ? (
-                        spinner          
-                ):            
-                (<Verify toggleIconTab={toggleIconTab} updateCollegeInfo={getCollegeInfo} Data={data} alter />)}
-                
+                {loading ? (
+                  spinner
+                ) : (
+                  <Verify toggleIconTab={toggleIconTab} updateCollegeInfo={getCollegeInfo} Data={data} alter />
+                )}
               </TabPane>
-              <TabPane tabId="7" >
-              {loading ? (
-                        spinner          
-                ):            
-                (<FormThree toggleIconTab={toggleIconTab} updateCollegeInfo={getCollegeInfo} Data={data} alter />)}
-                
+              <TabPane tabId="7">
+                {loading ? (
+                  spinner
+                ) : (
+                  <FormThree toggleIconTab={toggleIconTab} updateCollegeInfo={getCollegeInfo} Data={data} alter />
+                )}
               </TabPane>
-              <TabPane tabId="8" >
-              {loading ? (
-                        spinner          
-                ):            
-                (<FormFour toggleIconTab={toggleIconTab} updateCollegeInfo={getCollegeInfo} Data={data} alter />)}
-                
+              <TabPane tabId="8">
+                {loading ? (
+                  spinner
+                ) : (
+                  <FormFour toggleIconTab={toggleIconTab} updateCollegeInfo={getCollegeInfo} Data={data} alter />
+                )}
               </TabPane>
             </TabContent>
           </PreviewCard>

@@ -6,7 +6,7 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import PdfDcoument from "../../utils/PdfUtils/generatorPdf";
 import axios from "axios";
 
-const FormThree = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
+const FormThree = ({ alter, toggleIconTab, Data, updateCollegeInfo }) => {
   const [collegeData, setcollegeData] = useState();
   const [collegeName, setcollegeName] = useState();
   const [principalName, setprincipalName] = useState();
@@ -14,13 +14,12 @@ const FormThree = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
   const [freezeFlag, setfreezeFlag] = useState(false);
 
   const getCollegeInfo = async () => {
-        const data =Data;
-        setcollegeData(data);
-        setcollegeName(data.can);
-        setprincipalName(data.PrincipalName);
-        setdeclarationFlag(data.DeclarationFlag);
-        setfreezeFlag(data?.FreezeFlag ? data.FreezeFlag : false);
-      
+    const data = Data;
+    setcollegeData(data);
+    setcollegeName(data.can);
+    setprincipalName(data.PrincipalName);
+    setdeclarationFlag(data.DeclarationFlag);
+    setfreezeFlag(data?.FreezeFlag ? data.FreezeFlag : false);
   };
   useEffect(() => {
     updateCollegeInfo();
@@ -81,9 +80,9 @@ const FormThree = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
         id="flexCheckChecked"
       ></input>
       <p>
-        We, declare that I have thoroughly reviewed and verified all seat allocation matrix for TNEA. I have ensured
+        We, declare that we have thoroughly reviewed and verified all seat allocation matrix for TNEA. We have ensured
         that all seats have been allocated appropriately and that no further changes will be made to the allocation
-        matrix without proper authorization from the relevant authorities. I take full responsibility for any errors or
+        matrix without proper authorization from the relevant authorities. We take full responsibility for any errors or
         omissions that may have occurred during the verification process and certify that all changes made to the matrix
         were necessary and within the scope of the project/task/assignment.
       </p>
@@ -124,8 +123,7 @@ const FormThree = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
               className="text-center m-4"
               color="success"
               disabled={!declarationFlag}
-             
-            >
+                   >
               Next &gt;
             </Button>
           ) : (
