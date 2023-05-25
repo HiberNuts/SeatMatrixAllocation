@@ -7,7 +7,7 @@ import { backendURL } from "../../backendurl";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Select from "react-select";
-import { CourseList,SSCourse } from "./CourseList";
+import { CourseList, SSCourse } from "./CourseList";
 
 const GOVTSeats = {
   "CENTRAL GOVT": 0.5,
@@ -25,7 +25,7 @@ const GOVTSeats = {
   TELUGU: 0.5,
   UNIV: 1,
   IRTT: 0.65,
-  SS:0.7
+  SS: 0.7,
 };
 
 const AccredationOptions = [
@@ -33,7 +33,7 @@ const AccredationOptions = [
   { value: "NACC", label: "Non - Accredited", disabled: true },
 ];
 
-const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
+const FormTwo = ({ alter, toggleIconTab, Data, updateCollegeInfo }) => {
   const courseSchema = {
     courseName: "",
     courseCode: "",
@@ -43,8 +43,8 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
     Surrender: "",
     Management: "",
     SWS: "",
-    Quota:"",
-    error:false,
+    Quota: "",
+    error: false,
   };
   const [Course, setCourse] = useState([courseSchema]);
   const { errors, register, handleSubmit } = useForm();
@@ -52,7 +52,9 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
   const [clgCAT, setclgCAT] = useState("NM");
   const [clgCode, setclgCode] = useState("");
   const [freezeFlag, setfreezeFlag] = useState(false);
-  
+  const [comparingArray, setcomparingArray] = useState("");
+  const [changesTracker, setchangesTracker] = useState(false);
+
   const onFormSubmit = () => {
     fetch(`${backendURL}/setCourseDetails`, {
       method: "POST",
@@ -66,6 +68,7 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
     })
       .then((response) => {
         if (!response.ok) {
+          toast.error("Something went wrong please try again");
           throw new Error("Network response was not ok");
         }
         return response.json();
@@ -77,6 +80,7 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
           };
           updateCollegeInfo();
           notify();
+          toggleIconTab("verify");
         }
       })
       .catch((error) => {
@@ -85,20 +89,28 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
   };
 
   const getCollegeInfo = async () => {
-        const data=Data;
-        setCourse(data.CourseDetails.length ? data.CourseDetails : [courseSchema]);
-        setfreezeFlag(data?.FreezeFlag ? data.FreezeFlag : false);
-        if (data.ccode === "2709") {
-          setclgCAT("IRTT");
-        } else {
-          setclgCAT(data.Category);
-        }
-        removeCourseOnFetch(data.CourseDetails, data.ccode);
-     
+    const data = Data;
+    setCourse(data.CourseDetails.length ? data.CourseDetails : [courseSchema]);
+    setcomparingArray(JSON.stringify(Course));
+    setfreezeFlag(data?.FreezeFlag ? data.FreezeFlag : false);
+    if (data.ccode === "2709") {
+      setclgCAT("IRTT");
+    } else {
+      setclgCAT(data.Category);
+    }
+    removeCourseOnFetch(data.CourseDetails, data.ccode);
   };
   useEffect(() => {
     getCollegeInfo();
   }, [Data]);
+
+  useEffect(() => {
+    if (comparingArray === JSON.stringify(Course)) {
+      setchangesTracker(false);
+    } else {
+      setchangesTracker(true);
+    }
+  }, [Course]);
 
   const formClass = classNames({
     "form-validate": true,
@@ -128,7 +140,7 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
       CourseList.splice(0, 0, data[index]["courseName"]);
     }
     console.log(data);
-    data[index]={
+    data[index] = {
       courseName: event,
       courseCode: event.value,
       accredation: null,
@@ -137,12 +149,11 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
       Surrender: 0,
       Management: 0,
       SWS: 0,
-      Quota:0,
-      error:false
-    }
+      Quota: 0,
+      error: false,
+    };
     setCourse(data);
     console.log(data);
-
   };
   const handleAccrChange = (event, index) => {
     let data = [...Course];
@@ -159,7 +170,7 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
     if (data[index]["courseName"].label.includes("(SS)")) {
       data[index]["Govt"] = Math.floor(intake * 0.7);
       data[index]["Quota"] = 0.7;
-    } 
+    }
     //NormalCourse
     else {
       data[index]["Govt"] = Math.floor(intake * GOVTSeats[clgCAT]);
@@ -172,31 +183,29 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
       data[index]["Management"] = "";
       data[index]["Surrender"] = "";
       data[index]["SWS"] = "";
-      data[index]["intake"]="";
+      data[index]["intake"] = "";
     }
     setCourse(data);
   };
   const handleSurrenderChange = (event, index) => {
     let data = [...Course];
     let surrender = Math.floor(event.target.value);
-    let Govt =  data[index]["Govt"]
-    let Intake = data[index]["intake"]
-    let Management =Intake-Govt;
+    let Govt = data[index]["Govt"];
+    let Intake = data[index]["intake"];
+    let Management = Intake - Govt;
     if (!surrender) {
-      surrender=0;      
-    data[index]["Surrender"] = "";
-    }
-    else
-    {
-    data[index]["Surrender"] = surrender;
+      surrender = 0;
+      data[index]["Surrender"] = "";
+    } else {
+      data[index]["Surrender"] = surrender;
     }
     if (surrender > Management) {
-      data[index]["Surrender"] = Math.floor(surrender/10);
+      data[index]["Surrender"] = Math.floor(surrender / 10);
     } else {
-      data[index]["error"]=false;
+      data[index]["error"] = false;
       data[index]["Management"] = data[index]["intake"] - data[index]["Govt"] - surrender;
       data[index]["SWS"] = data[index]["Govt"] + surrender;
-      
+
       setCourse(data);
     }
   };
@@ -207,12 +216,12 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
       data[index]["Surrender"] = 0;
       setCourse(data);
     }
-  }
+  };
   const checkErr = (tst) => {
     let val = true;
     console.log(Course);
     Course.forEach((e) => {
-    // console.log(e.SWS === e.Govt + e.Surrender );
+      // console.log(e.SWS === e.Govt + e.Surrender );
 
       if (
         e.Govt >= 0 &&
@@ -225,7 +234,7 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
         val = val && true;
       } else {
         if (tst) {
-        toast.error("Please Fill all Fields, to add New Course");
+          toast.error("Please Fill all Fields, to add New Course");
         }
         val = val && false;
       }
@@ -240,7 +249,7 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
     }
   };
   const removeCourse = (e) => {
-    if (Course.length==1) {
+    if (Course.length == 1) {
       return;
     }
     const updatedCourses = [...Course];
@@ -253,8 +262,7 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
     } finally {
       updatedCourses.splice(e, 1);
       setCourse(updatedCourses);
-    console.log(updatedCourses);
-
+      console.log(updatedCourses);
     }
   };
   const updateHandler = async () => {
@@ -267,14 +275,13 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
     // if(checkErr())
     onFormSubmit();
   };
-  
 
   return (
     <React.Fragment>
       <Form className={formClass} onSubmit={(e) => e.preventDefault()}>
         <Row className="g-gs">
           <Col md="12">
-          <div className={window.innerWidth <= 1150 ? "table-responsive " : ""}>
+            <div className={window.innerWidth <= 1150 ? "table-responsive " : ""}>
               <table className={window.innerWidth <= 1150 ? "table table-responsive table-hover" : "table table-hover"}>
                 <thead>
                   <tr>
@@ -292,7 +299,6 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
                 </thead>
                 <tbody>
                   {Course.map((e, index) => {
-              
                     return (
                       <tr UseSubmitBehavior={false} onClick={(e) => e.preventDefault()} key={index}>
                         <th scope="row">{index + 1}</th>
@@ -302,7 +308,6 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
                               <input disabled={true} className="form-control" value={e.courseName.label}></input>
                             ) : (
                               <Select
-                               
                                 isOptionDisabled={(option) => (freezeFlag ? option.disabled : false)}
                                 onChange={(event) => handleCourseChange(event, index)}
                                 classNamePrefix="react-select"
@@ -323,7 +328,7 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
                               isOptionDisabled={(option) => (freezeFlag ? option.disabled : false)}
                               style={{ zIndex: "10000", width: "auto" }}
                               value={e.accredation}
-                              isDisabled={e.courseCode==""}
+                              isDisabled={e.courseCode == ""}
                               onChange={(event) => handleAccrChange(event, index)}
                               classNamePrefix="react-select"
                               options={AccredationOptions}
@@ -335,7 +340,7 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
                             type="number"
                             id="fv-intake"
                             name="intake"
-                            disabled={freezeFlag||e.courseCode==""}
+                            disabled={freezeFlag || e.courseCode == ""}
                             ref={register({ required: true })}
                             className="form-control"
                             onChange={(event) => handleinTakeChange(event, index)}
@@ -354,7 +359,7 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
                             type="number"
                             id="fv-subject"
                             name="Surrender"
-                            disabled={freezeFlag||e.courseCode==""}
+                            disabled={freezeFlag || e.courseCode == ""}
                             ref={register({ required: true })}
                             className={`form-control`}
                             value={e.Surrender}
@@ -431,18 +436,29 @@ const FormTwo = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
             >
               Next &gt;
             </Button>
-          ) : (
+          ) : changesTracker ? (
             <Button
               type="submit"
               onClick={() => {
                 updateHandler();
+              }}
+              className="text-center m-4"
+              color="primary"
+              disabled={!checkErr(false)}
+            >
+              Save and Proceed to Next &gt;
+            </Button>
+          ) : (
+            <Button
+              type="submit"
+              onClick={() => {
                 toggleIconTab("verify");
               }}
               className="text-center m-4"
               color="success"
               disabled={!checkErr(false)}
             >
-              Save and Proceed to Next &gt;
+              Next &gt;
             </Button>
           )}
         </div>

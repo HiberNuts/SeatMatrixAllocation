@@ -7,12 +7,13 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { backendURL } from "../../backendurl";
 
-const FormFour = ({toggleIconTab,updateCollegeInfo,Data,alter}) => {
+const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
   const [seatMatrix, setSeatMatrix] = useState("");
   const [AICTEApproval, setAICTEApproval] = useState("");
   const [AUAffiliation, setAUAffiliation] = useState("");
   const [Accredation, setAccredation] = useState("");
   const [Autonomous, setAutonomous] = useState("");
+  const [Minority, setMinority] = useState("");
   const [collegeData, setcollegeData] = useState({});
   const [signedUrls, setSignedUrls] = useState({});
   const [freezeFlag, setfreezeFlag] = useState(false);
@@ -130,6 +131,7 @@ const FormFour = ({toggleIconTab,updateCollegeInfo,Data,alter}) => {
   const inputAUAffiliation = useRef(null);
   const inputAccredation = useRef(null);
   const inputAutonomous = useRef(null);
+
 
   const handleDocDelete = async (type) => {
     const response = await axios.post(
@@ -585,21 +587,20 @@ const FormFour = ({toggleIconTab,updateCollegeInfo,Data,alter}) => {
         </table>
       </div>
       <Button
-            type="submit"
-            onClick={() => {
-              toggleIconTab("7");
-            }}
-            className="text-center m-4"
-            color="danger"
-          >
-            &lt; Back
-          </Button>
+        type="submit"
+        onClick={() => {
+          toggleIconTab("7");
+        }}
+        className="text-center m-4"
+        color="danger"
+      >
+        &lt; Back
+      </Button>
 
       {freezeFlag == false && (
         <Button onClick={handleSubmit} color="primary">
           Submit Changes
         </Button>
-        
       )}
       <div
         style={{
