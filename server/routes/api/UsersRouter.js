@@ -25,6 +25,7 @@ var multipleUpload = multer({ storage: storage }).fields([
   { name: "Accredation" },
   { name: "Autonomous" },
   { name: "bookletDeclaration" },
+  { name: "Minority" },
 ]);
 var upload = multer({ storage: storage }).single("file");
 
@@ -55,10 +56,7 @@ UserRouter.post("/login", async (req, res) => {
   const { ccode, CollegePassword } = req.body;
   try {
     // Find the auth with the given email
-    console.log(ccode);
     const auth = await users.findOne({ ccode: ccode });
-    console.log(auth);
-
     if (!auth) {
       return res.status(400).json({ message: "User not found" });
     }
@@ -100,9 +98,12 @@ UserRouter.post("/resetPasswordInitial", ejwt({ secret: secret, algorithms: ["HS
   }
 });
 
+let Reqcounter = 0;
+
 UserRouter.get("/collegeData", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
   try {
-    console.log("called college data");
+    Reqcounter = Reqcounter + 1;
+    console.log(`Called college data ${Reqcounter} times`);
     // Find the auth with the given ID
     const auth = await users.findById(req.auth.id);
 
@@ -272,8 +273,6 @@ UserRouter.post(
 UserRouter.post("/deleteDoc", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
   try {
     const { key } = req.body;
-
-    console.log(req.auth);
     var params = { Bucket: BUCKET, Key: `${req.auth.ccode}/${key}.pdf` };
     s3.deleteObject(params, async function (err, data) {
       if (err) res.json({ status: false }); // error

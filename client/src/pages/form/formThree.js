@@ -23,7 +23,6 @@ const FormThree = ({ alter, toggleIconTab, Data, updateCollegeInfo }) => {
     setfreezeFlag(data?.FreezeFlag ? data.FreezeFlag : false);
   };
   useEffect(() => {
-    // updateCollegeInfo();
     getCollegeInfo();
   }, [Data]);
 
