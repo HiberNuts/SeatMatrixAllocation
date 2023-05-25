@@ -7,6 +7,18 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { backendURL } from "../../backendurl";
 
+const MINORITY = {
+  CHRISTIAN: 0.5,
+  HINDI: 0.5,
+  JAIN: 0.5,
+  MALAYALAM: 0.5,
+  "MALAYALAM LINGUISTIC": 0.5,
+  MIN: 0.5,
+  MUSLIM: 0.5,
+  SOWRASHTRA: 0.5,
+  TELUGU: 0.5,
+};
+
 const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
   const [seatMatrix, setSeatMatrix] = useState("");
   const [AICTEApproval, setAICTEApproval] = useState("");
@@ -17,6 +29,7 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
   const [collegeData, setcollegeData] = useState({});
   const [signedUrls, setSignedUrls] = useState({});
   const [freezeFlag, setfreezeFlag] = useState(false);
+  const [MinorityFlag, setMinorityFlag] = useState(false);
 
   const [show, setShow] = useState(false);
 
@@ -86,13 +99,13 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
     }
   };
   const getCollegeData = async () => {
-    console.log("four");
     const data = await axios.get(`${backendURL}/collegeData`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
     });
     setcollegeData(data.data);
+    setMinorityFlag(data.data.Category in MINORITY ? true : false);
     setfreezeFlag(data?.data?.FreezeFlag ? data.data.FreezeFlag : false);
   };
   const getDocUrls = async () => {
@@ -131,7 +144,7 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
   const inputAUAffiliation = useRef(null);
   const inputAccredation = useRef(null);
   const inputAutonomous = useRef(null);
-
+  const inputMinority = useRef(null);
 
   const handleDocDelete = async (type) => {
     const response = await axios.post(
@@ -583,6 +596,86 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
                 )}
               </td>
             </tr>
+            {MinorityFlag && (
+              <tr>
+                <th scope="row">6</th>
+                <td>Minority Certification</td>
+                <td>
+                  {collegeData?.Documents?.Autonomous == true ? (
+                    <GenerateButtons type={"Autonomous"} />
+                  ) : (
+                    <div>
+                      No document available
+                      <br /> Upload first
+                    </div>
+                  )}
+                </td>
+                <td>
+                  <div className="form-control-wrap">
+                    {freezeFlag ? (
+                      <span></span>
+                    ) : (
+                      <div className="form-file">
+                        {collegeData?.Documents?.Autonomous == true ? (
+                          <button
+                            style={{ marginRight: "5px" }}
+                            class="btn btn-sm btn-outline-dark"
+                            onClick={() => inputAutonomous.current.click()}
+                          >
+                            Update
+                          </button>
+                        ) : (
+                          <button
+                            style={{ marginRight: "5px" }}
+                            class="btn btn-sm btn-outline-dark"
+                            onClick={() => inputAutonomous.current.click()}
+                          >
+                            Add
+                          </button>
+                        )}
+
+                        {Autonomous && (
+                          <button
+                            class="btn btn-sm btn-outline-dark"
+                            onClick={() => {
+                              inputAutonomous.current.value = "";
+                              setAutonomous();
+                            }}
+                          >
+                            Remove
+                          </button>
+                        )}
+                        <input
+                          type="file"
+                          accept=".pdf"
+                          onChange={(e) => {
+                            if (e.target.files[0].size > 1048576) {
+                              inputAutonomous.current.value = "";
+                              setAutonomous();
+                              toast.warning("File size must not exceed 1MB");
+                              return;
+                            }
+                            setAutonomous(e.target.files[0]);
+                          }}
+                          ref={inputAutonomous}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </td>
+                <td>
+                  {freezeFlag ? (
+                    <span></span>
+                  ) : (
+                    collegeData?.Documents?.Autonomous == true && (
+                      <button onClick={() => handleDocDelete("Autonomous")} className="btn btn-sm btn-outline-danger">
+                        <i class="bi bi-x-lg"></i>
+                      </button>
+                    )
+                  )}
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

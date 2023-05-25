@@ -1,4 +1,5 @@
 {
   "mongoURI": "mongodb+srv://raghav:raghav@seatmatrix.jyphlgc.mongodb.net/TNEASeatMatrix",
-  "jermeyMongoURI":"mongodb+srv://jeremy:jeremy4755@cluster1.cxfkdzp.mongodb.net/tneaseatmatrix"
+  "jermeyMongoURI": "mongodb+srv://jeremy:jeremy4755@cluster1.cxfkdzp.mongodb.net/tneaseatmatrix",
+  "raghavMongoURI": "mongodb+srv://raghav:raghav@seatmatrix.jyphlgc.mongodb.net/TNEASeatMatrix"
 }
