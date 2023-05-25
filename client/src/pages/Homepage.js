@@ -83,7 +83,7 @@ const Homepage = ({ ...props }) => {
                   className={classnames({ active: activeIconTab === "5" })}
                   onClick={(ev) => {
                     ev.preventDefault();
-                    toggleIconTab("5");
+                    // toggleIconTab("5");
                   }}
                 >
                   <Icon name="user-fill" /> <span>Personal Details</span>
@@ -97,7 +97,7 @@ const Homepage = ({ ...props }) => {
                   onClick={(ev) => {
                     if (personalFlag) {
                       ev.preventDefault();
-                      toggleIconTab("6");
+                      // toggleIconTab("6");
                     } else {
                       return;
                     }
@@ -122,7 +122,7 @@ const Homepage = ({ ...props }) => {
                   onClick={(ev) => {
                     if (personalFlag && courseFlag) {
                       ev.preventDefault();
-                      toggleIconTab("verify");
+                      // toggleIconTab("verify");
                     } else {
                       return;
                     }
@@ -144,7 +144,7 @@ const Homepage = ({ ...props }) => {
                   onClick={(ev) => {
                     if (personalFlag && courseFlag) {
                       ev.preventDefault();
-                      toggleIconTab("7");
+                      // toggleIconTab("7");
                     } else {
                       return;
                     }
@@ -165,7 +165,7 @@ const Homepage = ({ ...props }) => {
                   className={classnames({ active: activeIconTab === "8" })}
                   onClick={(ev) => {
                     if (personalFlag && courseFlag && declarationFlag) {
-                      toggleIconTab("8");
+                      // toggleIconTab("8");
                       ev.preventDefault();
                     } else {
                       return;

@@ -87,7 +87,7 @@ const Verify = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
    if((GOVTSeats[Data?.Category]*intake-GOVT)<1)
    return 0;
    else
-   return Math.floor(GOVTSeats[Data?.Category]*intake-GOVT)
+   return Math.round(GOVTSeats[Data?.Category]*intake-GOVT)
  }
   useEffect(() => {
     getCollegeInfo(Data);
@@ -135,6 +135,14 @@ const Verify = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
     })
     return [intake,GOVTSeats,(GOVTSeats/intake*100).toFixed(2)];
   }
+  const managementSum=()=>{
+    let mgmt=0;
+    const data=Course;
+    data.forEach((element) => {
+      mgmt+=element.Management;
+    })
+    return mgmt;
+  }
 
 
   return (
@@ -155,7 +163,9 @@ const Verify = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
         <tr>      
             <th scope="col">#</th>      
             <th scope="col">Course Name</th>      
-            <th scope="col">Govt Seats</th>    
+            <th scope="col">Govt Seats</th>   
+            <th scope="col">Management</th>    
+
             {
           buttonDisabled.map((item,index) => (
             <th key={index} scope="col">Seat {index+1}</th>
@@ -172,6 +182,10 @@ const Verify = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
 
          {element.Govt}
          </td>      
+         <td> 
+
+{element.Management}
+</td> 
          {
           buttonDisabled.map((item,idx) => {
             if(element.Quota!=1)
@@ -179,7 +193,7 @@ const Verify = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
               {
             item.index!=index?(
             <Button 
-            disabled={item.disabled}
+            disabled={item.disabled||element.Management<1}
             onClick={(e) => {
               console.log(buttonDisabled);
               e.preventDefault();

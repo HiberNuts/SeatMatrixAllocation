@@ -104,7 +104,44 @@ const FormThree = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
         <span style={{ color: "red" }}>*Important: </span>Please download the pdf from above and upload the same file in
         next section with principal signature in it.
       </div>
-      
+      <div className="d-flex justify-content-between">
+          <Button
+            type="submit"
+            onClick={() => {
+              toggleIconTab("verify");
+            }}
+            className="text-center m-4"
+            color="danger"
+          >
+            &lt; Back
+          </Button>
+          {freezeFlag == true ? (
+            <Button
+              type="submit"
+              onClick={() => {
+                toggleIconTab("8");
+              }}
+              className="text-center m-4"
+              color="success"
+              disabled={!declarationFlag}
+             
+            >
+              Next &gt;
+            </Button>
+          ) : (
+            <Button
+              type="submit"
+              onClick={() => {
+                toggleIconTab("8");
+              }}
+              className="text-center m-4"
+              color="success"
+              disabled={!declarationFlag}
+            >
+              Save and Proceed to Next &gt;
+            </Button>
+          )}
+        </div>
     </div>
   );
 };
