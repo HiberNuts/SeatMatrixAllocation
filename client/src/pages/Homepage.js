@@ -43,6 +43,7 @@ const Homepage = ({ ...props }) => {
       })
       .then((data) => {
         setData(data);
+        console.log("Props Updated");
         setpersonalFlag(data?.PersonalDetailFlag == true ? true : false);
         setcourseFlag(data?.CourseDetails?.length >= 1 ? true : false);
         setdeclarationFlag(data?.DeclarationFlag == true ? true : false);
@@ -57,7 +58,9 @@ const Homepage = ({ ...props }) => {
   useEffect(() => {
     getCollegeInfo();
   }, []);
-
+  useEffect(() => {
+    console.log(data);
+  },[data])
   const spinner = (
     <div className="d-flex justify-content-center">
       <Spinner style={{ width: "5rem", height: "5rem" }} color="primary" />
@@ -97,8 +100,8 @@ const Homepage = ({ ...props }) => {
                   onClick={(ev) => {
                     if (personalFlag) {
                       ev.preventDefault();
-                      toggleIconTab("6");
                     } else {
+                      toggleIconTab("6");
                       return;
                     }
                   }}
@@ -137,15 +140,17 @@ const Homepage = ({ ...props }) => {
                   tag="a"
                   href="#tab"
                   style={{
-                    color: personalFlag == true && courseFlag == true ? "#526484" : "lightgray",
-                    cursor: personalFlag && courseFlag == true ? "pointer" : "not-allowed",
+                    // color: personalFlag == true && courseFlag == true ? "#526484" : "lightgray",
+                    // cursor: personalFlag && courseFlag == true ? "pointer" : "not-allowed",
+                    color:"ligthgray",
+                    cursor:"not-allowed"
                   }}
                   className={classnames({ active: activeIconTab === "7" })}
                   onClick={(ev) => {
                     if (personalFlag && courseFlag) {
                       ev.preventDefault();
                       getCollegeInfo();
-                      toggleIconTab("7");
+                      // toggleIconTab("7");
                     } else {
                       return;
                     }
@@ -160,8 +165,10 @@ const Homepage = ({ ...props }) => {
                   tag="a"
                   href="#tab"
                   style={{
-                    color: personalFlag == true && courseFlag == true && declarationFlag ? "#526484" : "lightgray",
-                    cursor: personalFlag && courseFlag == true && declarationFlag ? "pointer" : "not-allowed",
+                    color:"ligthgray",
+                    cursor:"not-allowed"
+                    // color: personalFlag == true && courseFlag == true && declarationFlag ? "#526484" : "lightgray",
+                    // cursor: personalFlag && courseFlag == true && declarationFlag ? "pointer" : "not-allowed",
                   }}
                   className={classnames({ active: activeIconTab === "8" })}
                   onClick={(ev) => {
@@ -196,7 +203,7 @@ const Homepage = ({ ...props }) => {
                 {loading ? (
                   spinner
                 ) : (
-                  <Verify toggleIconTab={toggleIconTab} updateCollegeInfo={getCollegeInfo} Data={data} alter />
+                  <Verify activeIconTab={activeIconTab} toggleIconTab={toggleIconTab} updateCollegeInfo={getCollegeInfo} Data={data} alter />
                 )}
               </TabPane>
               <TabPane tabId="7">

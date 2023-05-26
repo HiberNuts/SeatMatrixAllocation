@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Form } from "reactstrap";
+import { Row, Col, Form, Modal, ModalBody, ModalFooter } from "reactstrap";
 import { useForm } from "react-hook-form";
 import { Button } from "../../components/Component";
 import classNames from "classnames";
@@ -7,15 +7,23 @@ import { backendURL } from "../../backendurl";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Select from "react-select";
-import { CourseList,SSCourse } from "./CourseList";
-import {Icon} from "../../components/Component";
-const Verify = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
-  const [Course, setCourse] = useState([]);
+import { CourseList, SSCourse } from "./CourseList";
+import { Icon } from "../../components/Component";
+const Verify = ({ alter,activeIconTab,toggleIconTab, Data, updateCollegeInfo }) => {
   const [clgCAT, setclgCAT] = useState("NM");
-  const [data,setData]=useState();
-  const [buttonDisabled, setButtonDisabled] = useState([]);
+  const [data, setData] = useState();
   const { errors, register, handleSubmit } = useForm();
   const [freezeFlag, setfreezeFlag] = useState(false);
+  const [show, setShow] = useState(false);
+  const [elegibleCourse,setElegibleCourse]=useState([]);
+  const [Course, setcourse] = useState([]);
+  
+
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => {
+    setShow(true);
+  };
   const onFormSubmit = () => {
     fetch(`${backendURL}/setCourseDetails`, {
       method: "POST",
@@ -62,84 +70,100 @@ const Verify = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
     TELUGU: 0.5,
     UNIV: 0.7,
     IRTT: 0.65,
-    SS:0.7
+    SS: 0.7
   };
- 
-  const getCollegeInfo =(Data) => {
-        const data=Data;
-        setCourse(data.CourseDetails.length ? data.CourseDetails : []);
-        setButtonDisabled(Array.from({ length: seatsToAdd() }, () =>({ disabled: false,content:"plus",color:"success",index:null})));
-        setfreezeFlag(data?.FreezeFlag ? data.FreezeFlag : false);
-  };
-  const seatsToAdd=()=>{
-    console.log("seatsToAdd=>",Data)
-    let intake=0;
-    let GOVT=0;
-    
-    Data?.CourseDetails.forEach((element) => {
-      console.log(element.Quota);
-      if(element.Quota!=1)
-      {
-      intake+=element.intake;
-      GOVT+=element.Govt;
+
+  const getCollegeInfo = () => {
+  //   const data = Data;
+    const ec = [];
+    // setfreezeFlag(data?.data?.FreezeFlag ? data.data.FreezeFlag : false);
+    for (let index = 0; index < Course.length; index++) {
+      const element =Course[index];
+      if (element.Quota != 1 && element.Management > 0) {
+        ec.push({...element, index:index});              
       }
-   })
-   if((GOVTSeats[Data?.Category]*intake-GOVT)<1)
-   return 0;
-   else
-   return Math.round(GOVTSeats[Data?.Category]*intake-GOVT)
- }
-  useEffect(() => {
-    getCollegeInfo(Data);
+    }     
+    ec.sort((a, b) => {
+      return b.Pending-a.Pending  ;
+    })  
     
-  }, [Data]);
-  const onAddSeat=(i,j)=>{
-    const course=[...Course];
-    course[i]["Govt"]+=1;
-    course[i]["Management"]-=1;
-    course[i]["SWS"]+=1;
-    const btn =[...buttonDisabled];
-    btn[j].index=i;
-    btn[j].disabled=true;
-    btn[j].color="secondary";
-    setButtonDisabled(btn);
-    setCourse(course);
+    setElegibleCourse(ec);
+    console.log("ElegibleCourse",ec);
+    
+    let seat=seatsToAdd();
+    console.log("seats",seat,Course);
+
+    for (let index = 0; index < ec.length; index++) {
+      if (seat==0) {
+        break;        
+      }
+      let indexVal=ec[index].index;       
+      console.log("indexVal",indexVal);
+      if (indexVal>=0) {
+
+        onAddSeat(indexVal);
+        seat--;
+      }
+    }
+  };
+
+  const seatsToAdd = () => {
+    let intake = 0;
+    let GOVT = 0;
+
+    Course.forEach((element) => {
+      if (element.Quota != 1) {
+        intake += element.intake;
+        GOVT += element.Govt;
+      }
+    })
+    if ((GOVTSeats[Data?.Category] * intake - GOVT) < 1)
+      return 0;
+    else
+      return Math.floor(GOVTSeats[Data?.Category] * intake - GOVT)
   }
-  const onRemoveSeat=(i,j)=>{
-    const course=[...Course];
-    course[i]["Govt"]-=1;
-    course[i]["Management"]+=1;
-    course[i]["SWS"]-=1;
-    const btn =[...buttonDisabled];
-    btn[j].index=null;
-    btn[j].disabled=false;
-    btn[j].color="success";
-    setButtonDisabled(btn);
-    setCourse(course);
+  useEffect(() => {
+      const data =Data.CourseDetails;
+      setcourse(data)
+      console.log("Props",Data);  
+  }, [Data]);
+  useEffect(() => {  
+    console.log("Triggered",Course);
+    getCollegeInfo();
+}, [Course]);
+  const onAddSeat = (i) => {
+    const course = Course;
+    if (course) {    
+    course[i]["Govt"] += 1;
+    course[i]["Management"] -= 1;
+    course[i]["SWS"] += 1;
+    }
+    console.log("culprit");
+    setcourse(course);
+
   }
   const formClass = classNames({
     "form-validate": true,
     "is-alter": alter,
-  });
- 
-  const pending=()=>{
-    let GOVTSeats=0;
-    let intake=0;
-    const data=Course;
+  });   
+
+  const pending = () => {
+    let GOVTSeats = 0;
+    let intake = 0;
+    const data = Course;
     data.forEach((element) => {
-      if(element.Quota!=1)
-        {
-      intake+=element.intake;
-      GOVTSeats+=element.Govt;
-        }
+      if (element.Quota != 1) {
+        intake += element.intake;
+        GOVTSeats += element.Govt;
+      }
     })
-    return [intake,GOVTSeats,(GOVTSeats/intake*100).toFixed(2)];
+    return [intake, GOVTSeats, (GOVTSeats / intake * 100).toFixed(2)];
   }
-  const managementSum=()=>{
-    let mgmt=0;
-    const data=Course;
+  const managementSum = () => {
+    let mgmt = 0;
+    const data = Course;
     data.forEach((element) => {
-      mgmt+=element.Management;
+      mgmt += element.Management;
     })
     return mgmt;
   }
@@ -147,87 +171,109 @@ const Verify = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
 
   return (
     <React.Fragment>
-      <h5 style={{color:"red"}}> Total Intake: {pending()[0]}</h5>
-      <h5 style={{color:"red"}}> Total Govt Seats: {pending()[1]}</h5>
-      <h5 style={{color:"red"}}> Total Percentage: {pending()[2]}%</h5>
-      <h5 style={{color:"red"}}> Quota Percentage: {GOVTSeats[Data?.Category]*100}%</h5>
-      <h5 style={{color:"red"}}> Seats needed to Add: {seatsToAdd()}</h5>
+      <Modal isOpen={show} onExit={handleClose} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+        <ModalBody>
+          <h4>Warning</h4>
+          <p>
+            Are you sure you want to submit the form?
+            <br />
+            This action is irreversible
+          </p>
+        </ModalBody>
+        <ModalFooter style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+          <Button outline color="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button color="success" onClick={handleClose}>
+            Submit
+          </Button>
+        </ModalFooter>
+      </Modal>
+      <h5 style={{ color: "red" }}> Total Intake: {pending()[0]}</h5>
+      <h5 style={{ color: "red" }}> Total Govt Seats: {pending()[1]}</h5>
+      <h5 style={{ color: "red" }}> Total Percentage: {pending()[2]}%</h5>
+      <h5 style={{ color: "red" }}> Quota Percentage: {GOVTSeats[Data?.Category] * 100}%</h5>
+      <h5 style={{ color: "red" }}> Extra Seats Added: {seatsToAdd()}</h5>
 
 
       <Form className={formClass} onSubmit={(e) => e.preventDefault()}>
         <Row className="g-gs">
           <Col md="12">
-          <div className={window.innerWidth <= 1150 ? "table-responsive " : ""}>
-          <table className="table">  
-    <thead className="table-dark">    
-        <tr>      
-            <th scope="col">#</th>      
-            <th scope="col">Course Name</th>      
-            <th scope="col">Govt Seats</th>   
-            <th scope="col">Management</th>    
+            <div className={window.innerWidth <= 1150 ? "table-responsive " : ""}>
+              <table className="table">
+                <thead className="table-dark text-center">
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Course Name</th>
+                    <th scope="col">Govt Seats</th>
+                    <th scope="col">Management</th>
+                    <th scope="col">Surrender</th>
+                    <th scope="col">SWS</th>
+                    <th scope="col">Adjustment Seats</th>
 
-            {
-          buttonDisabled.map((item,index) => (
-            <th key={index} scope="col">Seat {index+1}</th>
-          ))
-         }
-        </tr>  
-    </thead>  
-    <tbody>   
-      {Course.map((element, index) => (
-         <tr key={element.courseCode}>      
-         <th scope="row">{index+1}</th>      
-         <td>{element.courseName.label}</td>      
-         <td> 
+                  </tr>
+                </thead>
+                <tbody>
+                  {Course.map((element, index) => (
+                    <tr key={element.courseCode}>
+                      <th scope="row">{index + 1}</th>
+                      <td>{element.courseName.label}</td>
+                      <td className="text-center">
+                        {element.Govt}
+                      </td>
+                      <td className="text-center">
 
-         {element.Govt}
-         </td>      
-         <td> 
+                        {element.Management}
+                      </td>
+                      <td className="text-center">
 
-{element.Management}
-</td> 
-         {
-          buttonDisabled.map((item,idx) => {
-            if(element.Quota!=1)
-            return (<td key={idx}>
-              {
-            item.index!=index?(
-            <Button 
-            disabled={item.disabled||element.Management<1}
-            onClick={(e) => {
-              console.log(buttonDisabled);
-              e.preventDefault();
-              onAddSeat(index,idx);
-            }} className="btn btn-icon" color={item.color} size="lg">
-            <Icon name="plus" />
-          </Button>
-          ):
-          (
-            <Button 
-            onClick={(e) => {
-              e.preventDefault();
-              onRemoveSeat(index,idx);
-            }} className="btn btn-icon" color="danger" size="lg">
-            <Icon name="minus" />
-          </Button>
-          )
-            }
-            
-          </td>)
-          else
-          return(<td></td>)
-})
-         }
-     </tr> 
-      ))}
-        
-          
+                        {element.Surrender}
+                      </td>
+                      <td className="text-center">
 
-    </tbody>
-</table>
+                        {element.SWS}
+                      </td>
+                      {
+                       
+                          (elegibleCourse.includes(element))?
+                            (<td className="text-center" key={idx}>
+                              {
+                                item.index != index ? (
+                                  <Button
+                                
+                                    onClick={(e) => {
+                                      // console.log(buttonDisabled);
+                                      e.preventDefault();
+                
+                                    }} className="btn btn-icon" color={item.color} size="lg">
+                                    <Icon name="plus" /><h5 className="px-2 text-white">1</h5>
+                                  </Button>
+                                ) :
+                                  (
+                                    <Button
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        onRemoveSeat(index, idx);
+                                      }} className="btn btn-icon" color="danger" size="lg">
+                                      <Icon name="minus" />
+                                    </Button>
+                                  )
+                              }
+
+                            </td>): (<td></td>)
+                            }
+                            
+                     
+                    </tr>
+                  ))}
+
+
+
+                </tbody>
+              </table>
             </div>
           </Col>
-         
+
         </Row>
         <div className="d-flex justify-content-between">
           <Button
@@ -240,36 +286,34 @@ const Verify = ({ alter, toggleIconTab,Data,updateCollegeInfo }) => {
           >
             &lt; Back
           </Button>
-          {freezeFlag == true ? (
-            <Button
-              type="submit"
-              onClick={() => {
-                toggleIconTab("7");
-              }}
-              className="text-center m-4"
-              color="success"
-              disabled={seatsToAdd()}
-            >
-              Next &gt;
-            </Button>
-          ) : (
-            <Button
-              type="submit"
-              onClick={() => {
-                onFormSubmit();
-                toggleIconTab("7");
-              }}
-              className="text-center m-4"
-              color="success"
-              disabled={seatsToAdd()}
-            >
-              Save and Proceed to Next &gt;
-            </Button>
-          )}
+
         </div>
-   
+
+        <div
+          style={{
+            marginTop: "50px",
+            width: "100%",
+            alignItems: "center",
+            textAlign: "center",
+            justifyContent: "center",
+          }}
+        >
+          <button
+            onClick={handleShow}
+            disabled={freezeFlag}
+            style={{ width: "300px", height: "50px", justifyContent: "center" }}
+            className="btn btn-danger"
+          >
+            Freeze
+          </button>
+        </div>
+        <div className="text-center">
+          <span className="text-center" style={{ color: "red" }}>*Important: </span>Click freeze button once you are done with all the changes,
+          this action is irreversible.
+        </div>
       </Form>
     </React.Fragment>
+
   );
 };
 export default Verify;

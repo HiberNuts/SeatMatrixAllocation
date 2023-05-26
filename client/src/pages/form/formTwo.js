@@ -44,6 +44,7 @@ const FormTwo = ({ alter, toggleIconTab, Data, updateCollegeInfo }) => {
     Management: "",
     SWS: "",
     Quota: "",
+    Pending: 0,
     error: false,
   };
   const [Course, setCourse] = useState([courseSchema]);
@@ -90,7 +91,8 @@ const FormTwo = ({ alter, toggleIconTab, Data, updateCollegeInfo }) => {
 
   const getCollegeInfo = async () => {
     const data = Data;
-    setCourse(data.CourseDetails.length ? data.CourseDetails : [courseSchema]);
+    console.log("get colege dtat in form two",data);
+    setCourse(data.CourseDetails.length ? [...data.CourseDetails] : [courseSchema]);
     setcomparingArray(JSON.stringify(Course));
     setfreezeFlag(data?.FreezeFlag ? data.FreezeFlag : false);
     if (data.ccode === "2709") {
@@ -150,6 +152,7 @@ const FormTwo = ({ alter, toggleIconTab, Data, updateCollegeInfo }) => {
       Management: 0,
       SWS: 0,
       Quota: 0,
+      Pending: 0,
       error: false,
     };
     setCourse(data);
@@ -170,11 +173,15 @@ const FormTwo = ({ alter, toggleIconTab, Data, updateCollegeInfo }) => {
     if (data[index]["courseName"].label.includes("(SS)")) {
       data[index]["Govt"] = Math.floor(intake * 0.7);
       data[index]["Quota"] = 0.7;
+      data[index]["Pending"] = (intake * 0.7) % 1;
+
     }
     //NormalCourse
     else {
       data[index]["Govt"] = Math.floor(intake * GOVTSeats[clgCAT]);
       data[index]["Quota"] = GOVTSeats[clgCAT];
+      data[index]["Pending"] = (intake * GOVTSeats[clgCAT]) % 1;
+
     }
     data[index]["Management"] = intake - data[index]["Govt"];
     data[index]["SWS"] = data[index]["Govt"];
@@ -184,6 +191,7 @@ const FormTwo = ({ alter, toggleIconTab, Data, updateCollegeInfo }) => {
       data[index]["Surrender"] = "";
       data[index]["SWS"] = "";
       data[index]["intake"] = "";
+      
     }
     setCourse(data);
   };
