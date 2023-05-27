@@ -33,7 +33,7 @@ const AccredationOptions = [
   { value: "NACC", label: "Non - Accredited", disabled: true },
 ];
 
-const FormTwo = ({ alter, toggleIconTab, Data, updateCollegeInfo }) => {
+const FormTwo = ({ alter, toggleIconTab, Data, setParentCourse, updateCollegeInfo }) => {
   const courseSchema = {
     courseName: "",
     courseCode: "",
@@ -44,6 +44,7 @@ const FormTwo = ({ alter, toggleIconTab, Data, updateCollegeInfo }) => {
     Management: "",
     SWS: "",
     Quota: "",
+    Added: 0,
     Pending: 0,
     error: false,
   };
@@ -91,10 +92,11 @@ const FormTwo = ({ alter, toggleIconTab, Data, updateCollegeInfo }) => {
 
   const getCollegeInfo = async () => {
     const data = Data;
-    console.log("get colege dtat in form two",data);
+    console.log("get colege dtat in form two", data);
     setCourse(data.CourseDetails.length ? [...data.CourseDetails] : [courseSchema]);
     setcomparingArray(JSON.stringify(Course));
     setfreezeFlag(data?.FreezeFlag ? data.FreezeFlag : false);
+    setParentCourse(Course);
     if (data.ccode === "2709") {
       setclgCAT("IRTT");
     } else {
@@ -152,11 +154,12 @@ const FormTwo = ({ alter, toggleIconTab, Data, updateCollegeInfo }) => {
       Management: 0,
       SWS: 0,
       Quota: 0,
+      Added: 0,
       Pending: 0,
       error: false,
     };
     setCourse(data);
-    console.log(data);
+    // console.log(data);
   };
   const handleAccrChange = (event, index) => {
     let data = [...Course];
@@ -174,14 +177,12 @@ const FormTwo = ({ alter, toggleIconTab, Data, updateCollegeInfo }) => {
       data[index]["Govt"] = Math.floor(intake * 0.7);
       data[index]["Quota"] = 0.7;
       data[index]["Pending"] = (intake * 0.7) % 1;
-
     }
     //NormalCourse
     else {
       data[index]["Govt"] = Math.floor(intake * GOVTSeats[clgCAT]);
       data[index]["Quota"] = GOVTSeats[clgCAT];
       data[index]["Pending"] = (intake * GOVTSeats[clgCAT]) % 1;
-
     }
     data[index]["Management"] = intake - data[index]["Govt"];
     data[index]["SWS"] = data[index]["Govt"];
@@ -191,7 +192,6 @@ const FormTwo = ({ alter, toggleIconTab, Data, updateCollegeInfo }) => {
       data[index]["Surrender"] = "";
       data[index]["SWS"] = "";
       data[index]["intake"] = "";
-      
     }
     setCourse(data);
   };
@@ -227,7 +227,7 @@ const FormTwo = ({ alter, toggleIconTab, Data, updateCollegeInfo }) => {
   };
   const checkErr = (tst) => {
     let val = true;
-    console.log(Course);
+    // console.log(Course);
     Course.forEach((e) => {
       // console.log(e.SWS === e.Govt + e.Surrender );
 
@@ -261,7 +261,7 @@ const FormTwo = ({ alter, toggleIconTab, Data, updateCollegeInfo }) => {
       return;
     }
     const updatedCourses = [...Course];
-    console.log(updatedCourses);
+    // console.log(updatedCourses);
     try {
       const courseObj = updatedCourses[e]["courseName"];
       if (courseObj) {
@@ -270,16 +270,17 @@ const FormTwo = ({ alter, toggleIconTab, Data, updateCollegeInfo }) => {
     } finally {
       updatedCourses.splice(e, 1);
       setCourse(updatedCourses);
-      console.log(updatedCourses);
+      // console.log(updatedCourses);
     }
   };
   const updateHandler = async () => {
-    console.log("here");
+    // console.log("here");
     let val = [...Course];
     if (!val.at(Course.length - 1).courseCode) {
       val.splice(val.length - 1, 1);
     }
     setCourse(val);
+    setParentCourse(Course);
     // if(checkErr())
     onFormSubmit();
   };
@@ -302,7 +303,7 @@ const FormTwo = ({ alter, toggleIconTab, Data, updateCollegeInfo }) => {
                     <th scope="col">Surrender</th>
                     <th scope="col">Management</th>
                     <th scope="col">SWS</th>
-                    <th scope="col">Action</th>
+                    <th scope="col">Remove</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -387,7 +388,7 @@ const FormTwo = ({ alter, toggleIconTab, Data, updateCollegeInfo }) => {
                           <input type="text" id="fv-subject" className="form-control" disabled value={e.SWS} />
                         </td>
                         <td>
-                          {freezeFlag != true && (
+                          {freezeFlag !== true && (
                             <Button
                               UseSubmitBehavior={false}
                               key={index}
@@ -436,6 +437,7 @@ const FormTwo = ({ alter, toggleIconTab, Data, updateCollegeInfo }) => {
             <Button
               type="submit"
               onClick={() => {
+                setParentCourse(Course);
                 toggleIconTab("verify");
               }}
               className="text-center m-4"

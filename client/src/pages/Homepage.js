@@ -28,6 +28,7 @@ const Homepage = ({ ...props }) => {
   const [declarationFlag, setdeclarationFlag] = useState(false);
   const [docFlag, setdocFlag] = useState(false);
   const [data, setData] = useState();
+  const [Course, setCourse] = useState([]);
   const [loading, setLoading] = useState(true);
   const getCollegeInfo = async () => {
     fetch(`${backendURL}/collegeData`, {
@@ -60,7 +61,7 @@ const Homepage = ({ ...props }) => {
   }, []);
   useEffect(() => {
     console.log(data);
-  },[data])
+  }, [data]);
   const spinner = (
     <div className="d-flex justify-content-center">
       <Spinner style={{ width: "5rem", height: "5rem" }} color="primary" />
@@ -101,7 +102,7 @@ const Homepage = ({ ...props }) => {
                     if (personalFlag) {
                       ev.preventDefault();
                     } else {
-                      toggleIconTab("6");
+                      // toggleIconTab("6");
                       return;
                     }
                   }}
@@ -125,7 +126,7 @@ const Homepage = ({ ...props }) => {
                   onClick={(ev) => {
                     if (personalFlag && courseFlag) {
                       ev.preventDefault();
-                      toggleIconTab("verify");
+                      // toggleIconTab("verify");
                     } else {
                       return;
                     }
@@ -140,10 +141,8 @@ const Homepage = ({ ...props }) => {
                   tag="a"
                   href="#tab"
                   style={{
-                    // color: personalFlag == true && courseFlag == true ? "#526484" : "lightgray",
-                    // cursor: personalFlag && courseFlag == true ? "pointer" : "not-allowed",
-                    color:"ligthgray",
-                    cursor:"not-allowed"
+                    color: personalFlag == true && courseFlag == true && declarationFlag ? "#526484" : "lightgray",
+                    cursor: personalFlag && courseFlag == true && declarationFlag ? "pointer" : "not-allowed",
                   }}
                   className={classnames({ active: activeIconTab === "7" })}
                   onClick={(ev) => {
@@ -165,10 +164,8 @@ const Homepage = ({ ...props }) => {
                   tag="a"
                   href="#tab"
                   style={{
-                    color:"ligthgray",
-                    cursor:"not-allowed"
-                    // color: personalFlag == true && courseFlag == true && declarationFlag ? "#526484" : "lightgray",
-                    // cursor: personalFlag && courseFlag == true && declarationFlag ? "pointer" : "not-allowed",
+                    color: personalFlag == true && courseFlag == true && declarationFlag ? "#526484" : "lightgray",
+                    cursor: personalFlag && courseFlag == true && declarationFlag ? "pointer" : "not-allowed",
                   }}
                   className={classnames({ active: activeIconTab === "8" })}
                   onClick={(ev) => {
@@ -196,14 +193,27 @@ const Homepage = ({ ...props }) => {
                 {loading ? (
                   spinner
                 ) : (
-                  <FormTwo toggleIconTab={toggleIconTab} updateCollegeInfo={getCollegeInfo} Data={data} alter />
+                  <FormTwo
+                    toggleIconTab={toggleIconTab}
+                    setParentCourse={setCourse}
+                    updateCollegeInfo={getCollegeInfo}
+                    Data={data}
+                    alter
+                  />
                 )}
               </TabPane>
               <TabPane tabId="verify">
                 {loading ? (
                   spinner
                 ) : (
-                  <Verify activeIconTab={activeIconTab} toggleIconTab={toggleIconTab} updateCollegeInfo={getCollegeInfo} Data={data} alter />
+                  <Verify
+                    activeIconTab={activeIconTab}
+                    toggleIconTab={toggleIconTab}
+                    updateCollegeInfo={getCollegeInfo}
+                    Data={Course}
+                    Category={data?.Category}
+                    alter
+                  />
                 )}
               </TabPane>
               <TabPane tabId="7">
@@ -217,7 +227,7 @@ const Homepage = ({ ...props }) => {
                 {loading ? (
                   spinner
                 ) : (
-                  <FormFour toggleIconTab={toggleIconTab} updateCollegeInfo={getCollegeInfo} Data={data} alter />
+                  <FormFour toggleIconTab={toggleIconTab} updateCollegeInfo={getCollegeInfo} Data={Course} alter />
                 )}
               </TabPane>
             </TabContent>

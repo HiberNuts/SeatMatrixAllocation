@@ -1,24 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Row, Col, Form, Modal, ModalBody, ModalFooter } from "reactstrap";
-import { useForm } from "react-hook-form";
 import { Button } from "../../components/Component";
 import classNames from "classnames";
 import { backendURL } from "../../backendurl";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Select from "react-select";
-import { CourseList, SSCourse } from "./CourseList";
 import { Icon } from "../../components/Component";
-const Verify = ({ alter,activeIconTab,toggleIconTab, Data, updateCollegeInfo }) => {
-  const [clgCAT, setclgCAT] = useState("NM");
-  const [data, setData] = useState();
-  const { errors, register, handleSubmit } = useForm();
+const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, Category }) => {
   const [freezeFlag, setfreezeFlag] = useState(false);
   const [show, setShow] = useState(false);
-  const [elegibleCourse,setElegibleCourse]=useState([]);
   const [Course, setcourse] = useState([]);
-  
-
 
   const handleClose = () => setShow(false);
   const handleShow = () => {
@@ -70,37 +61,29 @@ const Verify = ({ alter,activeIconTab,toggleIconTab, Data, updateCollegeInfo }) 
     TELUGU: 0.5,
     UNIV: 0.7,
     IRTT: 0.65,
-    SS: 0.7
+    SS: 0.7,
   };
 
   const getCollegeInfo = () => {
-  //   const data = Data;
     const ec = [];
-    // setfreezeFlag(data?.data?.FreezeFlag ? data.data.FreezeFlag : false);
     for (let index = 0; index < Course.length; index++) {
-      const element =Course[index];
-      if (element.Quota != 1 && element.Management > 0) {
-        ec.push({...element, index:index});              
+      const element = Course[index];
+      if (element.Quota !== 1 && element.Management > 0) {
+        ec.push({ ...element, index: index });
       }
-    }     
+    }
     ec.sort((a, b) => {
-      return b.Pending-a.Pending  ;
-    })  
-    
-    setElegibleCourse(ec);
-    console.log("ElegibleCourse",ec);
-    
-    let seat=seatsToAdd();
-    console.log("seats",seat,Course);
-
+      return b.Pending - a.Pending;
+    });
+    let seat = seatsToAdd();
+    console.log("seats", seat, Course);
     for (let index = 0; index < ec.length; index++) {
-      if (seat==0) {
-        break;        
+      if (seat === 0) {
+        break;
       }
-      let indexVal=ec[index].index;       
-      console.log("indexVal",indexVal);
-      if (indexVal>=0) {
-
+      let indexVal = ec[index].index;
+      console.log("indexVal", indexVal);
+      if (indexVal >= 0) {
         onAddSeat(indexVal);
         seat--;
       }
@@ -112,63 +95,59 @@ const Verify = ({ alter,activeIconTab,toggleIconTab, Data, updateCollegeInfo }) 
     let GOVT = 0;
 
     Course.forEach((element) => {
-      if (element.Quota != 1) {
+      if (element.Quota !== 1) {
         intake += element.intake;
         GOVT += element.Govt;
       }
-    })
-    if ((GOVTSeats[Data?.Category] * intake - GOVT) < 1)
-      return 0;
-    else
-      return Math.floor(GOVTSeats[Data?.Category] * intake - GOVT)
-  }
+    });
+    if (GOVTSeats[Category] * intake - GOVT < 1) return 0;
+    else return Math.floor(GOVTSeats[Category] * intake - GOVT);
+  };
+  // useEffect(() => {
+  //   const data = Data;
+  //   setcourse(data);
+  //   console.log("Props", Data);
+  // }, [Data]);
   useEffect(() => {
-      const data =Data.CourseDetails;
-      setcourse(data)
-      console.log("Props",Data);  
-  }, [Data]);
-  useEffect(() => {  
-    console.log("Triggered",Course);
+    console.log("Triggered", Course);
     getCollegeInfo();
-}, [Course]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [Course]);
+  useEffect(() => {
+    const data = Data;
+    setcourse(data);
+    console.log("Props", Data);
+  }, [activeIconTab]);
   const onAddSeat = (i) => {
     const course = Course;
-    if (course) {    
-    course[i]["Govt"] += 1;
-    course[i]["Management"] -= 1;
-    course[i]["SWS"] += 1;
+    if (course) {
+      course[i]["Govt"] += 1;
+      course[i]["Management"] -= 1;
+      course[i]["SWS"] += 1;
+      course[i]["Added"] = 1;
     }
-    console.log("culprit");
     setcourse(course);
-
-  }
+    console.log(i);
+  };
   const formClass = classNames({
     "form-validate": true,
     "is-alter": alter,
-  });   
+  });
 
   const pending = () => {
     let GOVTSeats = 0;
     let intake = 0;
+    let added = 0;
     const data = Course;
     data.forEach((element) => {
-      if (element.Quota != 1) {
+      if (element.Quota !== 1) {
         intake += element.intake;
         GOVTSeats += element.Govt;
+        added += element.Added ? element.Added : 0;
       }
-    })
-    return [intake, GOVTSeats, (GOVTSeats / intake * 100).toFixed(2)];
-  }
-  const managementSum = () => {
-    let mgmt = 0;
-    const data = Course;
-    data.forEach((element) => {
-      mgmt += element.Management;
-    })
-    return mgmt;
-  }
-
-
+    });
+    return [intake, GOVTSeats, ((GOVTSeats / intake) * 100).toFixed(2), added];
+  };
   return (
     <React.Fragment>
       <Modal isOpen={show} onExit={handleClose} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
@@ -189,13 +168,15 @@ const Verify = ({ alter,activeIconTab,toggleIconTab, Data, updateCollegeInfo }) 
           </Button>
         </ModalFooter>
       </Modal>
-      <h5 style={{ color: "red" }}> Total Intake: {pending()[0]}</h5>
-      <h5 style={{ color: "red" }}> Total Govt Seats: {pending()[1]}</h5>
-      <h5 style={{ color: "red" }}> Total Percentage: {pending()[2]}%</h5>
-      <h5 style={{ color: "red" }}> Quota Percentage: {GOVTSeats[Data?.Category] * 100}%</h5>
-      <h5 style={{ color: "red" }}> Extra Seats Added: {seatsToAdd()}</h5>
-
-
+      {Category !== "GOVT AIDED" && Category!=="GOVT" ? (
+        <>
+          <h5 style={{ color: "red" }}> Total Intake: {pending()[0]}</h5>
+          <h5 style={{ color: "red" }}> Total Govt Seats: {pending()[1]}</h5>
+          <h5 style={{ color: "red" }}> Total Percentage: {pending()[2]}%</h5>
+          <h5 style={{ color: "red" }}> Quota Percentage: {GOVTSeats[Category] * 100}%</h5>
+          <h5 style={{ color: "red" }}> Extra Seats Added: {pending()[3]}</h5>
+        </>
+      ) : null}
       <Form className={formClass} onSubmit={(e) => e.preventDefault()}>
         <Row className="g-gs">
           <Col md="12">
@@ -210,7 +191,6 @@ const Verify = ({ alter,activeIconTab,toggleIconTab, Data, updateCollegeInfo }) 
                     <th scope="col">Surrender</th>
                     <th scope="col">SWS</th>
                     <th scope="col">Adjustment Seats</th>
-
                   </tr>
                 </thead>
                 <tbody>
@@ -218,62 +198,72 @@ const Verify = ({ alter,activeIconTab,toggleIconTab, Data, updateCollegeInfo }) 
                     <tr key={element.courseCode}>
                       <th scope="row">{index + 1}</th>
                       <td>{element.courseName.label}</td>
-                      <td className="text-center">
-                        {element.Govt}
-                      </td>
-                      <td className="text-center">
+                      {element.Added ? (
+                        <td>
+                          <Button
+                            onClick={(e) => {
+                              e.preventDefault();
+                            }}
+                            className="btn"
+                            color="warning"
+                            size="lg"
+                          >
+                            {element.Govt}
+                          </Button>
+                        </td>
+                      ) : (
+                        <td>
+                          <Button
+                            onClick={(e) => {
+                              e.preventDefault();
+                            }}
+                            className="btn"
+                            color="secondary"
+                            size="lg"
+                          >
+                            {element.Govt}
+                          </Button>
+                        </td>
+                      )}
 
-                        {element.Management}
-                      </td>
-                      <td className="text-center">
-
-                        {element.Surrender}
-                      </td>
-                      <td className="text-center">
-
-                        {element.SWS}
-                      </td>
-                      {
-                       
-                          (elegibleCourse.includes(element))?
-                            (<td className="text-center" key={idx}>
-                              {
-                                item.index != index ? (
-                                  <Button
-                                
-                                    onClick={(e) => {
-                                      // console.log(buttonDisabled);
-                                      e.preventDefault();
-                
-                                    }} className="btn btn-icon" color={item.color} size="lg">
-                                    <Icon name="plus" /><h5 className="px-2 text-white">1</h5>
-                                  </Button>
-                                ) :
-                                  (
-                                    <Button
-                                      onClick={(e) => {
-                                        e.preventDefault();
-                                        onRemoveSeat(index, idx);
-                                      }} className="btn btn-icon" color="danger" size="lg">
-                                      <Icon name="minus" />
-                                    </Button>
-                                  )
-                              }
-
-                            </td>): (<td></td>)
-                            }
-                            
-                     
+                      <td className="text-center">{element.Management}</td>
+                      <td className="text-center">{element.Surrender}</td>
+                      <td className="text-center">{element.SWS}</td>
+                      {element.Added ? (
+                        <td className="text-center">
+                          <Button
+                            onClick={(e) => {
+                              // console.log(buttonDisabled);
+                              e.preventDefault();
+                            }}
+                            className="btn btn-icon"
+                            color="success"
+                            size="lg"
+                          >
+                            <Icon name="plus" />
+                            <h5 className="px-2 text-white">1</h5>
+                          </Button>
+                        </td>
+                      ) : (
+                        <td className="text-center">
+                          <Button
+                            onClick={(e) => {
+                              e.preventDefault();
+                            }}
+                            className="btn"
+                            color="danger"
+                            size="lg"
+                          >
+                            <h5 className="text-white">--</h5>
+                          </Button>
+                        </td>
+                      )}
                     </tr>
                   ))}
-
-
-
                 </tbody>
               </table>
             </div>
           </Col>
-
         </Row>
         <div className="d-flex justify-content-between">
           <Button
@@ -286,7 +276,6 @@ const Verify = ({ alter,activeIconTab,toggleIconTab, Data, updateCollegeInfo }) 
           >
             &lt; Back
           </Button>
-
         </div>
 
         <div
@@ -308,12 +297,13 @@ const Verify = ({ alter,activeIconTab,toggleIconTab, Data, updateCollegeInfo }) 
           </button>
         </div>
         <div className="text-center">
-          <span className="text-center" style={{ color: "red" }}>*Important: </span>Click freeze button once you are done with all the changes,
-          this action is irreversible.
+          <span className="text-center" style={{ color: "red" }}>
+            *Important:{" "}
+          </span>
+          Click freeze button once you are done with all the changes, this action is irreversible.
         </div>
       </Form>
     </React.Fragment>
-
   );
 };
 export default Verify;
