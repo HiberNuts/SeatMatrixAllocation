@@ -185,7 +185,7 @@ const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, 
           </Button>
         </ModalFooter>
       </Modal>
-      {Category !== "GOVT AIDED" && Category !== "GOVT" ? (
+      {Category !== "GOVT AIDED" && Category !== "GOVT" && Category !== "UNIV" ? (
         <>
           <h5 style={{ color: "red" }}> Total Intake: {pending()[0]}</h5>
           <h5 style={{ color: "red" }}> Total Govt Seats: {pending()[1]}</h5>
