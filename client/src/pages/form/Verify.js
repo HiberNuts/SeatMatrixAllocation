@@ -6,7 +6,8 @@ import { backendURL } from "../../backendurl";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Icon } from "../../components/Component";
-const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, Category }) => {
+import { courseRank } from "../../utils/CourseRank";
+const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, Category, ccode }) => {
   const [freezeFlag, setfreezeFlag] = useState(false);
   const [show, setShow] = useState(false);
   const [Course, setcourse] = useState([]);
@@ -65,7 +66,7 @@ const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, 
   };
 
   const getCollegeInfo = () => {
-    const ec = [];
+    var ec = [];
     for (let index = 0; index < Course.length; index++) {
       const element = Course[index];
       if (element.Quota !== 1 && element.Management > 0) {
@@ -73,20 +74,28 @@ const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, 
       }
     }
     ec.sort((a, b) => {
-      return b.Pending - a.Pending;
+      if (a.Pending === b.Pending) {
+        return courseRank[ccode].indexOf(a.courseCode) - courseRank[ccode].indexOf(b.courseCode);
+      } else return b.Pending - a.Pending;
     });
+    console.log(ec);
     let seat = seatsToAdd();
     console.log("seats", seat, Course);
+    let mgmt = 0;
     for (let index = 0; index < ec.length; index++) {
       if (seat === 0) {
         break;
       }
+      mgmt += ec[index].Management;
       let indexVal = ec[index].index;
       console.log("indexVal", indexVal);
       if (indexVal >= 0) {
         onAddSeat(indexVal);
         seat--;
       }
+    }
+    if (seat > 0 && mgmt >= seat) {
+      getCollegeInfo();
     }
   };
 
@@ -124,7 +133,7 @@ const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, 
       course[i]["Govt"] += 1;
       course[i]["Management"] -= 1;
       course[i]["SWS"] += 1;
-      course[i]["Added"] = 1;
+      course[i]["Added"] += 1;
     }
     setcourse(course);
     console.log(i);
@@ -168,7 +177,7 @@ const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, 
           </Button>
         </ModalFooter>
       </Modal>
-      {Category !== "GOVT AIDED" && Category!=="GOVT" ? (
+      {Category !== "GOVT AIDED" && Category !== "GOVT" ? (
         <>
           <h5 style={{ color: "red" }}> Total Intake: {pending()[0]}</h5>
           <h5 style={{ color: "red" }}> Total Govt Seats: {pending()[1]}</h5>
@@ -241,7 +250,7 @@ const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, 
                             size="lg"
                           >
                             <Icon name="plus" />
-                            <h5 className="px-2 text-white">1</h5>
+                            <h5 className="px-2 text-white">{element.Added}</h5>
                           </Button>
                         </td>
                       ) : (

@@ -212,6 +212,7 @@ const Homepage = ({ ...props }) => {
                     updateCollegeInfo={getCollegeInfo}
                     Data={Course}
                     Category={data?.Category}
+                    ccode={data?.ccode}
                     alter
                   />
                 )}
