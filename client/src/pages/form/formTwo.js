@@ -95,7 +95,7 @@ const FormTwo = ({ alter, toggleIconTab, Data, setParentCourse, updateCollegeInf
     console.log("get colege dtat in form two", data);
     setCourse(data.CourseDetails.length ? [...data.CourseDetails] : [courseSchema]);
     setcomparingArray(JSON.stringify(Course));
-    setfreezeFlag(data?.FreezeFlag ? data.FreezeFlag : false);
+    setfreezeFlag(data?.Freeze1 ? data.Freeze1 : false);
     setParentCourse(Course);
     if (data.ccode === "2709") {
       setclgCAT("IRTT");

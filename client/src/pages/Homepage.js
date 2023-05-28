@@ -30,6 +30,8 @@ const Homepage = ({ ...props }) => {
   const [data, setData] = useState();
   const [Course, setCourse] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [freezeFlag, setfreezeFlag] = useState(false);
+
   const getCollegeInfo = async () => {
     fetch(`${backendURL}/collegeData`, {
       headers: {
@@ -50,6 +52,7 @@ const Homepage = ({ ...props }) => {
         setdeclarationFlag(data?.DeclarationFlag == true ? true : false);
         setdocFlag(data?.DocumentUploadFlag == true ? true : false);
         setLoading(false);
+        setfreezeFlag(data?.Freeze1 == true ? true : false);
       })
       .catch((error) => {
         console.log(error);
@@ -213,6 +216,7 @@ const Homepage = ({ ...props }) => {
                     Data={Course}
                     Category={data?.Category}
                     ccode={data?.ccode}
+                    ParentfreezeFlag={freezeFlag}
                     alter
                   />
                 )}

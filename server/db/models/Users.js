@@ -80,6 +80,10 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       required: false,
     },
+    Freeze1: {
+      type: Boolean,
+      required: false,
+    },
     Booklet: {
       type: Object,
       required: false,

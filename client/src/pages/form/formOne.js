@@ -114,7 +114,7 @@ const FormOne = ({ alter, toggleIconTab,updateCollegeInfo,Data }) => {
         setWebsite(data?.Website);
         setPincode(data?.Pincode);
         setEmail(data?.Email);
-        setfreezeFlag(data?.FreezeFlag ? data.FreezeFlag : false);
+        setfreezeFlag(data?.Freeze1 ? data.Freeze1 : false);
     
   };
 

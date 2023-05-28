@@ -208,6 +208,27 @@ UserRouter.post("/freezeBooklet", ejwt({ secret: secret, algorithms: ["HS256"] }
     res.status(500).json(err);
   }
 });
+UserRouter.post(
+  "/freeze1",
+  ejwt({ secret: secret, algorithms: ["HS256"] }),
+  async (req, res) => {
+    try {
+      const { freeze, Course } = req.body;
+      console.log(req.body);
+      if (!freeze || !Course) {
+        res.json({ status: false, message: "incomplete body set" });
+      } else {
+        const user = await users.findByIdAndUpdate(req.auth.id, {
+          Freeze1: freeze,
+          CourseDetails: Course,
+        });
+        res.json({ status: true });
+      }
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  }
+);
 UserRouter.post("/bookletInfrastructre", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
   try {
     const { Infra } = req.body;

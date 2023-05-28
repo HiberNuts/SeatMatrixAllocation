@@ -7,24 +7,30 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Icon } from "../../components/Component";
 import { courseRank } from "../../utils/CourseRank";
-const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, Category, ccode }) => {
+const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, Category, ccode, ParentfreezeFlag }) => {
   const [freezeFlag, setfreezeFlag] = useState(false);
   const [show, setShow] = useState(false);
   const [Course, setcourse] = useState([]);
-
+  
   const handleClose = () => setShow(false);
   const handleShow = () => {
     setShow(true);
   };
+  const handleSubmit = () => {
+    setfreezeFlag(true);
+    onFormSubmit();
+    handleClose();
+  };
   const onFormSubmit = () => {
-    fetch(`${backendURL}/setCourseDetails`, {
+    fetch(`${backendURL}/Freeze1`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
       body: JSON.stringify({
-        CourseDetails: Course,
+        Course: Course,
+        freeze: freezeFlag,
       }),
     })
       .then((response) => {
@@ -40,6 +46,7 @@ const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, 
           };
           notify();
           updateCollegeInfo();
+          window.location.href = "/";
         }
       })
       .catch((error) => {
@@ -125,6 +132,7 @@ const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, 
   useEffect(() => {
     const data = Data;
     setcourse(data);
+    setfreezeFlag(ParentfreezeFlag);
     console.log("Props", Data);
   }, [activeIconTab]);
   const onAddSeat = (i) => {
@@ -172,7 +180,7 @@ const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, 
           <Button outline color="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button color="success" onClick={handleClose}>
+          <Button color="success" onClick={handleSubmit}>
             Submit
           </Button>
         </ModalFooter>
@@ -302,10 +310,10 @@ const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, 
             style={{ width: "300px", height: "50px", justifyContent: "center" }}
             className="btn btn-danger"
           >
-            Freeze
+            {freezeFlag ? "Frozen" : "Freeze"}
           </button>
         </div>
-        <div className="text-center">
+        <div hidden={freezeFlag} className="text-center">
           <span className="text-center" style={{ color: "red" }}>
             *Important:{" "}
           </span>
