@@ -27,7 +27,7 @@ const CourseDetails = ({ alter,Data, toggleIconTab,updateCollegeInfo }) => {
   const [frozen,setFrozen] = useState(false);
   const [pending,setPending]=useState();
   const onFormSubmit = (data) => {
-    console.log(Course)
+   
     if (frozen) {
       toggleIconTab("Infrastructure");
     }
@@ -71,7 +71,7 @@ const CourseDetails = ({ alter,Data, toggleIconTab,updateCollegeInfo }) => {
   const getCollegeInfo = async (data) => {
    
         if (data.Booklet) {
-          console.log(data);
+        
           setFrozen(data.Booklet.Frozen);
           setCourse(data.Booklet.CourseDetails ? data.Booklet.CourseDetails : [courseSchema]);
           setclgCAT(data.Category);
@@ -126,7 +126,7 @@ const CourseDetails = ({ alter,Data, toggleIconTab,updateCollegeInfo }) => {
     let data = [...Course];
     data[index]["intake"] = event.target.value;
     setCourse(data);
-    console.log(event.value);
+   
   };
   const handlevalidChange = (event, index) => {
     let data = [...Course];

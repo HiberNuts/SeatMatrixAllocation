@@ -9,12 +9,25 @@ var multer = require("multer");
 const s3 = require("../../config/aws");
 // Load User model
 const users = require("../../db/models/Users");
+const nodemailer = require("nodemailer");
 
 const BUCKET = "seatmartix";
 
 var storage = multer.memoryStorage({
   destination: function (req, file, callback) {
     callback(null, "");
+  },
+});
+
+let transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    type: "OAuth2",
+    user: process.env.MAIL_USERNAME,
+    pass: "bestisthewaste@123",
+    clientId: process.env.OAUTH_CLIENTID,
+    clientSecret: process.env.OAUTH_CLIENT_SECRET,
+    refreshToken: process.env.OAUTH_REFRESH_TOKEN,
   },
 });
 
@@ -98,12 +111,8 @@ UserRouter.post("/resetPasswordInitial", ejwt({ secret: secret, algorithms: ["HS
   }
 });
 
-let Reqcounter = 0;
-
 UserRouter.get("/collegeData", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
   try {
-    Reqcounter = Reqcounter + 1;
-    console.log(`Called college data ${Reqcounter} times`);
     // Find the auth with the given ID
     const auth = await users.findById(req.auth.id);
 
@@ -120,7 +129,6 @@ UserRouter.get("/collegeData", ejwt({ secret: secret, algorithms: ["HS256"] }), 
 UserRouter.post("/personalDetail", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
   try {
     const { PrincipalName, Email, PhoneNumber, Pincode, District, Website, Autonomous } = req.body;
-    console.log(req.body);
     if (!PrincipalName || !Email || !PhoneNumber || !Pincode || !District || !Website) {
       res.json({ status: false, message: "incomplete body set" });
     } else {
@@ -144,7 +152,6 @@ UserRouter.post("/personalDetail", ejwt({ secret: secret, algorithms: ["HS256"] 
 UserRouter.post("/bookletData", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
   try {
     const { Booklet } = req.body;
-    console.log(req.body);
     if (!Booklet) {
       res.json({ status: false, message: "incomplete body set" });
     } else {
@@ -161,7 +168,6 @@ UserRouter.post("/bookletData", ejwt({ secret: secret, algorithms: ["HS256"] }),
 UserRouter.post("/bankData", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
   try {
     const { BankDetails } = req.body;
-    console.log(req.body);
     if (!BankDetails) {
       res.json({ status: false, message: "incomplete body set" });
     } else {
@@ -178,7 +184,6 @@ UserRouter.post("/bankData", ejwt({ secret: secret, algorithms: ["HS256"] }), as
 UserRouter.post("/bookletCourse", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
   try {
     const { CourseDetails } = req.body;
-    console.log(req.body);
     if (!CourseDetails) {
       res.json({ status: false, message: "incomplete body set" });
     } else {
@@ -195,7 +200,6 @@ UserRouter.post("/bookletCourse", ejwt({ secret: secret, algorithms: ["HS256"] }
 UserRouter.post("/freezeBooklet", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
   try {
     const { freeze } = req.body;
-    console.log(req.body);
     if (!freeze) {
       res.json({ status: false, message: "incomplete body set" });
     } else {
@@ -208,31 +212,35 @@ UserRouter.post("/freezeBooklet", ejwt({ secret: secret, algorithms: ["HS256"] }
     res.status(500).json(err);
   }
 });
-UserRouter.post(
-  "/freeze1",
-  ejwt({ secret: secret, algorithms: ["HS256"] }),
-  async (req, res) => {
-    try {
-      const { freeze, Course } = req.body;
-      console.log(req.body);
-      if (!freeze || !Course) {
-        res.json({ status: false, message: "incomplete body set" });
-      } else {
-        const user = await users.findByIdAndUpdate(req.auth.id, {
-          Freeze1: freeze,
-          CourseDetails: Course,
-        });
-        res.json({ status: true });
-      }
-    } catch (err) {
-      res.status(500).json(err);
+UserRouter.post("/Phase1Freeze", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
+  try {
+    const { freeze, Course } = req.body;
+    if (freeze == null || !Course) {
+      res.json({ status: false, message: "incomplete body set" });
+    } else {
+      const user = await users.findByIdAndUpdate(req.auth.id, {
+        Phase1Freeze: freeze,
+        CourseDetails: Course,
+      });
+      res.json({ status: true });
     }
+  } catch (err) {
+    res.status(500).json(err);
   }
-);
+});
+UserRouter.post("/Phase2Freeze", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
+  try {
+    const user = await users.findByIdAndUpdate(req.auth.id, {
+      Phase2Freeze: true,
+    });
+    res.json({ status: true });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 UserRouter.post("/bookletInfrastructre", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
   try {
     const { Infra } = req.body;
-    console.log(req.body);
     if (!Infra) {
       res.json({ status: false, message: "incomplete body set" });
     } else {
@@ -324,7 +332,7 @@ UserRouter.get("/documents", ejwt({ secret: secret, algorithms: ["HS256"] }), as
     let signedUrls = {};
     await s3.listObjectsV2(params, function (err, data) {
       if (err) {
-        console.log(err, err.stack);
+        console.log("Error in /documents", err, err.stack);
         res.json({ status: false, error: err });
       } else {
         data.Contents.forEach((con) => keys.push(con["Key"]));
@@ -342,7 +350,7 @@ UserRouter.get("/documents", ejwt({ secret: secret, algorithms: ["HS256"] }), as
     });
   } catch (error) {
     console.log("Error in getting documents", err);
-    console.log(error);
+    res.json({ status: false, error: error });
   }
 });
 
@@ -358,6 +366,42 @@ UserRouter.post("/declaration", ejwt({ secret: secret, algorithms: ["HS256"] }),
 
   if (College) {
     res.json({ status: true });
+  }
+});
+
+UserRouter.post("/forgotpass", async (req, res) => {
+  try {
+    const { CollegeCode } = req.body;
+
+    const College = await users.findOne({ ccode: CollegeCode });
+
+    if (College.Email.length < 1) {
+      return res.json({ status: false, message: "Email not found" });
+    }
+
+    if (!College) {
+      return res.json({ status: false, message: "Invalid college code" });
+    } else {
+      const message = {
+        from: "TNEA seat matrix",
+        // to: `${College.Email}`,
+        to: "amruthkiran47@gmail.com",
+        subject: "TNEA SeatMatrix Password",
+        text: `Please find below the passowrd for the login credentials of TNEA Seat Matrix web application \nPassword: ${College.CollegePassword}.`,
+      };
+
+      transporter.sendMail(message, function (err, data) {
+        if (err) {
+          throw Error("Error while sending Email", err);
+        } else {
+          console.log("Email sent to College");
+          res.json({ status: true, message: "Email sent to college" });
+        }
+      });
+    }
+  } catch (error) {
+    console.log("Error in resetting passowrd", error);
+    res.status(500).json({ status: false, error: error });
   }
 });
 
@@ -386,7 +430,6 @@ UserRouter.get("/list/seats", async (req, res) => {
     let declaration = 0;
     let documentUploadFlag = 0;
     const college = await users.find({});
-    console.log(college.length);
     college.map((c) => {
       if (c.FreezeFlag) {
         freezeflag = freezeflag + 1;

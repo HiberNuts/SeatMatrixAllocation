@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
 });
 
 const CourseTable = ({ collegeData }) => {
-  console.log("Here is the CourseTable", collegeData);
+
   return (
     <View style={styles.tableContainer}>
       <TableHeader />

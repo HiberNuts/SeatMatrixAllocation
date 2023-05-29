@@ -39,7 +39,7 @@ const PersonalDetails = ({alter,Data,toggleIconTab,updateCollegeInfo }) => {
     { label: "NO", value: false },
   ];
   const onFormSubmit = (data) => {
-    console.log("Here Data", data);
+   
     if (editFlag) {
       fetch(`${backendURL}/bookletData`, {
         method: "Post",
@@ -73,7 +73,7 @@ const PersonalDetails = ({alter,Data,toggleIconTab,updateCollegeInfo }) => {
           return response.json();
         })
         .then((data) => {
-          console.log(data);
+         
           if (data.status) {
 
             const notify = () => {
@@ -142,7 +142,7 @@ const PersonalDetails = ({alter,Data,toggleIconTab,updateCollegeInfo }) => {
   };
 
   useEffect(() => {
-    console.log("From Props",Data);
+  
     getCollegeInfo(Data);
   }, []);
 

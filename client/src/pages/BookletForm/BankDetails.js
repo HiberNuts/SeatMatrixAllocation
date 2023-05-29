@@ -37,9 +37,9 @@ const BankDetails = ({alter,Data, toggleIconTab,updateCollegeInfo }) => {
                     return response.json();
                 })
                 .then((data) => {
-                    console.log(data);
+                  
                     if (data.status) {
-                        console.log("s");
+                     
                         const notify = () => {
                             toast.success("Data added successfully", {
                                 position: "bottom-right",
@@ -74,13 +74,13 @@ const BankDetails = ({alter,Data, toggleIconTab,updateCollegeInfo }) => {
 
     const getCollegeInfo = async (data) => {
         
-                console.log(data);
+              
                 if (data.Booklet) {
                     setFrozen(data.Booklet.Frozen);
                     if (data.Booklet.BankDetails) {
                         setBank(data.Booklet.BankDetails.Bank1);
                 
-                        console.log(data);
+                     
                     }
                     else {
                         seteditFlag(true);

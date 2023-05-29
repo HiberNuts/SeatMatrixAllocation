@@ -43,7 +43,7 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
     try {
       var formData = new FormData();
       if (typeof collegeData?.Documents === "undefined" || collegeData?.Documents["seatMatrix"] != true) {
-        console.log(seatMatrix);
+      
         if (typeof seatMatrix == "undefined" || seatMatrix == "") {
           toast.warning("Seat matrix form is compulsory");
           return;
@@ -89,7 +89,7 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
         });
-        console.log(res);
+       
         if (res.data.status) {
           setSeatMatrix();
           inputseatMatrix.current.value = "";
@@ -123,7 +123,7 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
     });
     setcollegeData(data.data);
     setMinorityFlag(data.data.Category in MINORITY ? true : false);
-    setfreezeFlag(data?.data?.FreezeFlag ? data.data.FreezeFlag : false);
+    setfreezeFlag(data?.data?.Phase2Freeze ? data.data.Phase2Freeze : false);
   };
   const getDocUrls = async () => {
     const url = await axios.get(`${backendURL}/documents`, {
@@ -181,6 +181,36 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
     }
   };
 
+  const handleFreezeSubmit = async () => {
+    try {
+      fetch(`${backendURL}/Phase2Freeze`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (data.status) {
+            toast.success("Freezed successfully");
+            handleClose();
+          } else {
+            toast.error("Something went wrong please try again");
+            handleClose();
+          }
+        });
+    } catch (error) {
+      console.log(error);
+      toast(error);
+    }
+  };
+
   const handleClose = () => setShow(false);
   const handleShow = () => {
     setShow(true);
@@ -201,7 +231,7 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
           <Button outline color="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button color="success" onClick={handleClose}>
+          <Button color="success" onClick={handleFreezeSubmit}>
             Submit
           </Button>
         </ModalFooter>

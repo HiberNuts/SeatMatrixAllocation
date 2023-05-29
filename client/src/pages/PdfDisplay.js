@@ -21,7 +21,7 @@ const PdfDisplay = (props) => {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
+       
         setcollegeData(data);
       })
       .catch((error) => {

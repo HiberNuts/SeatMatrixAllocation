@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   },
 });
 const TableContent = ({ collegeData }) => {
-  console.log("Here is the TableContent", collegeData);
+ 
   const rows = collegeData?.Booklet.CourseDetails?.map((item, index) => (
     <View style={styles.container}>
       <Text style={styles.common}>{index+1}</Text>

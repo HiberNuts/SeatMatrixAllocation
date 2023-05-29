@@ -48,7 +48,7 @@ const Infrastructure = ({ alter,Data,toggleIconTab,updateCollegeInfo }) => {
     { label: "NO", value: false },
   ];
   const onFormSubmit = (data) => {
-    console.log("Here Data", data);
+    
     if (frozen) {
           toggleIconTab("PDF");
     }
@@ -90,7 +90,7 @@ const Infrastructure = ({ alter,Data,toggleIconTab,updateCollegeInfo }) => {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
+      
         if (data.status) {
           const notify = () => {
             toast.success("Submitted successfully", {
@@ -125,7 +125,7 @@ const Infrastructure = ({ alter,Data,toggleIconTab,updateCollegeInfo }) => {
         if (data.Booklet) {
           setFrozen(data.Booklet.Frozen);
           data = data.Booklet.Infrastructure;
-          console.log(data);
+         
           setDHQ(data.DHQ);
           setDRS(data.DRS);
           setRailway(data.railway);

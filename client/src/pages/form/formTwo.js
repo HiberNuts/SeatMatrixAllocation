@@ -33,7 +33,7 @@ const AccredationOptions = [
   { value: "NACC", label: "Non - Accredited", disabled: true },
 ];
 
-const FormTwo = ({ alter, toggleIconTab, Data, setParentCourse, updateCollegeInfo }) => {
+const FormTwo = ({ alter, toggleIconTab, Data, setParentCourse, updateCollegeInfo, phase1Freeze }) => {
   const courseSchema = {
     courseName: "",
     courseCode: "",
@@ -92,10 +92,10 @@ const FormTwo = ({ alter, toggleIconTab, Data, setParentCourse, updateCollegeInf
 
   const getCollegeInfo = async () => {
     const data = Data;
-    console.log("get colege dtat in form two", data);
+   
     setCourse(data.CourseDetails.length ? [...data.CourseDetails] : [courseSchema]);
     setcomparingArray(JSON.stringify(Course));
-    setfreezeFlag(data?.Freeze1 ? data.Freeze1 : false);
+    setfreezeFlag(data?.Phase1Freeze ? true : false);
     if (["1", "2", "3", "4"].includes(data.ccode)) setfreezeFlag(true);
     setParentCourse(Course);
     if (data.ccode === "2709") {
@@ -144,7 +144,7 @@ const FormTwo = ({ alter, toggleIconTab, Data, setParentCourse, updateCollegeInf
     if (data[index]["courseCode"]) {
       CourseList.splice(0, 0, data[index]["courseName"]);
     }
-    console.log(data);
+   
     data[index] = {
       courseName: event,
       courseCode: event.value,
@@ -160,7 +160,7 @@ const FormTwo = ({ alter, toggleIconTab, Data, setParentCourse, updateCollegeInf
       error: false,
     };
     setCourse(data);
-    // console.log(data);
+  
   };
   const handleAccrChange = (event, index) => {
     let data = [...Course];
@@ -228,9 +228,9 @@ const FormTwo = ({ alter, toggleIconTab, Data, setParentCourse, updateCollegeInf
   };
   const checkErr = (tst) => {
     let val = true;
-    // console.log(Course);
+    
     Course.forEach((e) => {
-      // console.log(e.SWS === e.Govt + e.Surrender );
+     
 
       if (
         e.Govt >= 0 &&
@@ -262,7 +262,7 @@ const FormTwo = ({ alter, toggleIconTab, Data, setParentCourse, updateCollegeInf
       return;
     }
     const updatedCourses = [...Course];
-    // console.log(updatedCourses);
+    
     try {
       const courseObj = updatedCourses[e]["courseName"];
       if (courseObj) {
@@ -271,11 +271,11 @@ const FormTwo = ({ alter, toggleIconTab, Data, setParentCourse, updateCollegeInf
     } finally {
       updatedCourses.splice(e, 1);
       setCourse(updatedCourses);
-      // console.log(updatedCourses);
+     
     }
   };
   const updateHandler = async () => {
-    // console.log("here");
+   
     let val = [...Course];
     if (!val.at(Course.length - 1).courseCode) {
       val.splice(val.length - 1, 1);
@@ -314,11 +314,11 @@ const FormTwo = ({ alter, toggleIconTab, Data, setParentCourse, updateCollegeInf
                         <th scope="row">{index + 1}</th>
                         <td>
                           <div className="form-control-select" style={{ width: "400px" }}>
-                            {freezeFlag ? (
+                            {phase1Freeze ? (
                               <input disabled={true} className="form-control" value={e.courseName.label}></input>
                             ) : (
                               <Select
-                                isOptionDisabled={(option) => (freezeFlag ? option.disabled : false)}
+                                isOptionDisabled={(option) => (phase1Freeze ? option.disabled : false)}
                                 onChange={(event) => handleCourseChange(event, index)}
                                 classNamePrefix="react-select"
                                 options={CourseList}
@@ -335,7 +335,7 @@ const FormTwo = ({ alter, toggleIconTab, Data, setParentCourse, updateCollegeInf
                         <td>
                           <div className="form-control-select">
                             <Select
-                              isOptionDisabled={(option) => (freezeFlag ? option.disabled : false)}
+                              isOptionDisabled={(option) => (phase1Freeze ? option.disabled : false)}
                               style={{ zIndex: "10000", width: "auto" }}
                               value={e.accredation}
                               isDisabled={e.courseCode == ""}
@@ -350,7 +350,7 @@ const FormTwo = ({ alter, toggleIconTab, Data, setParentCourse, updateCollegeInf
                             type="number"
                             id="fv-intake"
                             name="intake"
-                            disabled={freezeFlag || e.courseCode == ""}
+                            disabled={phase1Freeze || e.courseCode == ""}
                             ref={register({ required: true })}
                             className="form-control"
                             onChange={(event) => handleinTakeChange(event, index)}
@@ -369,7 +369,7 @@ const FormTwo = ({ alter, toggleIconTab, Data, setParentCourse, updateCollegeInf
                             type="number"
                             id="fv-subject"
                             name="Surrender"
-                            disabled={freezeFlag || e.courseCode == ""}
+                            disabled={phase1Freeze || e.courseCode == ""}
                             ref={register({ required: true })}
                             className={`form-control`}
                             value={e.Surrender}
@@ -389,7 +389,7 @@ const FormTwo = ({ alter, toggleIconTab, Data, setParentCourse, updateCollegeInf
                           <input type="text" id="fv-subject" className="form-control" disabled value={e.SWS} />
                         </td>
                         <td>
-                          {freezeFlag !== true && (
+                          {phase1Freeze !== true && (
                             <Button
                               UseSubmitBehavior={false}
                               key={index}
@@ -410,7 +410,7 @@ const FormTwo = ({ alter, toggleIconTab, Data, setParentCourse, updateCollegeInf
               </table>
             </div>
           </Col>
-          {freezeFlag == false && (
+          {phase1Freeze == false && (
             <Col md="12" className="text-center">
               <Button
                 className="container-fluid btn btn-secondary btn-md"
@@ -434,7 +434,7 @@ const FormTwo = ({ alter, toggleIconTab, Data, setParentCourse, updateCollegeInf
           >
             &lt; Back
           </Button>
-          {freezeFlag == true ? (
+          {phase1Freeze == true ? (
             <Button
               type="submit"
               onClick={() => {
