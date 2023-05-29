@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { Text, View, StyleSheet } from "@react-pdf/renderer";
-import Courses from "./data.js";
+
 
 const styles = StyleSheet.create({
   container: {

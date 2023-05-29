@@ -2,7 +2,6 @@ import React from "react";
 import { Document, Page, Text, View, StyleSheet, PDFViewer, Image } from "@react-pdf/renderer";
 import Logo from "../../layout/logo/Logo";
 // Create styles
-import Courses from "./data";
 import LogoDark2x from "../../images/logo-dark2x.png";
 import CourseTable from "./CourseTable";
 const styles = StyleSheet.create({
