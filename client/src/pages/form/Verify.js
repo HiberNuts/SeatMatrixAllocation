@@ -7,11 +7,11 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Icon } from "../../components/Component";
 import { courseRank } from "../../utils/CourseRank";
-const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, Category, ccode, ParentfreezeFlag }) => {
+const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, Category, ccode, phase1Freeze }) => {
   const [freezeFlag, setfreezeFlag] = useState(false);
   const [show, setShow] = useState(false);
   const [Course, setcourse] = useState([]);
-  
+
   const handleClose = () => setShow(false);
   const handleShow = () => {
     setShow(true);
@@ -22,7 +22,7 @@ const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, 
     handleClose();
   };
   const onFormSubmit = () => {
-    fetch(`${backendURL}/Freeze1`, {
+    fetch(`${backendURL}/Phase1Freeze`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -30,7 +30,7 @@ const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, 
       },
       body: JSON.stringify({
         Course: Course,
-        freeze: freezeFlag,
+        freeze: true,
       }),
     })
       .then((response) => {
@@ -40,6 +40,7 @@ const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, 
         return response.json();
       })
       .then((data) => {
+      
         if (data.status) {
           const notify = () => {
             toast.success("Data added successfully");
@@ -85,9 +86,9 @@ const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, 
         return courseRank[ccode].indexOf(a.courseCode) - courseRank[ccode].indexOf(b.courseCode);
       } else return b.Pending - a.Pending;
     });
-    console.log(ec);
+  
     let seat = seatsToAdd();
-    console.log("seats", seat, Course);
+   
     let mgmt = 0;
     for (let index = 0; index < ec.length; index++) {
       if (seat === 0) {
@@ -95,7 +96,7 @@ const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, 
       }
       mgmt += ec[index].Management;
       let indexVal = ec[index].index;
-      console.log("indexVal", indexVal);
+     
       if (indexVal >= 0) {
         onAddSeat(indexVal);
         seat--;
@@ -122,18 +123,18 @@ const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, 
   // useEffect(() => {
   //   const data = Data;
   //   setcourse(data);
-  //   console.log("Props", Data);
+  //  
   // }, [Data]);
   useEffect(() => {
-    console.log("Triggered", Course);
+ 
     getCollegeInfo();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Course]);
   useEffect(() => {
     const data = Data;
     setcourse(data);
-    setfreezeFlag(ParentfreezeFlag);
-    console.log("Props", Data);
+    setfreezeFlag(phase1Freeze);
+   
   }, [activeIconTab]);
   const onAddSeat = (i) => {
     const course = Course;
@@ -144,7 +145,7 @@ const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, 
       course[i]["Added"] += 1;
     }
     setcourse(course);
-    console.log(i);
+    
   };
   const formClass = classNames({
     "form-validate": true,
@@ -250,7 +251,7 @@ const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, 
                         <td className="text-center">
                           <Button
                             onClick={(e) => {
-                              // console.log(buttonDisabled);
+                              
                               e.preventDefault();
                             }}
                             className="btn btn-icon"

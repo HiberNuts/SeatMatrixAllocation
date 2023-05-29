@@ -30,7 +30,7 @@ const Homepage = ({ ...props }) => {
   const [data, setData] = useState();
   const [Course, setCourse] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [freezeFlag, setfreezeFlag] = useState(false);
+  const [phase1Freeze, setphase1Freeze] = useState(false);
 
   const getCollegeInfo = async () => {
     fetch(`${backendURL}/collegeData`, {
@@ -46,13 +46,12 @@ const Homepage = ({ ...props }) => {
       })
       .then((data) => {
         setData(data);
-        console.log("Props Updated");
         setpersonalFlag(data?.PersonalDetailFlag == true ? true : false);
         setcourseFlag(data?.CourseDetails?.length >= 1 ? true : false);
         setdeclarationFlag(data?.DeclarationFlag == true ? true : false);
         setdocFlag(data?.DocumentUploadFlag == true ? true : false);
         setLoading(false);
-        setfreezeFlag(data?.Freeze1 == true ? true : false);
+        setphase1Freeze(data?.Phase1Freeze == true ? true : false);
       })
       .catch((error) => {
         console.log(error);
@@ -63,7 +62,7 @@ const Homepage = ({ ...props }) => {
     getCollegeInfo();
   }, []);
   useEffect(() => {
-    console.log(data);
+    
   }, [data]);
   const spinner = (
     <div className="d-flex justify-content-center">
@@ -104,8 +103,8 @@ const Homepage = ({ ...props }) => {
                   onClick={(ev) => {
                     if (personalFlag) {
                       ev.preventDefault();
+                      toggleIconTab("6");
                     } else {
-                      // toggleIconTab("6");
                       return;
                     }
                   }}
@@ -129,7 +128,7 @@ const Homepage = ({ ...props }) => {
                   onClick={(ev) => {
                     if (personalFlag && courseFlag) {
                       ev.preventDefault();
-                      // toggleIconTab("verify");
+                      toggleIconTab("verify");
                     } else {
                       return;
                     }
@@ -144,15 +143,17 @@ const Homepage = ({ ...props }) => {
                   tag="a"
                   href="#tab"
                   style={{
-                    color: personalFlag == true && courseFlag == true && declarationFlag ? "#526484" : "lightgray",
-                    cursor: personalFlag && courseFlag == true && declarationFlag ? "pointer" : "not-allowed",
+                    // color: personalFlag == true && courseFlag == true && declarationFlag ? "#526484" : "lightgray",
+                    // cursor: personalFlag && courseFlag == true && declarationFlag ? "pointer" : "not-allowed",
+                    color: "lightgray",
+                    cursor: "not-allowed",
                   }}
                   className={classnames({ active: activeIconTab === "7" })}
                   onClick={(ev) => {
                     if (personalFlag && courseFlag) {
                       ev.preventDefault();
-                      getCollegeInfo();
-                      // toggleIconTab("7");
+                      // getCollegeInfo();
+                      toggleIconTab("7");
                     } else {
                       return;
                     }
@@ -167,14 +168,16 @@ const Homepage = ({ ...props }) => {
                   tag="a"
                   href="#tab"
                   style={{
-                    color: personalFlag == true && courseFlag == true && declarationFlag ? "#526484" : "lightgray",
-                    cursor: personalFlag && courseFlag == true && declarationFlag ? "pointer" : "not-allowed",
+                    // color: personalFlag == true && courseFlag == true && declarationFlag ? "#526484" : "lightgray",
+                    // cursor: personalFlag && courseFlag == true && declarationFlag ? "pointer" : "not-allowed",
+                    color: "lightgray",
+                    cursor: "not-allowed",
                   }}
                   className={classnames({ active: activeIconTab === "8" })}
                   onClick={(ev) => {
                     if (personalFlag && courseFlag && declarationFlag) {
-                      toggleIconTab("8");
                       ev.preventDefault();
+                      toggleIconTab("8");
                     } else {
                       return;
                     }
@@ -189,7 +192,13 @@ const Homepage = ({ ...props }) => {
                 {loading ? (
                   spinner
                 ) : (
-                  <FormOne toggleIconTab={toggleIconTab} updateCollegeInfo={getCollegeInfo} Data={data} alter />
+                  <FormOne
+                    phase1Freeze={phase1Freeze}
+                    toggleIconTab={toggleIconTab}
+                    updateCollegeInfo={getCollegeInfo}
+                    Data={data}
+                    alter
+                  />
                 )}
               </TabPane>
               <TabPane tabId="6">
@@ -201,6 +210,7 @@ const Homepage = ({ ...props }) => {
                     setParentCourse={setCourse}
                     updateCollegeInfo={getCollegeInfo}
                     Data={data}
+                    phase1Freeze={phase1Freeze}
                     alter
                   />
                 )}
@@ -216,7 +226,7 @@ const Homepage = ({ ...props }) => {
                     Data={Course}
                     Category={data?.Category}
                     ccode={data?.ccode}
-                    ParentfreezeFlag={freezeFlag}
+                    phase1Freeze={phase1Freeze}
                     alter
                   />
                 )}

@@ -20,7 +20,7 @@ const FormThree = ({ alter, toggleIconTab, Data, updateCollegeInfo }) => {
     setcollegeName(data.can);
     setprincipalName(data.PrincipalName);
     setdeclarationFlag(data.DeclarationFlag);
-    setfreezeFlag(data?.FreezeFlag ? data.FreezeFlag : false);
+    setfreezeFlag(data?.Phase2Freeze ? data.Phase2Freeze : false);
   };
   useEffect(() => {
     getCollegeInfo();

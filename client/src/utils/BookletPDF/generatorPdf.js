@@ -147,7 +147,6 @@ let month = date.getMonth() + 1;
 let year = date.getFullYear();
 
 let currentDate = `${day}-${month}-${year}`;
-  console.log("Here is the data", collegedata.Booklet.PrincipalName);
   return (
   <Document>
     <Page size="A4" style={styles.page}>

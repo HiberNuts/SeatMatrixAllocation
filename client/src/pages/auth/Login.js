@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   Block,
   BlockContent,
@@ -24,7 +26,10 @@ const Login = () => {
   const [passState, setPassState] = useState(false);
   const [errorVal, setError] = useState("");
   const [modalForm, setModalForm] = useState(false);
+  const [forgotPassModal, setforgotPassModal] = useState(false);
+  const [forgotPassCollegeCode, setforgotPassCollegeCode] = useState("");
   const toggleForm = () => setModalForm(!modalForm);
+  const toggleForgotPass = () => setforgotPassModal(!forgotPassModal);
   const [collegeCode, setcollegeCode] = useState("");
   const [collegeCodeError, setcollegeCodeError] = useState(false);
 
@@ -72,6 +77,7 @@ const Login = () => {
 
   return (
     <React.Fragment>
+      <ToastContainer />
       <Head title="Login" />
       <PageContainer>
         <Block className="nk-block-middle nk-auth-body  wide-xs">
@@ -151,6 +157,17 @@ const Login = () => {
                     className={`form-control-lg form-control ${passState ? "is-hidden" : "is-shown"}`}
                   />
                   {errors.passcode && <span className="invalid">{errors.passcode.message}</span>}
+                </div>
+                <div
+                  style={{ textAlign: "right", display: "flex", justifyContent: "flex-end", marginTop: "10px" }}
+                  className="forgotpass"
+                >
+                  <p
+                    onClick={() => setforgotPassModal(true)}
+                    style={{ textAlign: "right", color: "blueviolet", fontSize: "15px", cursor: "pointer" }}
+                  >
+                    <u>Forgot password?</u>
+                  </p>
                 </div>
               </div>
               <div className="form-group">
@@ -232,6 +249,75 @@ const Login = () => {
                       size="lg"
                     >
                       {loading ? <Spinner size="sm" color="light" /> : "Change"}
+                    </Button>
+                  </div>
+                </form>
+              </ModalBody>
+            </Modal>
+            <Modal isOpen={forgotPassModal} toggle={toggleForgotPass}>
+              <ModalHeader toggle={toggleForgotPass}>Forgot password</ModalHeader>
+              <ModalBody>
+                <form>
+                  <div className="form-group">
+                    <p>
+                      *Your password will be sent to you on the college email that was provided while submiting personal
+                      details form.
+                    </p>
+                    <div className="form-label-group">
+                      <label className="form-label" htmlFor="default-01">
+                        College Code
+                      </label>
+                    </div>
+                    <div className="form-control-wrap">
+                      <input
+                        type="number"
+                        id="default-01"
+                        name="name"
+                        value={forgotPassCollegeCode}
+                        onChange={(e) => setforgotPassCollegeCode(e.target.value)}
+                        defaultValue=""
+                        placeholder="Enter your College Code"
+                        className="form-control-lg form-control"
+                      />
+                      {errors.name && <span className="invalid">{errors.name.message}</span>}
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <Button
+                      color="primary"
+                      type="submit"
+                      onClick={(ev) => {
+                        setLoading(true);
+                        ev.preventDefault();
+                        fetch(`${backendURL}/forgotpass`, {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify({ CollegeCode: forgotPassCollegeCode }),
+                        })
+                          .then((response) => {
+                            console.log(response);
+                            if (!response.ok) {
+                              setLoading(false);
+                              throw new Error("Network response was not ok");
+                            }
+                            setLoading(false);
+                            return response.json();
+                          })
+                          .then((data) => {
+                            if (data.status) {
+                              toast.success("Pasword has been sent");
+                              setLoading(false);
+                            } else {
+                              toast.error(`${data.message}`);
+                              setLoading(false);
+                            }
+                          });
+                      }}
+                      size="lg"
+                    >
+                      {loading ? <Spinner size="sm" color="light" /> : "Submit"}
                     </Button>
                   </div>
                 </form>

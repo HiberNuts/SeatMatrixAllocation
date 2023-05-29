@@ -40,8 +40,6 @@ const Booklet = ({ ...props }) => {
             return response.json();
         })
         .then((data) => {
-        
-            console.log("Booklet",data);
             setData(data);
             if (data.Booklet) {            
             setpersonalFlag(data?.Booklet.PersonalDetailFlag == true ? true : false);

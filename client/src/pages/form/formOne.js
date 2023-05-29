@@ -25,7 +25,7 @@ const FULLFORM = {
   TELUGU: "TELUGU",
   UNIV: "UNIVERSITY",
 };
-const FormOne = ({ alter, toggleIconTab,updateCollegeInfo,Data }) => {
+const FormOne = ({ alter, toggleIconTab, updateCollegeInfo, Data }) => {
   const [loading, setLoading] = useState(true);
   const { errors, register, handleSubmit } = useForm();
   const [collegeName, setcollegeName] = useState("");
@@ -40,7 +40,7 @@ const FormOne = ({ alter, toggleIconTab,updateCollegeInfo,Data }) => {
   const [principalName, setprincipalName] = useState("");
   const [email, setEmail] = useState("");
   const [editFlag, seteditFlag] = useState(false);
-  const [freezeFlag, setfreezeFlag] = useState(false);
+  const [phase1Freeze, setphase1Freeze] = useState(false);
 
   const AutonomousOptions = [
     { label: "Autonomous", value: true },
@@ -97,35 +97,32 @@ const FormOne = ({ alter, toggleIconTab,updateCollegeInfo,Data }) => {
   });
 
   const getCollegeInfo = async () => {
-        const data = Data;
-        console.log(data?.PersonalDetailFlag==false);
-        setLoading(false);
-        setcollegeName(data.can);
-        setcollegeCode(data.ccode);
-        setCollegeType(FULLFORM[data.Category]);
-        setpersonalDetailFlag(data?.PersonalDetailFlag?true:false);
-        if(data?.PersonalDetailFlag==false||data?.PersonalDetailFlag==undefined){
-          seteditFlag(true)
-        }
-        setprincipalName(data?.PrincipalName);
-        setPhone(data?.PhoneNumber);
-        setAutonomous(data.Autonomous ? AutonomousOptions[0] : AutonomousOptions[1]);
-        setDistrict(data?.District);
-        setWebsite(data?.Website);
-        setPincode(data?.Pincode);
-        setEmail(data?.Email);
-        setfreezeFlag(data?.Freeze1 ? data.Freeze1 : false);
-    
+    const data = Data;
+
+    setLoading(false);
+    setcollegeName(data.can);
+    setcollegeCode(data.ccode);
+    setCollegeType(FULLFORM[data.Category]);
+    setpersonalDetailFlag(data?.PersonalDetailFlag ? true : false);
+    if (data?.PersonalDetailFlag == false || data?.PersonalDetailFlag == undefined) {
+      seteditFlag(true);
+    }
+    setprincipalName(data?.PrincipalName);
+    setPhone(data?.PhoneNumber);
+    setAutonomous(data.Autonomous ? AutonomousOptions[0] : AutonomousOptions[1]);
+    setDistrict(data?.District);
+    setWebsite(data?.Website);
+    setPincode(data?.Pincode);
+    setEmail(data?.Email);
+    setphase1Freeze(data?.Phase1Freeze ? data.Phase1Freeze : false);
   };
 
   useEffect(() => {
     getCollegeInfo();
     updateCollegeInfo();
-    console.log(personalDetailFlag);
     // if(personalDetailFlag==false){
     //   seteditFlag(true)
     // }
-
   }, []);
 
   const updateHandler = (data) => {
@@ -201,7 +198,7 @@ const FormOne = ({ alter, toggleIconTab,updateCollegeInfo,Data }) => {
                   <input
                     ref={register({ required: true })}
                     type="text"
-                    disabled={freezeFlag}
+                    disabled={phase1Freeze}
                     id="fv-subject"
                     name="principalName"
                     className="form-control"
@@ -229,7 +226,7 @@ const FormOne = ({ alter, toggleIconTab,updateCollegeInfo,Data }) => {
                     type="email"
                     id="fv-email"
                     name="email"
-                    disabled={freezeFlag}
+                    disabled={phase1Freeze}
                     className="form-control"
                     onChange={(e) => (editFlag ? setEmail(e.target.value) : null)}
                     value={email}
@@ -257,7 +254,7 @@ const FormOne = ({ alter, toggleIconTab,updateCollegeInfo,Data }) => {
                         message: "Invalid Phone Number",
                       },
                     })}
-                    disabled={freezeFlag}
+                    disabled={phase1Freeze}
                     type="phone"
                     id="fv-phone"
                     name="phone"
@@ -291,7 +288,7 @@ const FormOne = ({ alter, toggleIconTab,updateCollegeInfo,Data }) => {
                     type="text"
                     id="fv-district"
                     name="district"
-                    disabled={freezeFlag}
+                    disabled={phase1Freeze}
                     className="form-control"
                     onChange={(e) => (editFlag ? setDistrict(e.target.value) : null)}
                     value={district}
@@ -322,7 +319,7 @@ const FormOne = ({ alter, toggleIconTab,updateCollegeInfo,Data }) => {
                     type="text"
                     id="fv-pincode"
                     name="pincode"
-                    disabled={freezeFlag}
+                    disabled={phase1Freeze}
                     className="form-control"
                     onChange={(e) => (editFlag ? setPincode(e.target.value) : null)}
                     value={pincode}
@@ -348,7 +345,7 @@ const FormOne = ({ alter, toggleIconTab,updateCollegeInfo,Data }) => {
                     })}
                     type="text"
                     id="fv-website"
-                    disabled={freezeFlag}
+                    disabled={phase1Freeze}
                     name="website"
                     className="form-control"
                     onChange={(e) => (editFlag ? setWebsite(e.target.value) : null)}
@@ -370,7 +367,7 @@ const FormOne = ({ alter, toggleIconTab,updateCollegeInfo,Data }) => {
                   <Select
                     id="autonomous"
                     name="autonomous"
-                    disabled={freezeFlag}
+                    disabled={phase1Freeze}
                     classNamePrefix="react-select"
                     onChange={(e) => (editFlag ? setAutonomous(e) : null)}
                     options={AutonomousOptions}
@@ -395,7 +392,7 @@ const FormOne = ({ alter, toggleIconTab,updateCollegeInfo,Data }) => {
             </Col>
           </Row>
         </Form>
-        {freezeFlag != true && personalDetailFlag && !editFlag && (
+        {phase1Freeze != true && personalDetailFlag && !editFlag && (
           <Button onClick={() => seteditFlag(true)} color="danger" size="lg">
             Edit
           </Button>

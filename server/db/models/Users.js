@@ -76,11 +76,11 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       required: false,
     },
-    FreezeFlag: {
+    Phase1Freeze: {
       type: Boolean,
       required: false,
     },
-    Freeze1: {
+    Phase2Freeze: {
       type: Boolean,
       required: false,
     },
