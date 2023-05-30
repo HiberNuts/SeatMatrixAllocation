@@ -11,7 +11,13 @@ const AuthFooter = () => {
             className="nk-block-content text-center text-lg-start"
           >
             <p className="text-soft">&copy; 2023 TNEA. All Rights Reserved.</p>
-            <p style={{ fontSize: "15px" }}>Contact Details.</p>
+            <p style={{ fontSize: "15px", alignItems: "start", alignSelf: "start" }}>
+              For any Queries please contact:
+              <br />
+              Email: Tneaseatmatrixteam@gmail.com
+              <br /> Raghav - 8015637209 <br />
+              Jayaprakesh - 9150301368
+            </p>
           </div>
         </Row>
       </div>

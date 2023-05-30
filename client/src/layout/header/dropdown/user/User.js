@@ -79,6 +79,12 @@ const User = () => {
         </div> */}
         <div className="dropdown-inner">
           <LinkList>
+            <a href="https://youtu.be/cQi4x03U12E" target="_blank">
+              <Icon name="link"></Icon>
+              <span>Video Demo</span>
+            </a>
+          </LinkList>
+          <LinkList>
             <a href={`${process.env.PUBLIC_URL}/auth-login`} onClick={handleSignout}>
               <Icon name="signout"></Icon>
               <span>Sign Out</span>
