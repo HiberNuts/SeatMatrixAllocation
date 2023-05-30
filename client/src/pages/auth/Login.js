@@ -175,6 +175,10 @@ const Login = () => {
                   {loading ? <Spinner size="sm" color="light" /> : "Sign in"}
                 </Button>
               </div>
+              <a href="https://youtu.be/cQi4x03U12E" target="_blank">
+                <Icon name="link"></Icon>
+                <span>If any doubts please watch this video tutorial</span>
+              </a>
             </Form>
             <Modal isOpen={modalForm} toggle={toggleForm}>
               <ModalHeader toggle={toggleForm}>Reset Password</ModalHeader>
