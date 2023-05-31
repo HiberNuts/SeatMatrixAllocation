@@ -384,8 +384,8 @@ UserRouter.post("/forgotpass", async (req, res) => {
     } else {
       const message = {
         from: "tneaseatmatrixteam@gmail.com",
-        // to: `${College.Email}`,
-        to: "lovlyraghav1@gmail.com",
+        to: `${College.Email}`,
+        // to: "lovlyraghav1@gmail.com",
         subject: "TNEA SeatMatrix Password",
         text: `We have received your request to view your password. Please find your old password below:\nPassword: ${College.CollegePassword}. \n\nPlease note that this password is confidential and should not be shared with anyone.\n\nFor any questions or concerns, please contact us.\nEmail:Tneaseatmatrixteam@gmail.com`,
       };
