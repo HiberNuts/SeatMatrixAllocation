@@ -16,6 +16,7 @@ import { backendURL } from "../backendurl";
 import { ToastContainer } from "react-toastify";
 import { Spinner } from "reactstrap";
 import Verify from "./form/Verify";
+import BankDetails from "./form/BankDetails";
 
 const Homepage = ({ ...props }) => {
   const [activeIconTab, setActiveIconTab] = useState("5");
@@ -26,6 +27,7 @@ const Homepage = ({ ...props }) => {
   const [personalFlag, setpersonalFlag] = useState(false);
   const [courseFlag, setcourseFlag] = useState(false);
   const [declarationFlag, setdeclarationFlag] = useState(false);
+  const [bankDetailFlag, setbankDetailFlag] = useState(false);
   const [docFlag, setdocFlag] = useState(false);
   const [data, setData] = useState();
   const [Course, setCourse] = useState([]);
@@ -52,6 +54,7 @@ const Homepage = ({ ...props }) => {
         setdocFlag(data?.DocumentUploadFlag == true ? true : false);
         setLoading(false);
         setphase1Freeze(data?.Phase1Freeze == true ? true : false);
+        setbankDetailFlag(data?.BankDetailFlag == true ? true : false);
       })
       .catch((error) => {
         console.log(error);
@@ -61,9 +64,7 @@ const Homepage = ({ ...props }) => {
   useEffect(() => {
     getCollegeInfo();
   }, []);
-  useEffect(() => {
-    
-  }, [data]);
+  useEffect(() => {}, [data]);
   const spinner = (
     <div className="d-flex justify-content-center">
       <Spinner style={{ width: "5rem", height: "5rem" }} color="primary" />
@@ -99,9 +100,30 @@ const Homepage = ({ ...props }) => {
                 <NavLink
                   tag="a"
                   href="#tab"
-                  className={classnames({ active: activeIconTab === "6" })}
+                  style={{
+                    color: personalFlag == true ? "#526484" : "lightgray",
+                    cursor: personalFlag == true ? "pointer" : "not-allowed",
+                  }}
+                  className={classnames({ active: activeIconTab === "10" })}
                   onClick={(ev) => {
                     if (personalFlag) {
+                      ev.preventDefault();
+                      toggleIconTab("10");
+                    } else {
+                      return;
+                    }
+                  }}
+                >
+                  <Icon name="user-fill" /> <span>Bank Details</span>
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink
+                  tag="a"
+                  href="#tab"
+                  className={classnames({ active: activeIconTab === "6" })}
+                  onClick={(ev) => {
+                    if (personalFlag && bankDetailFlag) {
                       ev.preventDefault();
                       toggleIconTab("6");
                     } else {
@@ -109,8 +131,8 @@ const Homepage = ({ ...props }) => {
                     }
                   }}
                   style={{
-                    color: personalFlag == true ? "#526484" : "lightgray",
-                    cursor: personalFlag ? "pointer" : "not-allowed",
+                    color: personalFlag == true && bankDetailFlag == true ? "#526484" : "lightgray",
+                    cursor: personalFlag && bankDetailFlag == true ? "pointer" : "not-allowed",
                   }}
                 >
                   <Icon name="book-fill" /> <span>Course Details</span>
@@ -121,12 +143,12 @@ const Homepage = ({ ...props }) => {
                   tag="a"
                   href="#tab"
                   style={{
-                    color: personalFlag == true && courseFlag == true ? "#526484" : "lightgray",
-                    cursor: personalFlag && courseFlag == true ? "pointer" : "not-allowed",
+                    color: personalFlag == true && courseFlag && bankDetailFlag == true ? "#526484" : "lightgray",
+                    cursor: personalFlag && courseFlag && bankDetailFlag == true ? "pointer" : "not-allowed",
                   }}
                   className={classnames({ active: activeIconTab === "verify" })}
                   onClick={(ev) => {
-                    if (personalFlag && courseFlag) {
+                    if (personalFlag && courseFlag && bankDetailFlag) {
                       ev.preventDefault();
                       toggleIconTab("verify");
                     } else {
@@ -197,6 +219,20 @@ const Homepage = ({ ...props }) => {
                     toggleIconTab={toggleIconTab}
                     updateCollegeInfo={getCollegeInfo}
                     Data={data}
+                    alter
+                  />
+                )}
+              </TabPane>
+              <TabPane tabId="10">
+                {loading ? (
+                  spinner
+                ) : (
+                  <BankDetails
+                    toggleIconTab={toggleIconTab}
+                    setParentCourse={setCourse}
+                    updateCollegeInfo={getCollegeInfo}
+                    Data={data}
+                    phase1Freeze={phase1Freeze}
                     alter
                   />
                 )}

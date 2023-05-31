@@ -92,7 +92,7 @@ const FormTwo = ({ alter, toggleIconTab, Data, setParentCourse, updateCollegeInf
 
   const getCollegeInfo = async () => {
     const data = Data;
-   
+
     setCourse(data.CourseDetails.length ? [...data.CourseDetails] : [courseSchema]);
     setcomparingArray(JSON.stringify(Course));
     setfreezeFlag(data?.Phase1Freeze ? true : false);
@@ -144,7 +144,7 @@ const FormTwo = ({ alter, toggleIconTab, Data, setParentCourse, updateCollegeInf
     if (data[index]["courseCode"]) {
       CourseList.splice(0, 0, data[index]["courseName"]);
     }
-   
+
     data[index] = {
       courseName: event,
       courseCode: event.value,
@@ -160,7 +160,6 @@ const FormTwo = ({ alter, toggleIconTab, Data, setParentCourse, updateCollegeInf
       error: false,
     };
     setCourse(data);
-  
   };
   const handleAccrChange = (event, index) => {
     let data = [...Course];
@@ -228,10 +227,8 @@ const FormTwo = ({ alter, toggleIconTab, Data, setParentCourse, updateCollegeInf
   };
   const checkErr = (tst) => {
     let val = true;
-    
-    Course.forEach((e) => {
-     
 
+    Course.forEach((e) => {
       if (
         e.Govt >= 0 &&
         e.SWS === e.Govt + e.Surrender &&
@@ -262,7 +259,7 @@ const FormTwo = ({ alter, toggleIconTab, Data, setParentCourse, updateCollegeInf
       return;
     }
     const updatedCourses = [...Course];
-    
+
     try {
       const courseObj = updatedCourses[e]["courseName"];
       if (courseObj) {
@@ -271,11 +268,9 @@ const FormTwo = ({ alter, toggleIconTab, Data, setParentCourse, updateCollegeInf
     } finally {
       updatedCourses.splice(e, 1);
       setCourse(updatedCourses);
-     
     }
   };
   const updateHandler = async () => {
-   
     let val = [...Course];
     if (!val.at(Course.length - 1).courseCode) {
       val.splice(val.length - 1, 1);
@@ -427,7 +422,7 @@ const FormTwo = ({ alter, toggleIconTab, Data, setParentCourse, updateCollegeInf
           <Button
             type="submit"
             onClick={() => {
-              toggleIconTab("5");
+              toggleIconTab("10");
             }}
             className="text-center m-4"
             color="danger"

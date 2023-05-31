@@ -8,7 +8,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button } from "../../components/Component";
 
-const BankDetails = ({ alter, Data, toggleIconTab, updateCollegeInfo }) => {
+const BankDetails = ({ alter, Data, toggleIconTab, updateCollegeInfo, phase1Freeze }) => {
   const [loading, setLoading] = useState(true);
   const [bank, setBank] = useState({ Name: "", IFSC: "", AccNo: "", Holder: "", Branch: "" });
   const [editFlag, seteditFlag] = useState(false);
@@ -66,13 +66,8 @@ const BankDetails = ({ alter, Data, toggleIconTab, updateCollegeInfo }) => {
   });
 
   const getCollegeInfo = async (data) => {
-    if (data.Booklet) {
-      setFrozen(data.Booklet.Frozen);
-      if (data.Booklet.BankDetails) {
-        setBank(data.Booklet.BankDetails.Bank1);
-      } else {
-        seteditFlag(true);
-      }
+    if (data.BankDetails) {
+      setBank(data.BankDetails.Bank1);
     } else {
       seteditFlag(true);
     }
@@ -98,7 +93,7 @@ const BankDetails = ({ alter, Data, toggleIconTab, updateCollegeInfo }) => {
                 </label>
                 <div className="form-control-wrap">
                   <input
-                    disabled={frozen}
+                    disabled={phase1Freeze}
                     ref={register({
                       required: true,
                     })}
@@ -123,7 +118,7 @@ const BankDetails = ({ alter, Data, toggleIconTab, updateCollegeInfo }) => {
                     ref={register({
                       required: true,
                     })}
-                    disabled={frozen}
+                    disabled={phase1Freeze}
                     type="number"
                     name="bankAcc"
                     id="acc"
@@ -146,7 +141,7 @@ const BankDetails = ({ alter, Data, toggleIconTab, updateCollegeInfo }) => {
                       required: true,
                     })}
                     type="text"
-                    disabled={frozen}
+                    disabled={phase1Freeze}
                     name="bankHolder"
                     id="bankHolder"
                     className="form-control"
@@ -169,7 +164,7 @@ const BankDetails = ({ alter, Data, toggleIconTab, updateCollegeInfo }) => {
                     })}
                     type="text"
                     name="bankIFSC"
-                    disabled={frozen}
+                    disabled={phase1Freeze}
                     id="IFSC"
                     className="form-control"
                     value={bank.IFSC}
@@ -182,7 +177,7 @@ const BankDetails = ({ alter, Data, toggleIconTab, updateCollegeInfo }) => {
             <Col lg="6">
               <div className="form-group">
                 <label className="form-label" htmlFor="pay-amount-1">
-                  Bank Address
+                  Branch
                 </label>
                 <div className="form-control-wrap">
                   <input
@@ -190,7 +185,7 @@ const BankDetails = ({ alter, Data, toggleIconTab, updateCollegeInfo }) => {
                       required: true,
                     })}
                     type="text"
-                    disabled={frozen}
+                    disabled={phase1Freeze}
                     name="bankAddr"
                     id="bankAddr"
                     className="form-control"
@@ -209,21 +204,27 @@ const BankDetails = ({ alter, Data, toggleIconTab, updateCollegeInfo }) => {
           <Button
             type="submit"
             onClick={() => {
-              toggleIconTab("Personal");
+              toggleIconTab("5");
             }}
             color="danger"
           >
             &lt; Back
           </Button>
-          <Button name="submit" type="submit" color={editFlag ? "warning" : "primary"} size="lg" disabled={frozen}>
+          <Button
+            name="submit"
+            type="submit"
+            color={editFlag ? "warning" : "primary"}
+            size="lg"
+            disabled={phase1Freeze}
+          >
             {editFlag ? "Save" : "Edit"}
           </Button>
           <Button
             onClick={(e) => {
               e.preventDefault();
-              toggleIconTab("Branch");
+              toggleIconTab("6");
             }}
-            disabled={editFlag || !Data.Booklet?.BankDetailFlag}
+            disabled={editFlag || !Data.BankDetailFlag}
             color="success"
             size="lg"
           >

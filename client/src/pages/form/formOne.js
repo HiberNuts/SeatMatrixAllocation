@@ -378,11 +378,11 @@ const FormOne = ({ alter, toggleIconTab, updateCollegeInfo, Data }) => {
             </Col>
             <Col md="12">
               <div className="form-group">
-                {!personalDetailFlag && editFlag === false && (
+                {/* {!personalDetailFlag && editFlag === false && (
                   <Button type="submit" color="primary" size="lg">
                     Submit
                   </Button>
-                )}
+                )} */}
                 {editFlag === true && (
                   <Button type="submit" onClick={handleSubmit((data) => updateHandler(data))} color="warning" size="lg">
                     Update
@@ -399,16 +399,18 @@ const FormOne = ({ alter, toggleIconTab, updateCollegeInfo, Data }) => {
         )}
 
         <div className="d-flex justify-content-end">
-          <Button
-            onClick={() => {
-              toggleIconTab("6");
-            }}
-            type="submit"
-            color="success"
-            size="lg"
-          >
-            Next &gt;
-          </Button>
+          {personalDetailFlag && (
+            <Button
+              onClick={() => {
+                toggleIconTab("10");
+              }}
+              type="submit"
+              color="success"
+              size="lg"
+            >
+              Next &gt;
+            </Button>
+          )}
         </div>
       </React.Fragment>
     );
