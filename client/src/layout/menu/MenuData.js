@@ -4,16 +4,16 @@ const menu = [
     heading: "Dashboards",
   },
   {
-    
-    icon: "book-fill",
-    text: "Booklet",
-    link: "/",
-  }
-,
-  {
     icon: "view-x3",
     text: "Seat Matrix",
-    link: "/seatMatrix",
+    link: "/",
+  },
+  {
+    
+    icon: "book-fill",
+    text: "Instructions",
+    link: "/Instructions",
   }
+
 ];
 export default menu;
