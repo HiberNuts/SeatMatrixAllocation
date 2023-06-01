@@ -335,6 +335,7 @@ const BankDetails = ({ alter, Data, toggleIconTab, updateCollegeInfo, phase1Free
             type="submit"
             color={editFlag ? "warning" : "primary"}
             size="lg"
+            onClick={() => seteditFlag(true)}
             disabled={phase1Freeze}
           >
             {editFlag ? "Save" : "Edit"}
