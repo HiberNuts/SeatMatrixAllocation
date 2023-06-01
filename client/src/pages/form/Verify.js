@@ -118,6 +118,8 @@ const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, 
       }
     });
     if (GOVTSeats[Category] * intake - GOVT < 1) return 0;
+    else if ((GOVTSeats[Category] * intake - GOVT)%1>0.9)
+    return Math.floor(GOVTSeats[Category] * intake - GOVT)+1;
     else return Math.floor(GOVTSeats[Category] * intake - GOVT);
   };
   // useEffect(() => {
