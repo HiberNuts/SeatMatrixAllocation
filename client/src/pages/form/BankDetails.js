@@ -11,7 +11,7 @@ import { Button } from "../../components/Component";
 const BankDetails = ({ alter, Data, toggleIconTab, updateCollegeInfo, phase1Freeze }) => {
   const [loading, setLoading] = useState(true);
   const [bank, setBank] = useState({ Name: "", IFSC: "", AccNo: "", Holder: "", Branch: "" });
-  const [bank2, setBank2] = useState({ Name: "", IFSC: "", AccNo: "", Holder: "", Branch: "" })
+  const [bank2, setBank2] = useState({ Name: "", IFSC: "", AccNo: "", Holder: "", Branch: "" });
   const [editFlag, seteditFlag] = useState(false);
   const { errors, register, handleSubmit } = useForm();
   const [frozen, setFrozen] = useState(false);
@@ -26,7 +26,7 @@ const BankDetails = ({ alter, Data, toggleIconTab, updateCollegeInfo, phase1Free
         body: JSON.stringify({
           BankDetails: {
             Bank1: bank,
-            Bank2: bank2
+            Bank2: bank2,
           },
         }),
       })
@@ -69,8 +69,12 @@ const BankDetails = ({ alter, Data, toggleIconTab, updateCollegeInfo, phase1Free
 
   const getCollegeInfo = async (data) => {
     if (data.BankDetails) {
-      setBank(data.BankDetails.Bank1);
-      setBank2(data.BankDetails.Bank2);
+      setBank(
+        data.BankDetails?.Bank1 ? data.BankDetails?.Bank1 : { Name: "", IFSC: "", AccNo: "", Holder: "", Branch: "" }
+      );
+      setBank2(
+        data.BankDetails?.Bank2 ? data.BankDetails?.Bank2 : { Name: "", IFSC: "", AccNo: "", Holder: "", Branch: "" }
+      );
     } else {
       seteditFlag(true);
     }
@@ -78,6 +82,7 @@ const BankDetails = ({ alter, Data, toggleIconTab, updateCollegeInfo, phase1Free
 
   useEffect(() => {
     getCollegeInfo(Data);
+    console.log(bank2);
   }, []);
 
   return (
@@ -203,116 +208,118 @@ const BankDetails = ({ alter, Data, toggleIconTab, updateCollegeInfo, phase1Free
         </div>
         <hr></hr>
         <div className="col">
-                        <div className="card-head">
-                            <h5 className="card-title text-primary">Bank Details- 7.5% (Govt Schools)</h5>
-                        </div>
+          <div className="card-head">
+            <h5 className="card-title text-primary">Bank Details- 7.5% (Govt Schools)</h5>
+          </div>
 
-                        <Row className="g-4">
-                            <Col lg="6">
-                                <div className="form-group">
-                                    <label className="form-label" htmlFor="full-name-1">
-                                        Bank Name
-                                    </label>
-                                    <div className="form-control-wrap">
-                                        <input
-                                            ref={register({
-                                                required: true
-                                            })}
-                                            type="text"
-                                            name="bankName2"
-                                            id="full-name-2l"
-                                            className="form-control"
-                                            value={bank2.Name}
-                                            onChange={(e) => (editFlag ? setBank2({ ...bank2, Name: e.target.value }) : null)} />
-                                        {errors.bankName2 && <span className="invalid">This field is required</span>}
-
-                                    </div>
-                                </div>
-                            </Col>
-                            <Col lg="6">
-                                <div className="form-group">
-                                    <label className="form-label" htmlFor="email-address-1">
-                                        Account Number
-                                    </label>
-                                    <div className="form-control-wrap">
-                                        <input
-                                            ref={register({
-                                                required: true
-                                            })}
-                                            type="number"
-                                            name="bankAcc2"
-                                            id="acc2"
-                                            className="form-control"
-                                            value={bank2.AccNo}
-                                            onChange={(e) => (editFlag ? setBank2({ ...bank2, AccNo: e.target.value }) : null)} />
-                                        {errors.bankAcc2 && <span className="invalid">This field is required</span>}
-                                    </div>
-                                </div>
-                            </Col>
-                            <Col lg="6">
-                                <div className="form-group">
-                                    <label className="form-label" htmlFor="phone-no-1">
-                                        Bank Holder Name
-                                    </label>
-                                    <div className="form-control-wrap">
-                                        <input
-                                            ref={register({
-                                                required: true
-                                            })}
-                                            type="text"
-                                            name="bankHolder2"
-                                            id="bankHolder2"
-                                            className="form-control"
-                                            value={bank2.Holder}
-                                            onChange={(e) => (editFlag ? setBank2({ ...bank2, Holder: e.target.value }) : null)} />
-                                        {errors.bankHolder2 && <span className="invalid">This field is required</span>}
-                                    </div>
-                                </div>
-                            </Col>
-                            <Col lg="6">
-                                <div className="form-group">
-                                    <label className="form-label" htmlFor="pay-amount-1">
-                                        IFSC CODE
-                                    </label>
-                                    <div className="form-control-wrap">
-                                        <input
-                                            ref={register({
-                                                required: true
-                                            })}
-                                            type="text"
-                                            name="bankIFSC2"
-                                            id="IFSC2"
-                                            className="form-control"
-                                            value={bank2.IFSC}
-                                            onChange={(e) => (editFlag ? setBank2({ ...bank2, IFSC: e.target.value }) : null)} />
-                                        {errors.bankIFSC2 && <span className="invalid">This field is required</span>}
-                                    </div>
-                                </div>
-                            </Col>
-                            <Col lg="6">
-                                <div className="form-group">
-                                    <label className="form-label" htmlFor="pay-amount-1">
-                                        Bank Address
-                                    </label>
-                                    <div className="form-control-wrap">
-                                        <input
-                                            ref={register({
-                                                required: true
-                                            })}
-                                            type="text"
-                                            name="bankAddr2"
-                                            id="bankAddr2"
-                                            className="form-control"
-                                            value={bank2.Branch}
-                                            onChange={(e) => (editFlag ? setBank2({ ...bank2, Branch: e.target.value }) : null)} />
-                                        {errors.bankAddr2 && <span className="invalid">This field is required</span>}
-                                    </div>
-                                </div>
-                            </Col>
-                        </Row>
-
-
-                    </div>
+          <Row className="g-4">
+            <Col lg="6">
+              <div className="form-group">
+                <label className="form-label" htmlFor="full-name-1">
+                  Bank Name
+                </label>
+                <div className="form-control-wrap">
+                  <input
+                    ref={register({
+                      required: true,
+                    })}
+                    type="text"
+                    name="bankName2"
+                    id="full-name-2l"
+                    className="form-control"
+                    value={bank2?.Name}
+                    onChange={(e) => (editFlag ? setBank2({ ...bank2, Name: e.target.value }) : null)}
+                  />
+                  {errors.bankName2 && <span className="invalid">This field is required</span>}
+                </div>
+              </div>
+            </Col>
+            <Col lg="6">
+              <div className="form-group">
+                <label className="form-label" htmlFor="email-address-1">
+                  Account Number
+                </label>
+                <div className="form-control-wrap">
+                  <input
+                    ref={register({
+                      required: true,
+                    })}
+                    type="number"
+                    name="bankAcc2"
+                    id="acc2"
+                    className="form-control"
+                    value={bank2?.AccNo}
+                    onChange={(e) => (editFlag ? setBank2({ ...bank2, AccNo: e.target.value }) : null)}
+                  />
+                  {errors.bankAcc2 && <span className="invalid">This field is required</span>}
+                </div>
+              </div>
+            </Col>
+            <Col lg="6">
+              <div className="form-group">
+                <label className="form-label" htmlFor="phone-no-1">
+                  Bank Holder Name
+                </label>
+                <div className="form-control-wrap">
+                  <input
+                    ref={register({
+                      required: true,
+                    })}
+                    type="text"
+                    name="bankHolder2"
+                    id="bankHolder2"
+                    className="form-control"
+                    value={bank2?.Holder}
+                    onChange={(e) => (editFlag ? setBank2({ ...bank2, Holder: e.target.value }) : null)}
+                  />
+                  {errors.bankHolder2 && <span className="invalid">This field is required</span>}
+                </div>
+              </div>
+            </Col>
+            <Col lg="6">
+              <div className="form-group">
+                <label className="form-label" htmlFor="pay-amount-1">
+                  IFSC CODE
+                </label>
+                <div className="form-control-wrap">
+                  <input
+                    ref={register({
+                      required: true,
+                    })}
+                    type="text"
+                    name="bankIFSC2"
+                    id="IFSC2"
+                    className="form-control"
+                    value={bank2?.IFSC}
+                    onChange={(e) => (editFlag ? setBank2({ ...bank2, IFSC: e.target.value }) : null)}
+                  />
+                  {errors.bankIFSC2 && <span className="invalid">This field is required</span>}
+                </div>
+              </div>
+            </Col>
+            <Col lg="6">
+              <div className="form-group">
+                <label className="form-label" htmlFor="pay-amount-1">
+                  Bank Address
+                </label>
+                <div className="form-control-wrap">
+                  <input
+                    ref={register({
+                      required: true,
+                    })}
+                    type="text"
+                    name="bankAddr2"
+                    id="bankAddr2"
+                    className="form-control"
+                    value={bank2?.Branch}
+                    onChange={(e) => (editFlag ? setBank2({ ...bank2, Branch: e.target.value }) : null)}
+                  />
+                  {errors.bankAddr2 && <span className="invalid">This field is required</span>}
+                </div>
+              </div>
+            </Col>
+          </Row>
+        </div>
         <div className="pt-5 d-flex justify-content-between">
           <Button
             type="submit"
