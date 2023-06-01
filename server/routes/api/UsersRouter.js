@@ -24,7 +24,7 @@ let transporter = nodemailer.createTransport({
   auth: {
     type: "OAuth2",
     user: process.env.MAIL_USERNAME,
-    pass: "bestisthewaste@123",
+    pass: "tnea@2023",
     clientId: process.env.OAUTH_CLIENTID,
     clientSecret: process.env.OAUTH_CLIENT_SECRET,
     refreshToken: process.env.OAUTH_REFRESH_TOKEN,
@@ -52,10 +52,10 @@ UserRouter.get("/getById/:id", (req, res) => {
     .catch((err) => res.status(404).json({ noAuthfound: "No user found" }));
 });
 
-UserRouter.get("/", async (req, res) => {
-  const data = await users.find({});
-  res.json(data);
-});
+// UserRouter.get("/", async (req, res) => {
+//   const data = await users.find({});
+//   res.json(data);
+// });
 
 UserRouter.post("/", (req, res) => {
   users
@@ -172,8 +172,8 @@ UserRouter.post("/bankData", ejwt({ secret: secret, algorithms: ["HS256"] }), as
       res.json({ status: false, message: "incomplete body set" });
     } else {
       const user = await users.findByIdAndUpdate(req.auth.id, {
-        "Booklet.BankDetails": BankDetails,
-        "Booklet.BankDetailFlag": true,
+        BankDetails: BankDetails,
+        BankDetailFlag:true
       });
       res.json({ status: true });
     }
@@ -383,11 +383,11 @@ UserRouter.post("/forgotpass", async (req, res) => {
       return res.json({ status: false, message: "Invalid college code" });
     } else {
       const message = {
-        from: "TNEA seat matrix",
-        // to: `${College.Email}`,
-        to: "amruthkiran47@gmail.com",
+        from: "tneaseatmatrixteam@gmail.com",
+        to: `${College.Email}`,
+        // to: "lovlyraghav1@gmail.com",
         subject: "TNEA SeatMatrix Password",
-        text: `Please find below the passowrd for the login credentials of TNEA Seat Matrix web application \nPassword: ${College.CollegePassword}.`,
+        text: `We have received your request to view your password. Please find your old password below:\nPassword: ${College.CollegePassword}. \n\nPlease note that this password is confidential and should not be shared with anyone.\n\nFor any questions or concerns, please contact us.\nEmail:Tneaseatmatrixteam@gmail.com`,
       };
 
       transporter.sendMail(message, function (err, data) {

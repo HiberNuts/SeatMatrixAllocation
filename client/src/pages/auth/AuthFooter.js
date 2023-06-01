@@ -10,7 +10,10 @@ const AuthFooter = () => {
             style={{ display: "flex", justifyContent: "space-evenly" }}
             className="nk-block-content text-center text-lg-start"
           >
-            <p className="text-soft">&copy; 2023 TNEA. All Rights Reserved.</p>
+            <p className="text-soft">
+              &copy; 2023 TNEA. All Rights Reserved. <br />
+              For better expirence please use laptop/PC
+            </p>
             <p style={{ fontSize: "15px", alignItems: "start", alignSelf: "start" }}>
               For any Queries please contact:
               <br />

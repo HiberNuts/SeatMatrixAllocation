@@ -88,6 +88,12 @@ const userSchema = new mongoose.Schema(
       type: Object,
       required: false,
     },
+    BankDetails: {
+      type: Object,
+    },
+    BankDetailFlag: {
+      type: Boolean,
+    },
     bookletDeclaration: {
       type: Boolean,
     },

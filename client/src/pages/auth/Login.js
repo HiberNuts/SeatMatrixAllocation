@@ -32,6 +32,7 @@ const Login = () => {
   const toggleForgotPass = () => setforgotPassModal(!forgotPassModal);
   const [collegeCode, setcollegeCode] = useState("");
   const [collegeCodeError, setcollegeCodeError] = useState(false);
+  const [diffCodeError, setdiffCodeError] = useState(false);
 
   const onFormSubmit = (formData) => {
     setcollegeCode(formData.name);
@@ -175,10 +176,17 @@ const Login = () => {
                   {loading ? <Spinner size="sm" color="light" /> : "Sign in"}
                 </Button>
               </div>
-              <a href="https://youtu.be/cQi4x03U12E" target="_blank">
+              <a
+                href="https://drive.google.com/file/d/1pXIci9A25JDqATavp6jHKLtUDmtn_vLi/view?usp=share_link"
+                target="_blank"
+              >
                 <Icon name="link"></Icon>
                 <span>If any doubts please watch this video tutorial</span>
               </a>
+              {/* <a href="https://youtu.be/cQi4x03U12E" target="_blank">
+                <Icon name="link"></Icon>
+                <span>If any doubts please watch this video tutorial</span>
+              </a> */}
             </Form>
             <Modal isOpen={modalForm} toggle={toggleForm}>
               <ModalHeader toggle={toggleForm}>Reset Password</ModalHeader>
@@ -189,7 +197,15 @@ const Login = () => {
                       Password
                     </label>
                     <div className="form-control-wrap">
-                      <input type="password" className="form-control" id="passwordOne" />
+                      <input
+                        type="password"
+                        onChange={() => {
+                          setdiffCodeError(false);
+                          setcollegeCodeError(false);
+                        }}
+                        className="form-control"
+                        id="passwordOne"
+                      />
                       {collegeCodeError && <span className="invalid">New passowrd cannot be same as old one</span>}
                     </div>
                   </div>
@@ -198,7 +214,16 @@ const Login = () => {
                       Confirm Password
                     </label>
                     <div className="form-control-wrap">
-                      <input type="password" className="form-control" id="passwordTwo" />
+                      <input
+                        onChange={() => {
+                          setdiffCodeError(false);
+                          setcollegeCodeError(false);
+                        }}
+                        type="password"
+                        className="form-control"
+                        id="passwordTwo"
+                      />
+                      {diffCodeError && <span className="invalid">Password and Confirm Password must be same</span>}
                     </div>
                   </div>
 
@@ -213,6 +238,8 @@ const Login = () => {
 
                         if (passone == collegeCode) {
                           setcollegeCodeError(true);
+                        } else if (passone != passtwo) {
+                          setdiffCodeError(true);
                         } else {
                           if (passone == passtwo) {
                             setLoading(true);
@@ -317,6 +344,10 @@ const Login = () => {
                               toast.error(`${data.message}`);
                               setLoading(false);
                             }
+                          })
+                          .catch((error) => {
+                            toast.error("Something went wrong!");
+                            setLoading(false);
                           });
                       }}
                       size="lg"
