@@ -171,15 +171,15 @@ const Homepage = ({ ...props }) => {
                     cursor: "not-allowed",
                   }}
                   className={classnames({ active: activeIconTab === "7" })}
-                  onClick={(ev) => {
-                    if (personalFlag && courseFlag) {
-                      ev.preventDefault();
-                      // getCollegeInfo();
-                      toggleIconTab("7");
-                    } else {
-                      return;
-                    }
-                  }}
+                  // onClick={(ev) => {
+                  //   if (personalFlag && courseFlag) {
+                  //     ev.preventDefault();
+                  //     // getCollegeInfo();
+                  //   } else {
+                  //     toggleIconTab("7");
+                  //     return;
+                  //   }
+                  // }}
                 >
                   <Icon name="check-fill-c" /> <span>Declaration</span>
                 </NavLink>
@@ -196,14 +196,14 @@ const Homepage = ({ ...props }) => {
                     cursor: "not-allowed",
                   }}
                   className={classnames({ active: activeIconTab === "8" })}
-                  onClick={(ev) => {
-                    if (personalFlag && courseFlag && declarationFlag) {
-                      ev.preventDefault();
-                      toggleIconTab("8");
-                    } else {
-                      return;
-                    }
-                  }}
+                  // onClick={(ev) => {
+                  //   if (personalFlag && courseFlag && declarationFlag) {
+                  //     ev.preventDefault();
+                  //   } else {
+                  //     toggleIconTab("8");
+                  //     return;
+                  //   }
+                  // }}
                 >
                   <Icon name="upload" /> <span>Document Upload</span>
                 </NavLink>
