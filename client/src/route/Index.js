@@ -5,6 +5,7 @@ import Booklet from "../pages/Booklet";
 import Homepage from "../pages/Homepage";
 import PdfDisplay from "../pages/PdfDisplay";
 import Error504Modern from "../pages/SeatMatrix504";
+import Instructions from "../pages/Instructions";
 const Pages = () => {
   useLayoutEffect(() => {
     window.scrollTo(0, 0);
@@ -17,7 +18,7 @@ const Pages = () => {
         <Route exact path={`${process.env.PUBLIC_URL}/`} component={Homepage}></Route>
         {/* <Route exact path={`${process.env.PUBLIC_URL}/booklet`} component={Booklet}></Route> */}
         <Route exact path={`${process.env.PUBLIC_URL}/seatMatrix`} component={Homepage}></Route>
-
+        <Route exact path={`${process.env.PUBLIC_URL}/Instructions`} component={Instructions}></Route>
 
         <Route component={RedirectAs404}></Route>
       </Switch>
