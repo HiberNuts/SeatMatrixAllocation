@@ -1,5 +1,4 @@
 const menu = [
-
   {
     heading: "Dashboards",
   },
@@ -9,11 +8,9 @@ const menu = [
     link: "/",
   },
   {
-    
     icon: "book-fill",
-    text: "Instructions",
+    text: "General Instructions",
     link: "/Instructions",
-  }
-
+  },
 ];
 export default menu;
