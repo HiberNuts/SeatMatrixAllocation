@@ -84,6 +84,7 @@ const BankDetails = ({ alter, Data, toggleIconTab, updateCollegeInfo, phase1Free
     getCollegeInfo(Data);
     console.log(bank2);
   }, []);
+  console.log(editFlag);
 
   return (
     <div>
@@ -330,16 +331,21 @@ const BankDetails = ({ alter, Data, toggleIconTab, updateCollegeInfo, phase1Free
           >
             &lt; Back
           </Button>
-          <Button
-            name="submit"
-            type="submit"
-            color={editFlag ? "warning" : "primary"}
-            size="lg"
-            onClick={() => seteditFlag(true)}
-            disabled={phase1Freeze}
-          >
-            {editFlag ? "Save" : "Edit"}
-          </Button>
+          {editFlag && (
+            <Button name="submit" type="submit" color="warning" size="lg" disabled={phase1Freeze}>
+              Save
+            </Button>
+          )}
+          {editFlag == false && (
+            <Button
+              color={editFlag ? "warning" : "primary"}
+              size="lg"
+              onClick={() => seteditFlag(true)}
+              disabled={phase1Freeze}
+            >
+              Edit
+            </Button>
+          )}
           <Button
             onClick={(e) => {
               e.preventDefault();

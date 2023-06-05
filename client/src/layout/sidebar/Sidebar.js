@@ -7,14 +7,14 @@ import Toggle from "./Toggle";
 import EcommerceMenu from "../menu/EcommerceMenu";
 
 const Sidebar = ({ fixed, theme, className, sidebarToggle, mobileView, ...props }) => {
-  const [collapseSidebar, setSidebar] = useState(false);
+  const [collapseSidebar, setSidebar] = useState(true);
   const [mouseEnter, setMouseEnter] = useState(false);
 
   const toggleCollapse = () => {
     setSidebar(!collapseSidebar);
   };
 
-  const handleMouseEnter = () => setMouseEnter(true);
+  const handleMouseEnter = () => setMouseEnter(false);
   const handleMouseLeave = () => setMouseEnter(false);
 
   const classes = classNames({
@@ -34,14 +34,14 @@ const Sidebar = ({ fixed, theme, className, sidebarToggle, mobileView, ...props 
           <Logo />
         </div>
         <div className="nk-menu-trigger me-n2">
-          <Toggle className="nk-nav-toggle nk-quick-nav-icon d-xl-none me-n2" icon="arrow-left" click={sidebarToggle} />
-          <Toggle
+          {/* <Toggle className="nk-nav-toggle nk-quick-nav-icon d-xl-none me-n2" icon="arrow-left" click={sidebarToggle} /> */}
+          {/* <Toggle
             className={`nk-nav-compact nk-quick-nav-icon d-none d-xl-inline-flex ${
               collapseSidebar ? "compact-active" : ""
             }`}
             click={toggleCollapse}
             icon="menu"
-          />
+          /> */}
         </div>
       </div>
       <div className="nk-sidebar-content" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
