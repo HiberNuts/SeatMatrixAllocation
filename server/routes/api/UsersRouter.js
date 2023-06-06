@@ -173,7 +173,7 @@ UserRouter.post("/bankData", ejwt({ secret: secret, algorithms: ["HS256"] }), as
     } else {
       const user = await users.findByIdAndUpdate(req.auth.id, {
         BankDetails: BankDetails,
-        BankDetailFlag:true
+        BankDetailFlag: true,
       });
       res.json({ status: true });
     }
@@ -414,6 +414,59 @@ UserRouter.get("/list/college/:collegeCode", async (req, res) => {
     res.json(college);
   } catch (err) {
     res.status(500).json(err);
+  }
+});
+
+UserRouter.get("/dash", async (req, res) => {
+  try {
+    const coll = await users.find({});
+    const LoginCollege = await users.find({ CollegePassword: { $exists: true } });
+    const PersonalD = await users.find({
+      PersonalDetailFlag: { $eq: true },
+    });
+    const BankD = await users.find({
+      BankDetailFlag: { $eq: true },
+    });
+    const CourseD = await users.find({
+      CourseDetails: { $exists: true },
+    });
+    const p1f = await users.find({
+      Phase1Freeze: { $eq: true },
+    });
+    const p2f = await users.find({
+      Phase2Freeze: { $eq: true },
+    });
+    const declD = await users.find({
+      DeclarationFlag: { $eq: true },
+    });
+    const docD = await users.find({
+      DocumentUploadFlag: { $eq: true },
+    });
+
+    res.setHeader("Content-type", "text/html");
+    res.send(
+      "<html><body><p>Total number of colleges: <b>" +
+        coll?.length +
+        "</b><br/>Colleges that have logged in: <b>" +
+        LoginCollege?.length +
+        "</b> <br/> Colleges that have filled Personal Details: <b>" +
+        PersonalD?.length +
+        "</b> <br/> Colleges that have filled Bank Details: <b>" +
+        BankD?.length +
+        "</b><br/> Colleges that have filled Course Details: <b>" +
+        CourseD?.length +
+        "</b><br/> Colleges those who all Freezed Phase 1 are: <b>" +
+        p1f?.length +
+        "</b><br/> Colleges that have marked declaration: <b>" +
+        declD?.length +
+        "</b><br/> Colleges that have uploaded documents: <b>" +
+        docD?.length +
+        "</b><br/> Colleges that have Freezed Phase 2 are: <b>" +
+        p2f?.length +
+        "</b></p></body></html>"
+    );
+  } catch (error) {
+    res.send(error);
   }
 });
 UserRouter.get("/list/seats", async (req, res) => {
