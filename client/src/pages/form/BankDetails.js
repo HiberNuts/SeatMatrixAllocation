@@ -16,7 +16,7 @@ const BankDetails = ({ alter, Data, toggleIconTab, updateCollegeInfo, phase1Free
   const { errors, register, handleSubmit } = useForm();
   const [frozen, setFrozen] = useState(false);
   const onFormSubmit = (data) => {
-    if (editFlag) {
+    if (phase1Freeze != true) {
       fetch(`${backendURL}/bankData`, {
         method: "Post",
         headers: {
@@ -58,9 +58,12 @@ const BankDetails = ({ alter, Data, toggleIconTab, updateCollegeInfo, phase1Free
         .catch((error) => {
           console.log(error);
         });
-    } else {
-      seteditFlag(true);
     }
+    // if (editFlag) {
+
+    // } else {
+    //   seteditFlag(true);
+    // }
   };
   const formClass = classNames({
     "form-validate": false,
@@ -82,10 +85,8 @@ const BankDetails = ({ alter, Data, toggleIconTab, updateCollegeInfo, phase1Free
 
   useEffect(() => {
     getCollegeInfo(Data);
-    console.log(bank2);
   }, []);
   console.log(editFlag);
-
   return (
     <div>
       <Form className={formClass} onSubmit={handleSubmit((data) => onFormSubmit(data))}>
@@ -226,6 +227,7 @@ const BankDetails = ({ alter, Data, toggleIconTab, updateCollegeInfo, phase1Free
                     })}
                     type="text"
                     name="bankName2"
+                    disabled={phase1Freeze}
                     id="full-name-2l"
                     className="form-control"
                     value={bank2?.Name}
@@ -248,6 +250,7 @@ const BankDetails = ({ alter, Data, toggleIconTab, updateCollegeInfo, phase1Free
                     type="number"
                     name="bankAcc2"
                     id="acc2"
+                    disabled={phase1Freeze}
                     className="form-control"
                     value={bank2?.AccNo}
                     onChange={(e) => (editFlag ? setBank2({ ...bank2, AccNo: e.target.value }) : null)}
@@ -269,6 +272,7 @@ const BankDetails = ({ alter, Data, toggleIconTab, updateCollegeInfo, phase1Free
                     type="text"
                     name="bankHolder2"
                     id="bankHolder2"
+                    disabled={phase1Freeze}
                     className="form-control"
                     value={bank2?.Holder}
                     onChange={(e) => (editFlag ? setBank2({ ...bank2, Holder: e.target.value }) : null)}
@@ -290,6 +294,7 @@ const BankDetails = ({ alter, Data, toggleIconTab, updateCollegeInfo, phase1Free
                     type="text"
                     name="bankIFSC2"
                     id="IFSC2"
+                    disabled={phase1Freeze}
                     className="form-control"
                     value={bank2?.IFSC}
                     onChange={(e) => (editFlag ? setBank2({ ...bank2, IFSC: e.target.value }) : null)}
@@ -311,6 +316,7 @@ const BankDetails = ({ alter, Data, toggleIconTab, updateCollegeInfo, phase1Free
                     type="text"
                     name="bankAddr2"
                     id="bankAddr2"
+                    disabled={phase1Freeze}
                     className="form-control"
                     value={bank2?.Branch}
                     onChange={(e) => (editFlag ? setBank2({ ...bank2, Branch: e.target.value }) : null)}
@@ -326,6 +332,7 @@ const BankDetails = ({ alter, Data, toggleIconTab, updateCollegeInfo, phase1Free
             type="submit"
             onClick={() => {
               toggleIconTab("5");
+              seteditFlag(false);
             }}
             color="danger"
           >

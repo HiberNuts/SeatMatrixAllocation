@@ -40,7 +40,6 @@ const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, 
         return response.json();
       })
       .then((data) => {
-      
         if (data.status) {
           const notify = () => {
             toast.success("Data added successfully");
@@ -83,12 +82,12 @@ const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, 
     }
     ec.sort((a, b) => {
       if (a.Pending === b.Pending) {
-        return courseRank[ccode].indexOf(a.courseCode) - courseRank[ccode].indexOf(b.courseCode);
+        return courseRank[ccode]?.indexOf(a.courseCode) - courseRank[ccode]?.indexOf(b.courseCode);
       } else return b.Pending - a.Pending;
     });
-  
+
     let seat = seatsToAdd();
-   
+
     let mgmt = 0;
     for (let index = 0; index < ec.length; index++) {
       if (seat === 0) {
@@ -96,7 +95,7 @@ const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, 
       }
       mgmt += ec[index].Management;
       let indexVal = ec[index].index;
-     
+
       if (indexVal >= 0) {
         onAddSeat(indexVal);
         seat--;
@@ -118,17 +117,16 @@ const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, 
       }
     });
     if (GOVTSeats[Category] * intake - GOVT < 1) return 0;
-    else if ((GOVTSeats[Category] * intake - GOVT)%1>0.9)
-    return Math.floor(GOVTSeats[Category] * intake - GOVT)+1;
+    else if ((GOVTSeats[Category] * intake - GOVT) % 1 > 0.9)
+      return Math.floor(GOVTSeats[Category] * intake - GOVT) + 1;
     else return Math.floor(GOVTSeats[Category] * intake - GOVT);
   };
   // useEffect(() => {
   //   const data = Data;
   //   setcourse(data);
-  //  
+  //
   // }, [Data]);
   useEffect(() => {
- 
     getCollegeInfo();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Course]);
@@ -136,7 +134,6 @@ const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, 
     const data = Data;
     setcourse(data);
     setfreezeFlag(phase1Freeze);
-   
   }, [activeIconTab]);
   const onAddSeat = (i) => {
     const course = Course;
@@ -147,7 +144,6 @@ const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, 
       course[i]["Added"] += 1;
     }
     setcourse(course);
-    
   };
   const formClass = classNames({
     "form-validate": true,
@@ -253,7 +249,6 @@ const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, 
                         <td className="text-center">
                           <Button
                             onClick={(e) => {
-                              
                               e.preventDefault();
                             }}
                             className="btn btn-icon"
