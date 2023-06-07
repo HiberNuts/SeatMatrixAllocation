@@ -66,7 +66,7 @@ const Instructions = () => {
                 <ListGroupItemText>
                   <b>Phase2:</b> Declaration and Document upload section will be enabled in this phase
                 </ListGroupItemText>
-                <ListGroupItemText>Phase 2 will be enabled in few days from now</ListGroupItemText>
+                <ListGroupItemText>Phase 2 will be enabled after June 15th 2023</ListGroupItemText>
                 <ListGroupItemText>
                   If any issue presists in data updating please try to refresh once to view the latest changes.
                 </ListGroupItemText>

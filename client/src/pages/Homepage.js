@@ -78,7 +78,13 @@ const Homepage = ({ ...props }) => {
           <BlockHead>
             <BlockHeadContent>
               <BlockTitle tag="h5">Seat Matrix Form</BlockTitle>
-              <p>Please fill the form within the due date</p>
+              <p>
+                <a href="/Instructions">Click here to view instructions or click General Instructions in left panel</a>
+              </p>
+              <p style={{ color: "red" }}>
+                *Declaration and Documents Upload section are part of Phase 2 and will be enabled after June 15th.
+              </p>
+              {/* <p>Please fill the form within the due date</p> */}
             </BlockHeadContent>
           </BlockHead>
           <PreviewCard>
