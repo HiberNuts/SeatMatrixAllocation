@@ -2,6 +2,7 @@ export const CourseList = [
     { label: "ARTIFICIAL INTELLIGENCE AND DATA SCIENCE", value: "AD" },
     { label: "AERONAUTICAL ENGINEERING", value: "AE" },
     { label: "AGRICULTURAL ENGINEERING", value: "AG" },
+    { label: "ARCHITECTURE", value: "AR"},
     { label: "Artificial Intelligence and Machine Learning", value: "AL" },
     { label: "COMPUTER SCIENCE AND ENGINEERING (ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING)", value: "AM" },
     { label: "AEROSPACE ENGINEERING", value: "AO" },
@@ -76,6 +77,7 @@ export const CourseList = [
   ];
 
 export const SSCourse = [{ label: "APPAREL TECHNOLOGY (SS)", value: "AP" },
+{ label: "ARCHITECTURE (SS)", value: "BA"},
 { label: "AUTOMOBILE ENGINEERING (SS)", value: "AS" },
 { label: "ARTIFICIAL INTELLIGENCE AND DATA SCIENCE (SS)", value: "AT" },
 { label: "BIO TECHNOLOGY (SS)", value: "BS" },
