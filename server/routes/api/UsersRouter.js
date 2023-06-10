@@ -728,7 +728,7 @@ UserRouter.get("/list/p1notfreeze", async (req, res) => {
   }
 });
 
-UserRouter.post("/unlockp1/:collegeCode", async (req, res) => {
+UserRouter.get("/unlockp1/:collegeCode", async (req, res) => {
   try {
     const collegeCode = req.params.collegeCode;
     const college = await users.findOneAndUpdate({ ccode: collegeCode }, { Phase1Freeze: false });
@@ -737,7 +737,7 @@ UserRouter.post("/unlockp1/:collegeCode", async (req, res) => {
     res.status(500).json(err);
   }
 });
-UserRouter.post("/lockp1/:collegeCode", async (req, res) => {
+UserRouter.get("/lockp1/:collegeCode", async (req, res) => {
   try {
     const collegeCode = req.params.collegeCode;
     const college = await users.findOneAndUpdate({ ccode: collegeCode }, { Phase1Freeze: true });
