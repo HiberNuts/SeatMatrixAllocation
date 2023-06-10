@@ -269,6 +269,7 @@ UserRouter.post(
 
       const College = await users.findById(req.auth.id);
       let document = College.Documents ? College.Documents : {};
+      let docUrl = College.docUrl ? College.docUrl : {};
       for (let i = 0; i < allFiles.length; i++) {
         var params = {
           Bucket: BUCKET,
@@ -281,9 +282,12 @@ UserRouter.post(
             console.log("Error", err);
           }
           if (data) {
+            console.log(data);
             document[allFiles[i].fieldname] = true;
+            docUrl[allFiles[i].fieldname] = data.Location;
             await users.findByIdAndUpdate(req.auth.id, {
               Documents: document,
+              docUrl: docUrl,
             });
           }
         });
@@ -308,8 +312,10 @@ UserRouter.post("/deleteDoc", ejwt({ secret: secret, algorithms: ["HS256"] }), a
       else {
         const CollegeData = await users.findById(req.auth.id);
         let document = CollegeData.Documents;
+        let docUrl = CollegeData.docUrl;
         document[key] = false;
-        const College = await users.findByIdAndUpdate(req.auth.id, { Documents: document });
+        delete docUrl[key];
+        const College = await users.findByIdAndUpdate(req.auth.id, { Documents: document, docUrl: docUrl });
         if (College) {
           res.json({ status: true });
         }
