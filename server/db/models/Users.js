@@ -97,6 +97,9 @@ const userSchema = new mongoose.Schema(
     bookletDeclaration: {
       type: Boolean,
     },
+    docUrl: {
+      type: Object,
+    },
   },
   {
     timestamps: true,
