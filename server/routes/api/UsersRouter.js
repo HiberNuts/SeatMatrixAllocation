@@ -732,7 +732,7 @@ UserRouter.post("/unlockp1/:collegeCode", async (req, res) => {
   try {
     const collegeCode = req.params.collegeCode;
     const college = await users.findOneAndUpdate({ ccode: collegeCode }, { Phase1Freeze: false });
-    res.json(college);
+    res.json({ status: true });
   } catch (err) {
     res.status(500).json(err);
   }
@@ -769,7 +769,7 @@ UserRouter.get("/unlockp2/:collegeCode", async (req, res) => {
   try {
     const collegeCode = req.params.collegeCode;
     const college = await users.findOneAndUpdate({ ccode: collegeCode }, { Phase2Freeze: false });
-    res.json(college);
+    res.json({ status: true });
   } catch (err) {
     res.status(500).json(err);
   }
