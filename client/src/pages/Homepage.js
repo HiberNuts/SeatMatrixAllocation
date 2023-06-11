@@ -5,7 +5,20 @@ import Icon from "../components/icon/Icon";
 import classnames from "classnames";
 import FormOne from "./form/formOne";
 import FormTwo from "./form/formTwo";
-import { Nav, NavItem, NavLink, Row, Col, TabContent, TabPane } from "reactstrap";
+import {
+  Nav,
+  NavItem,
+  NavLink,
+  Row,
+  Col,
+  TabContent,
+  TabPane,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+} from "reactstrap";
 import { Block, BlockHead, BlockHeadContent, BlockTitle, BlockDes, BackTo } from "../components/block/Block";
 import { PreviewCard } from "../components/preview/Preview";
 import FormFour from "./form/formFour";
@@ -17,6 +30,7 @@ import { ToastContainer } from "react-toastify";
 import { Spinner } from "reactstrap";
 import Verify from "./form/Verify";
 import BankDetails from "./form/BankDetails";
+import { Alert } from "reactstrap";
 
 const Homepage = ({ ...props }) => {
   const [activeIconTab, setActiveIconTab] = useState("5");
@@ -70,6 +84,28 @@ const Homepage = ({ ...props }) => {
       <Spinner style={{ width: "5rem", height: "5rem" }} color="primary" />
     </div>
   );
+  const [modal, setModal] = useState(false);
+  const [backdrop, setBackdrop] = useState(true);
+  const [keyboard, setKeyboard] = useState(true);
+
+  const toggle = () => setModal(!modal);
+
+  const changeBackdrop = (e) => {
+    let { value } = e.target;
+    if (value !== "static") {
+      value = JSON.parse(value);
+    }
+    setBackdrop(value);
+  };
+
+  const changeKeyboard = (e) => {
+    setKeyboard(e.currentTarget.checked);
+  };
+
+  useEffect(() => {
+    toggle();
+  }, []);
+
   return (
     <React.Fragment>
       <Head title="HomePage" />
@@ -82,7 +118,11 @@ const Homepage = ({ ...props }) => {
                 <a href="/Instructions">Click here to view instructions or click General Instructions in left panel</a>
               </p>
               <p style={{ color: "red" }}>
-                *Declaration and Documents Upload section are part of Phase 2 and will be enabled after June 15th.
+                *Last Date to Freeze phase 1 is June 15, after June 15th every college will be automatically freezed
+                <br />
+                *Declaration and Document upload section are part of Phase2 and will be enabled few days from june
+                15th. 
+                {/* *Declaration and Documents Upload section are part of Phase 2 and will be enabled after June 15th. */}
               </p>
               {/* <p>Please fill the form within the due date</p> */}
             </BlockHeadContent>
@@ -291,6 +331,22 @@ const Homepage = ({ ...props }) => {
           </PreviewCard>
         </Block>
       </Content>
+      <Modal isOpen={modal} toggle={toggle} backdrop={backdrop} keyboard={keyboard}>
+        <ModalHeader color={"red"} toggle={toggle}>
+          Instructions!
+        </ModalHeader>
+        <ModalBody>
+          Please ensure that you provide all the required data before June 15th 11:00pm IST. After this time limit,
+          every college will be auto-frozen and no further changes will be acknowledged. The required data includes
+          personal details, bank details, course details and verification pages.
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={toggle}>
+            Okay
+          </Button>
+        </ModalFooter>
+      </Modal>
+
       <ToastContainer />
     </React.Fragment>
   );
