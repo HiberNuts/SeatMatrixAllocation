@@ -30,7 +30,7 @@ import { ToastContainer } from "react-toastify";
 import { Spinner } from "reactstrap";
 import Verify from "./form/Verify";
 import BankDetails from "./form/BankDetails";
-import { Alert } from "reactstrap";
+
 
 const Homepage = ({ ...props }) => {
   const [activeIconTab, setActiveIconTab] = useState("5");
@@ -111,6 +111,7 @@ const Homepage = ({ ...props }) => {
       <Head title="HomePage" />
       <Content>
         <Block>
+          
           <BlockHead>
             <BlockHeadContent>
               <BlockTitle tag="h5">Seat Matrix Form</BlockTitle>
@@ -120,8 +121,7 @@ const Homepage = ({ ...props }) => {
               <p style={{ color: "red" }}>
                 *Last Date to Freeze phase 1 is June 15, after June 15th every college will be automatically freezed
                 <br />
-                *Declaration and Document upload section are part of Phase2 and will be enabled few days from june
-                15th. 
+                *Declaration and Document upload section are part of Phase2 and will be enabled few days from june 15th.
                 {/* *Declaration and Documents Upload section are part of Phase 2 and will be enabled after June 15th. */}
               </p>
               {/* <p>Please fill the form within the due date</p> */}
@@ -331,21 +331,6 @@ const Homepage = ({ ...props }) => {
           </PreviewCard>
         </Block>
       </Content>
-      <Modal isOpen={modal} toggle={toggle} backdrop={backdrop} keyboard={keyboard}>
-        <ModalHeader color={"red"} toggle={toggle}>
-          Instructions!
-        </ModalHeader>
-        <ModalBody>
-          Please ensure that you provide all the required data before June 15th 11:00pm IST. After this time limit,
-          every college will be auto-frozen and no further changes will be acknowledged. The required data includes
-          personal details, bank details, course details and verification pages.
-        </ModalBody>
-        <ModalFooter>
-          <Button color="secondary" onClick={toggle}>
-            Okay
-          </Button>
-        </ModalFooter>
-      </Modal>
 
       <ToastContainer />
     </React.Fragment>
