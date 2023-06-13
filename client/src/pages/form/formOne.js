@@ -1,5 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Label, Form, Spinner } from "reactstrap";
+
+import {
+  Nav,
+  NavItem,
+  NavLink,
+  Form,
+  Label,
+  Row,
+  Col,
+  TabContent,
+  TabPane,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Spinner,
+} from "reactstrap";
 import Select from "react-select";
 import { backendURL } from "../../backendurl";
 import { useForm } from "react-hook-form";
@@ -130,9 +146,53 @@ const FormOne = ({ alter, toggleIconTab, updateCollegeInfo, Data }) => {
     onFormSubmit(data);
   };
 
+  const [modal, setModal] = useState(false);
+  const [backdrop, setBackdrop] = useState(true);
+  const [keyboard, setKeyboard] = useState(true);
+
+  const toggle = () => setModal(!modal);
+
+  const changeBackdrop = (e) => {
+    let { value } = e.target;
+    if (value !== "static") {
+      value = JSON.parse(value);
+    }
+    setBackdrop(value);
+  };
+
+  const changeKeyboard = (e) => {
+    setKeyboard(e.currentTarget.checked);
+  };
+
+  useEffect(() => {
+    toggle();
+  }, []);
+
   if (!loading)
     return (
       <React.Fragment>
+        <Modal
+          isOpen={modal}
+          toggle={toggle}
+          size="lg"
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+          keyboard={keyboard}
+        >
+          <ModalHeader color={"red"} toggle={toggle}>
+            Instructions!
+          </ModalHeader>
+          <ModalBody>
+            Please ensure that you provide all the required data before June 15th 11:00pm IST. After this time limit,
+            every college will be auto-frozen and no further changes will be acknowledged. The required data includes
+            personal details, bank details, course details and verification pages.
+          </ModalBody>
+          <ModalFooter>
+            <Button color="secondary" onClick={toggle}>
+              Okay
+            </Button>
+          </ModalFooter>
+        </Modal>
         <Form className={formClass} onSubmit={handleSubmit((data) => onFormSubmit(data))}>
           <Row className="g-gs">
             <Col md="6">
