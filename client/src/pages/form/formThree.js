@@ -92,15 +92,9 @@ const FormThree = ({ alter, toggleIconTab, Data, updateCollegeInfo }) => {
       </p>
 
       {(freezeFlag == true || declarationFlag == true) && (
-        <PDFDownloadLink document={<PdfDcoument collegeData={collegeData} />} fileName="declaration.pdf">
-          {({ blob, url, loading, error }) =>
-            loading ? (
-              "Loading document..."
-            ) : (
-              <button className="btn btn-primary">Download the declaration form here!</button>
-            )
-          }
-        </PDFDownloadLink>
+        <button onClick={()=>{
+          window.open('/pdf', '_blank');
+        }} className="btn btn-primary">Download the declaration form here!</button>
       )}
 
       <div>
