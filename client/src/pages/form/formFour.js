@@ -91,6 +91,7 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
         });
        
         if (res.data.status) {
+          toast.success("Files added successfully");
           setSeatMatrix();
           inputseatMatrix.current.value = "";
           setAICTEApproval();
@@ -105,7 +106,6 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
           inputMinority.current.value = "";
           getCollegeData();
           getDocUrls();
-          toast.success("Files added successfully");
         }
       } else {
         toast.warning("Select atleast one field");

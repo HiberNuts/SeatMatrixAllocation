@@ -269,6 +269,7 @@ UserRouter.post(
 
       const College = await users.findById(req.auth.id);
       let document = College.Documents ? College.Documents : {};
+      let docUrl = College.docUrl ? College.docUrl : {};
       for (let i = 0; i < allFiles.length; i++) {
         var params = {
           Bucket: BUCKET,
@@ -281,9 +282,12 @@ UserRouter.post(
             console.log("Error", err);
           }
           if (data) {
+            console.log(data);
             document[allFiles[i].fieldname] = true;
+            docUrl[allFiles[i].fieldname] = data.Location;
             await users.findByIdAndUpdate(req.auth.id, {
               Documents: document,
+              docUrl: docUrl,
             });
           }
         });
@@ -308,8 +312,10 @@ UserRouter.post("/deleteDoc", ejwt({ secret: secret, algorithms: ["HS256"] }), a
       else {
         const CollegeData = await users.findById(req.auth.id);
         let document = CollegeData.Documents;
+        let docUrl = CollegeData.docUrl;
         document[key] = false;
-        const College = await users.findByIdAndUpdate(req.auth.id, { Documents: document });
+        delete docUrl[key];
+        const College = await users.findByIdAndUpdate(req.auth.id, { Documents: document, docUrl: docUrl });
         if (College) {
           res.json({ status: true });
         }
@@ -321,12 +327,13 @@ UserRouter.post("/deleteDoc", ejwt({ secret: secret, algorithms: ["HS256"] }), a
   }
 });
 
-UserRouter.get("/documents", ejwt({ secret: secret, algorithms: ["HS256"] }), async (req, res) => {
+UserRouter.get("/documents", async (req, res) => {
   try {
     var params = {
       Bucket: BUCKET,
       Delimiter: "/",
-      Prefix: `${req.auth.ccode}/`,
+      // Prefix: `${req.auth.ccode}/`,
+      Prefix: "2005",
     };
     let keys = [];
     let signedUrls = {};
@@ -417,6 +424,15 @@ UserRouter.get("/list/college/:collegeCode", async (req, res) => {
   }
 });
 
+UserRouter.get("/list/college", async (req, res) => {
+  try {
+    const college = await users.find();
+    res.json(college);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 UserRouter.get("/dash", async (req, res) => {
   try {
     const coll = await users.find({});
@@ -469,34 +485,197 @@ UserRouter.get("/dash", async (req, res) => {
     res.send(error);
   }
 });
+
+UserRouter.get("/filled", async (req, res) => {
+  try {
+    const LoginCollege = await users.find(
+      { CollegePassword: { $exists: true } },
+      { ccode: 1, can: 1, PrincipalName: 1, PhoneNumber: 1, Email: 1 }
+    );
+    const PersonalD = await users.find(
+      {
+        PersonalDetailFlag: { $eq: true },
+      },
+      { ccode: 1, can: 1, PrincipalName: 1, PhoneNumber: 1, Email: 1 }
+    );
+    const BankD = await users.find(
+      {
+        BankDetailFlag: { $eq: true },
+      },
+      { ccode: 1, can: 1, PrincipalName: 1, PhoneNumber: 1, Email: 1 }
+    );
+    const CourseD = await users.find(
+      {
+        CourseDetails: { $exists: true },
+      },
+      { ccode: 1, can: 1, PrincipalName: 1, PhoneNumber: 1, Email: 1 }
+    );
+    const p1f = await users.find(
+      {
+        Phase1Freeze: { $eq: true },
+      },
+      { ccode: 1, can: 1, PrincipalName: 1, PhoneNumber: 1, Email: 1 }
+    );
+    const p2f = await users.find(
+      {
+        Phase2Freeze: { $eq: true },
+      },
+      { ccode: 1, can: 1, PrincipalName: 1, PhoneNumber: 1, Email: 1 }
+    );
+    const declD = await users.find(
+      {
+        DeclarationFlag: { $eq: true },
+      },
+      { ccode: 1, can: 1, PrincipalName: 1, PhoneNumber: 1, Email: 1 }
+    );
+    const docD = await users.find(
+      {
+        DocumentUploadFlag: { $eq: true },
+      },
+      { ccode: 1, can: 1, PrincipalName: 1, PhoneNumber: 1, Email: 1 }
+    );
+
+    const NLoginCollege = await users.find(
+      { CollegePassword: { $exists: false } },
+      { ccode: 1, can: 1, PrincipalName: 1, PhoneNumber: 1, Email: 1 }
+    );
+    const NPersonalD = await users.find(
+      {
+        $or: [{ PersonalDetailFlag: false }, { PersonalDetailFlag: { $exists: false } }],
+      },
+      { ccode: 1, can: 1, PrincipalName: 1, PhoneNumber: 1, Email: 1 }
+    );
+
+    const NBankD = await users.find(
+      {
+        $or: [{ BankDetailFlag: false }, { BankDetailFlag: { $exists: false } }],
+      },
+      { ccode: 1, can: 1, PrincipalName: 1, PhoneNumber: 1, Email: 1 }
+    );
+
+    const NCourseD = await users.find(
+      {
+        CourseDetails: { $exists: false },
+      },
+      { ccode: 1, can: 1, PrincipalName: 1, PhoneNumber: 1, Email: 1 }
+    );
+    const Np1f = await users.find(
+      {
+        $or: [{ Phase1Freeze: false }, { Phase1Freeze: { $exists: false } }],
+      },
+      { ccode: 1, can: 1, PrincipalName: 1, PhoneNumber: 1, Email: 1 }
+    );
+
+    const Np2f = await users.find(
+      {
+        $or: [{ Phase2Freeze: false }, { Phase2Freeze: { $exists: false } }],
+      },
+      { ccode: 1, can: 1, PrincipalName: 1, PhoneNumber: 1, Email: 1 }
+    );
+
+    const NdeclD = await users.find(
+      {
+        $or: [{ DeclarationFlag: false }, { DeclarationFlag: { $exists: false } }],
+      },
+      { ccode: 1, can: 1, PrincipalName: 1, PhoneNumber: 1, Email: 1 }
+    );
+    const NdocD = await users.find(
+      {
+        $or: [{ DocumentUploadFlag: false }, { DocumentUploadFlag: { $exists: false } }],
+      },
+      { ccode: 1, can: 1, PrincipalName: 1, PhoneNumber: 1, Email: 1 }
+    );
+
+    res.json({
+      login: LoginCollege,
+      pd: PersonalD,
+      bd: BankD,
+      cd: CourseD,
+      p1f: p1f,
+      p2f: p2f,
+      dec: declD,
+      doc: docD,
+      nlogin: NLoginCollege,
+      npd: NPersonalD,
+      nbd: NBankD,
+      ncd: NCourseD,
+      np1f: Np1f,
+      np2f: Np2f,
+      ndec: NdeclD,
+      ndoc: NdocD,
+    });
+  } catch (error) {
+    res.send(error);
+  }
+});
+
+UserRouter.get("/notfilled", async (req, res) => {
+  try {
+    const LoginCollege = await users.find({ CollegePassword: { $exists: false } });
+    const PersonalD = await users.find({
+      $or: [{ PersonalDetailFlag: false }, { PersonalDetailFlag: { $exists: false } }],
+    });
+
+    const BankD = await users.find({
+      $or: [{ BankDetailFlag: false }, { BankDetailFlag: { $exists: false } }],
+    });
+
+    const CourseD = await users.find({
+      CourseDetails: { $exists: false },
+    });
+    const p1f = await users.find({
+      $or: [{ Phase1Freeze: false }, { Phase1Freeze: { $exists: false } }],
+    });
+
+    const p2f = await users.find({
+      $or: [{ Phase2Freeze: false }, { Phase2Freeze: { $exists: false } }],
+    });
+
+    const declD = await users.find({
+      $or: [{ DeclarationFlag: false }, { DeclarationFlag: { $exists: false } }],
+    });
+    const docD = await users.find({
+      $or: [{ DocumentUploadFlag: false }, { DocumentUploadFlag: { $exists: false } }],
+    });
+
+    res.json({ pd: PersonalD, bd: BankD, cd: CourseD, p1f: p1f, p2f: p2f, dec: declD, doc: docD });
+  } catch (error) {
+    res.send(error);
+  }
+});
 UserRouter.get("/list/seats", async (req, res) => {
   try {
-    let array = {};
     let intake = 0;
     let govt = 0;
     let management = 0;
     let sws = 0;
-    let freezeflag = 0;
-    let unfreezeflag = 0;
+    let surrender = 0;
+    let Phase1Freeze = 0;
+    let Phase2Freeze = 0;
     let personalDetail = 0;
     let courseDetails = 0;
+    let bankDetails = 0;
     let declaration = 0;
     let documentUploadFlag = 0;
     const college = await users.find({});
     college.map((c) => {
-      if (c.FreezeFlag) {
-        freezeflag = freezeflag + 1;
-      } else {
-        unfreezeflag = unfreezeflag + 1;
+      if (c.Phase1Freeze) {
+        Phase1Freeze = Phase1Freeze + 1;
+      }
+      if (Phase2Freeze) {
+        Phase2Freeze = Phase2Freeze + 1;
       }
       if (c?.PersonalDetailFlag) {
         personalDetail = personalDetail + 1;
       }
-      if (c?.CourseDetails.length > 1) {
+      if (c?.CourseDetails.length >= 1) {
         courseDetails = courseDetails + 1;
       }
       if (c?.DeclarationFlag) {
         declaration = declaration + 1;
+      }
+      if (c?.BankDetailFlag) {
+        bankDetails = bankDetails + 1;
       }
       if (c?.DocumentUploadFlag) {
         documentUploadFlag = documentUploadFlag + 1;
@@ -505,6 +684,7 @@ UserRouter.get("/list/seats", async (req, res) => {
         c.CourseDetails.map((course) => {
           intake = intake + course.intake;
           govt = govt + course.Govt;
+          surrender = surrender + course.Surrender;
           management = management + course.Management;
           sws = sws + course.SWS;
         });
@@ -516,50 +696,88 @@ UserRouter.get("/list/seats", async (req, res) => {
       govt: govt,
       management: management,
       sws: sws,
-      freezeflag: freezeflag,
-      unfreezeflag: unfreezeflag,
+      surrender: surrender,
+      Phase1Freeze: Phase1Freeze,
+      Phase2Freeze: Phase2Freeze,
       perd: personalDetail,
       cour: courseDetails,
       dec: declaration,
       doc: documentUploadFlag,
+      bankd: bankDetails,
     });
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
-UserRouter.get("/list/freeze", async (req, res) => {
+UserRouter.get("/list/p1freeze", async (req, res) => {
   try {
-    const college = await users.find({ FreezeFlag: true });
+    const college = await users.find({ Phase1Freeze: true });
     res.json(college);
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
-UserRouter.get("/list/notfreeze", async (req, res) => {
+UserRouter.get("/list/p1notfreeze", async (req, res) => {
   try {
-    // const college = await users.find({ FreezeFlag: null || false });
-    const college = await users.find({ $or: [{ FreezeFlag: false }, { FreezeFlag: { $exists: false } }] });
+    const college = await users.find({ $or: [{ Phase1Freeze: false }, { Phase1Freeze: { $exists: false } }] });
     res.json(college);
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
-UserRouter.post("/unlock/:collegeCode", async (req, res) => {
+UserRouter.get("/unlockp1/:collegeCode", async (req, res) => {
   try {
     const collegeCode = req.params.collegeCode;
-    const college = await users.findOneAndUpdate({ ccode: collegeCode }, { FreezeFlag: false });
+    const college = await users.findOneAndUpdate({ ccode: collegeCode }, { Phase1Freeze: false });
+    res.json({ status: true });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+UserRouter.get("/lockp1/:collegeCode", async (req, res) => {
+  try {
+    const collegeCode = req.params.collegeCode;
+    const college = await users.findOneAndUpdate({ ccode: collegeCode }, { Phase1Freeze: true });
     res.json(college);
   } catch (err) {
     res.status(500).json(err);
   }
 });
-UserRouter.post("/lock/:collegeCode", async (req, res) => {
+
+UserRouter.get("/list/p2freeze", async (req, res) => {
+  try {
+    const college = await users.find({ Phase2Freeze: true });
+    res.json(college);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+UserRouter.get("/list/p2notfreeze", async (req, res) => {
+  try {
+    const college = await users.find({ $or: [{ Phase2Freeze: false }, { Phase2Freeze: { $exists: false } }] });
+    res.json(college);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+UserRouter.get("/unlockp2/:collegeCode", async (req, res) => {
   try {
     const collegeCode = req.params.collegeCode;
-    const college = await users.findOneAndUpdate({ ccode: collegeCode }, { FreezeFlag: true });
+    const college = await users.findOneAndUpdate({ ccode: collegeCode }, { Phase2Freeze: false });
+    res.json({ status: true });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+UserRouter.get("/lockp2/:collegeCode", async (req, res) => {
+  try {
+    const collegeCode = req.params.collegeCode;
+    const college = await users.findOneAndUpdate({ ccode: collegeCode }, { Phase2Freeze: true });
     res.json(college);
   } catch (err) {
     res.status(500).json(err);
