@@ -29,7 +29,7 @@ export const CourseList = [
     { label: "ENVIRONMENTAL ENGINEERING", value: "EN" },
     { label: "ELECTRONICS AND  TELECOMMUNICATION ENGINEERING", value: "ET" },
     { label: "Electronics Engineering (VLSI Desisn and Technolosy)", value: "EV" },
-    { label: "Electronics and Communication (Advanced Communicatiori Technology)", value: "EA" },
+    { label: "Electronics and Communication (Advanced Communication Technology)", value: "EA" },
     { label: "FOOD TECHNOLOGY ", value: "FD" },
     { label: "FASHION TECHNOLOGY", value: "FT" },
     { label: "GEO INFORMATICS", value: "GI" },
