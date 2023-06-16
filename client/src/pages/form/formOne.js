@@ -164,9 +164,9 @@ const FormOne = ({ alter, toggleIconTab, updateCollegeInfo, Data }) => {
     setKeyboard(e.currentTarget.checked);
   };
 
-  useEffect(() => {
-    toggle();
-  }, []);
+  // useEffect(() => {
+  //   toggle();
+  // }, []);
 
   if (!loading)
     return (
