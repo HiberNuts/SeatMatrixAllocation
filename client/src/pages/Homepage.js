@@ -31,7 +31,6 @@ import { Spinner } from "reactstrap";
 import Verify from "./form/Verify";
 import BankDetails from "./form/BankDetails";
 
-
 const Homepage = ({ ...props }) => {
   const [activeIconTab, setActiveIconTab] = useState("5");
   const toggleIconTab = (icontab) => {
@@ -111,7 +110,6 @@ const Homepage = ({ ...props }) => {
       <Head title="HomePage" />
       <Content>
         <Block>
-          
           <BlockHead>
             <BlockHeadContent>
               <BlockTitle tag="h5">Seat Matrix Form</BlockTitle>
@@ -119,9 +117,9 @@ const Homepage = ({ ...props }) => {
                 <a href="/Instructions">Click here to view instructions or click General Instructions in left panel</a>
               </p>
               <p style={{ color: "red" }}>
-                *Last Date to Freeze phase 1 is June 15, after June 15th every college will be automatically freezed
+                *Last Date to Freeze phase 1 is extended !!!
                 <br />
-                *Declaration and Document upload section are part of Phase2 and will be enabled few days from june 15th.
+                *Declaration and Document upload section are part of Phase2 and will be enabled in third week of june.
                 {/* *Declaration and Documents Upload section are part of Phase 2 and will be enabled after June 15th. */}
               </p>
               {/* <p>Please fill the form within the due date</p> */}

@@ -30,6 +30,7 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
   const [signedUrls, setSignedUrls] = useState({});
   const [freezeFlag, setfreezeFlag] = useState(false);
   const [MinorityFlag, setMinorityFlag] = useState(false);
+  const [loading, setloading] = useState(false);
 
   const [show, setShow] = useState(false);
 
@@ -41,9 +42,9 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
 
   const handleSubmit = async () => {
     try {
+      setloading(true);
       var formData = new FormData();
       if (typeof collegeData?.Documents === "undefined" || collegeData?.Documents["seatMatrix"] != true) {
-      
         if (typeof seatMatrix == "undefined" || seatMatrix == "") {
           toast.warning("Seat matrix form is compulsory");
           return;
@@ -89,29 +90,50 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
         });
-       
+
         if (res.data.status) {
           toast.success("Files added successfully");
+          setloading(false);
           setSeatMatrix();
-          inputseatMatrix.current.value = "";
+          if (inputseatMatrix.current.value) {
+            inputseatMatrix.current.value = "";
+          }
+
           setAICTEApproval();
-          inputAICTEApproval.current.value = "";
+          if (inputAICTEApproval.current.value) {
+            inputAICTEApproval.current.value = "";
+          }
+
           setAUAffiliation();
-          inputAUAffiliation.current.value = "";
+          if (inputAUAffiliation.current.value) {
+            inputAUAffiliation.current.value = "";
+          }
+
           setAccredation();
-          inputAccredation.current.value = "";
+          if (inputAccredation.current.value) {
+            inputAccredation.current.value = "";
+          }
+
           setAutonomous();
-          inputAutonomous.current.value = "";
+          if (inputAutonomous.current.value) {
+            inputAutonomous.current.value = "";
+          }
           setMinority();
-          inputMinority.current.value = "";
+          if (inputMinority?.current?.value) {
+            inputMinority.current.value = "";
+          }
           getCollegeData();
           getDocUrls();
         }
       } else {
+        setloading(false);
+
         toast.warning("Select atleast one field");
         return;
       }
     } catch (error) {
+      setloading(false);
+      toast.error("Something went wrong! please try again");
       console.log(error);
     }
   };
@@ -215,110 +237,116 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
   const handleShow = () => {
     setShow(true);
   };
-
-  return (
-    <Block size="lg" className="container-fluid align-items-center justify-content-center">
-      <Modal isOpen={show} onHide={handleClose} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
-        <ModalBody>
-          <h4>Warning</h4>
-          <p>
-            Are you sure you want to submit the form?
-            <br />
-            This action is irreversible
-          </p>
-        </ModalBody>
-        <ModalFooter style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
-          <Button outline color="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button color="success" onClick={handleFreezeSubmit}>
-            Submit
-          </Button>
-        </ModalFooter>
-      </Modal>
-      <div className="table-responsive">
-        <table className="table">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Details</th>
-              <th scope="col">PDF Download</th>
-              <th scope="col">Upload/Update</th>
-              <th scope="col">Delete</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>
-                Seat Matrix Declaration <span style={{ color: "red" }}>*</span>
-              </td>
-              <td>
-                {collegeData?.Documents?.seatMatrix == true ? (
-                  <GenerateButtons type={"seatMatrix"} />
-                ) : (
-                  <div>
-                    No document available
-                    <br /> Upload first
-                  </div>
-                )}
-              </td>
-
-              <td>
-                <div className="form-control-wrap">
-                  {freezeFlag ? (
-                    <span></span>
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center">
+        <Spinner style={{ width: "5rem", height: "5rem" }} color="primary" />
+      </div>
+    );
+  } else
+    return (
+      <Block size="lg" className="container-fluid align-items-center justify-content-center">
+        <Modal isOpen={show} onHide={handleClose} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
+          <ModalBody>
+            <h4>Warning</h4>
+            <p>
+              Are you sure you want to submit the form?
+              <br />
+              This action is irreversible
+            </p>
+          </ModalBody>
+          <ModalFooter style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+            <Button outline color="secondary" onClick={handleClose}>
+              Close
+            </Button>
+            <Button color="success" onClick={handleFreezeSubmit}>
+              Submit
+            </Button>
+          </ModalFooter>
+        </Modal>
+        <div className="table-responsive">
+          <table className="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Details</th>
+                <th scope="col">PDF Download</th>
+                <th scope="col">Upload/Update</th>
+                <th scope="col">Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>
+                  Seat Matrix Declaration <span style={{ color: "red" }}>*</span>
+                </td>
+                <td>
+                  {collegeData?.Documents?.seatMatrix == true ? (
+                    <GenerateButtons type={"seatMatrix"} />
                   ) : (
-                    <div className="form-file">
-                      {collegeData?.Documents?.seatMatrix == true ? (
-                        <button
-                          style={{ marginRight: "5px" }}
-                          class="btn btn-sm btn-outline-dark"
-                          onClick={() => inputseatMatrix.current.click()}
-                        >
-                          Update
-                        </button>
-                      ) : (
-                        <button
-                          style={{ marginRight: "5px" }}
-                          class="btn btn-sm btn-outline-dark"
-                          onClick={() => inputseatMatrix.current.click()}
-                        >
-                          Add
-                        </button>
-                      )}
-
-                      {seatMatrix && (
-                        <button
-                          class="btn btn-sm btn-outline-dark"
-                          onClick={() => {
-                            inputseatMatrix.current.value = "";
-                            setSeatMatrix();
-                          }}
-                        >
-                          Remove
-                        </button>
-                      )}
-                      <input
-                        type="file"
-                        accept=".pdf"
-                        onChange={(e) => {
-                          if (e.target.files[0].size > 1048576) {
-                            inputseatMatrix.current.value = "";
-                            setSeatMatrix();
-                            toast.warning("File size must not exceed 1MB", { autoClose: 3000 });
-                            return;
-                          }
-                          setSeatMatrix(e.target.files[0]);
-                        }}
-                        ref={inputseatMatrix}
-                      />
+                    <div>
+                      No document available
+                      <br /> Upload first
                     </div>
                   )}
-                </div>
-              </td>
-              <td>
-                {/* {freezeFlag ? (
+                </td>
+
+                <td>
+                  <div className="form-control-wrap">
+                    {freezeFlag ? (
+                      <span></span>
+                    ) : (
+                      <div className="form-file">
+                        {collegeData?.Documents?.seatMatrix == true ? (
+                          <button
+                            style={{ marginRight: "5px" }}
+                            class="btn btn-sm btn-outline-dark"
+                            onClick={() => inputseatMatrix.current.click()}
+                          >
+                            Update
+                          </button>
+                        ) : (
+                          <button
+                            style={{ marginRight: "5px" }}
+                            class="btn btn-sm btn-outline-dark"
+                            onClick={() => inputseatMatrix.current.click()}
+                          >
+                            Add
+                          </button>
+                        )}
+
+                        {seatMatrix && (
+                          <button
+                            class="btn btn-sm btn-outline-dark"
+                            onClick={() => {
+                              inputseatMatrix.current.value = "";
+                              setSeatMatrix();
+                            }}
+                          >
+                            Remove
+                          </button>
+                        )}
+                        <input
+                          type="file"
+                          accept=".pdf"
+                          onChange={(e) => {
+                            if (e.target.files[0].size > 1048576) {
+                              inputseatMatrix.current.value = "";
+                              setSeatMatrix();
+                              toast.warning("File size must not exceed 1MB", { autoClose: 3000 });
+                              return;
+                            }
+                            setSeatMatrix(e.target.files[0]);
+                          }}
+                          ref={inputseatMatrix}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </td>
+                <td>
+                  {/* {freezeFlag ? (
                   <span></span>
                 ) : (
                   collegeData?.Documents?.seatMatrix == true && (
@@ -327,331 +355,256 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
                     </button>
                   )
                 )} */}
-              </td>
-            </tr>
+                </td>
+              </tr>
 
-            <tr>
-              <th scope="row">2</th>
-              <td>AICTE Approval</td>
-              <td>
-                {collegeData?.Documents?.AICTEApproval == true ? (
-                  <GenerateButtons type={"AICTEApproval"} />
-                ) : (
-                  <div>
-                    No document available
-                    <br /> Upload first
-                  </div>
-                )}
-              </td>
-
-              <td>
-                <div className="form-control-wrap">
-                  {freezeFlag ? (
-                    <span></span>
-                  ) : (
-                    <div className="form-file">
-                      {collegeData?.Documents?.AICTEApproval == true ? (
-                        <button
-                          style={{ marginRight: "5px" }}
-                          class="btn btn-sm btn-outline-dark"
-                          onClick={() => inputAICTEApproval.current.click()}
-                        >
-                          Update
-                        </button>
-                      ) : (
-                        <button
-                          style={{ marginRight: "5px" }}
-                          class="btn btn-sm btn-outline-dark"
-                          onClick={() => inputAICTEApproval.current.click()}
-                        >
-                          Add
-                        </button>
-                      )}
-
-                      {AICTEApproval && (
-                        <button
-                          class="btn btn-sm btn-outline-dark"
-                          onClick={() => {
-                            inputAICTEApproval.current.value = "";
-                            setAICTEApproval();
-                          }}
-                        >
-                          Remove
-                        </button>
-                      )}
-                      <input
-                        type="file"
-                        accept=".pdf"
-                        onChange={(e) => {
-                          if (e.target.files[0].size > 1048576) {
-                            inputAICTEApproval.current.value = "";
-                            setAICTEApproval();
-                            toast.warning("File size must not exceed 1MB");
-                            return;
-                          }
-                          setAICTEApproval(e.target.files[0]);
-                        }}
-                        ref={inputAICTEApproval}
-                      />
-                    </div>
-                  )}
-                </div>
-              </td>
-              <td>
-                {freezeFlag ? (
-                  <span></span>
-                ) : (
-                  collegeData?.Documents?.AICTEApproval == true && (
-                    <button onClick={() => handleDocDelete("AICTEApproval")} className="btn btn-sm btn-outline-danger">
-                      <i class="bi bi-x-lg"></i>
-                    </button>
-                  )
-                )}
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>Anna University Affiliation</td>
-              <td>
-                {collegeData?.Documents?.AUAffiliation == true ? (
-                  <GenerateButtons type={"AUAffiliation"} />
-                ) : (
-                  <div>
-                    No document available
-                    <br /> Upload first
-                  </div>
-                )}
-              </td>
-
-              <td>
-                <div className="form-control-wrap">
-                  {freezeFlag ? (
-                    <span></span>
-                  ) : (
-                    <div className="form-file">
-                      {collegeData?.Documents?.AUAffiliation == true ? (
-                        <button
-                          style={{ marginRight: "5px" }}
-                          class="btn btn-sm btn-outline-dark"
-                          onClick={() => inputAUAffiliation.current.click()}
-                        >
-                          Update
-                        </button>
-                      ) : (
-                        <button
-                          style={{ marginRight: "5px" }}
-                          class="btn btn-sm btn-outline-dark"
-                          onClick={() => inputAUAffiliation.current.click()}
-                        >
-                          Add
-                        </button>
-                      )}
-
-                      {AUAffiliation && (
-                        <button
-                          class="btn btn-sm btn-outline-dark"
-                          onClick={() => {
-                            inputAUAffiliation.current.value = "";
-                            setAUAffiliation();
-                          }}
-                        >
-                          Remove
-                        </button>
-                      )}
-                      <input
-                        type="file"
-                        accept=".pdf"
-                        onChange={(e) => {
-                          if (e.target.files[0].size > 1048576) {
-                            inputAUAffiliation.current.value = "";
-                            setAUAffiliation();
-                            toast.warning("File size must not exceed 1MB");
-                            return;
-                          }
-                          setAUAffiliation(e.target.files[0]);
-                        }}
-                        ref={inputAUAffiliation}
-                      />
-                    </div>
-                  )}
-                </div>
-              </td>
-              <td>
-                {freezeFlag ? (
-                  <span></span>
-                ) : (
-                  collegeData?.Documents?.AUAffiliation == true && (
-                    <button onClick={() => handleDocDelete("AUAffiliation")} className="btn btn-sm btn-outline-danger">
-                      <i class="bi bi-x-lg"></i>
-                    </button>
-                  )
-                )}
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">4</th>
-              <td>Accredation</td>
-              <td>
-                {collegeData?.Documents?.Accredation == true ? (
-                  <GenerateButtons type={"Accredation"} />
-                ) : (
-                  <div>
-                    No document available
-                    <br /> Upload first
-                  </div>
-                )}
-              </td>
-              <td>
-                <div className="form-control-wrap">
-                  {freezeFlag ? (
-                    <span></span>
-                  ) : (
-                    <div className="form-file">
-                      {collegeData?.Documents?.Accredation == true ? (
-                        <button
-                          style={{ marginRight: "5px" }}
-                          class="btn btn-sm btn-outline-dark"
-                          onClick={() => inputAccredation.current.click()}
-                        >
-                          Update
-                        </button>
-                      ) : (
-                        <button
-                          style={{ marginRight: "5px" }}
-                          class="btn btn-sm btn-outline-dark"
-                          onClick={() => inputAccredation.current.click()}
-                        >
-                          Add
-                        </button>
-                      )}
-
-                      {Accredation && (
-                        <button
-                          class="btn btn-sm btn-outline-dark"
-                          onClick={() => {
-                            inputAccredation.current.value = "";
-                            setAccredation();
-                          }}
-                        >
-                          Remove
-                        </button>
-                      )}
-                      <input
-                        type="file"
-                        accept=".pdf"
-                        onChange={(e) => {
-                          if (e.target.files[0].size > 1048576) {
-                            inputAccredation.current.value = "";
-                            setAccredation();
-                            toast.warning("File size must not exceed 1MB");
-                            return;
-                          }
-                          setAccredation(e.target.files[0]);
-                        }}
-                        ref={inputAccredation}
-                      />
-                    </div>
-                  )}
-                </div>
-              </td>
-              <td>
-                {freezeFlag ? (
-                  <span></span>
-                ) : (
-                  collegeData?.Documents?.Accredation == true && (
-                    <button onClick={() => handleDocDelete("Accredation")} className="btn btn-sm btn-outline-danger">
-                      <i class="bi bi-x-lg"></i>
-                    </button>
-                  )
-                )}
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">5</th>
-              <td>Autonomous Certification</td>
-              <td>
-                {collegeData?.Documents?.Autonomous == true ? (
-                  <GenerateButtons type={"Autonomous"} />
-                ) : (
-                  <div>
-                    No document available
-                    <br /> Upload first
-                  </div>
-                )}
-              </td>
-              <td>
-                <div className="form-control-wrap">
-                  {freezeFlag ? (
-                    <span></span>
-                  ) : (
-                    <div className="form-file">
-                      {collegeData?.Documents?.Autonomous == true ? (
-                        <button
-                          style={{ marginRight: "5px" }}
-                          class="btn btn-sm btn-outline-dark"
-                          onClick={() => inputAutonomous.current.click()}
-                        >
-                          Update
-                        </button>
-                      ) : (
-                        <button
-                          style={{ marginRight: "5px" }}
-                          class="btn btn-sm btn-outline-dark"
-                          onClick={() => inputAutonomous.current.click()}
-                        >
-                          Add
-                        </button>
-                      )}
-
-                      {Autonomous && (
-                        <button
-                          class="btn btn-sm btn-outline-dark"
-                          onClick={() => {
-                            inputAutonomous.current.value = "";
-                            setAutonomous();
-                          }}
-                        >
-                          Remove
-                        </button>
-                      )}
-                      <input
-                        type="file"
-                        accept=".pdf"
-                        onChange={(e) => {
-                          if (e.target.files[0].size > 1048576) {
-                            inputAutonomous.current.value = "";
-                            setAutonomous();
-                            toast.warning("File size must not exceed 1MB");
-                            return;
-                          }
-                          setAutonomous(e.target.files[0]);
-                        }}
-                        ref={inputAutonomous}
-                      />
-                    </div>
-                  )}
-                </div>
-              </td>
-              <td>
-                {freezeFlag ? (
-                  <span></span>
-                ) : (
-                  collegeData?.Documents?.Autonomous == true && (
-                    <button onClick={() => handleDocDelete("Autonomous")} className="btn btn-sm btn-outline-danger">
-                      <i class="bi bi-x-lg"></i>
-                    </button>
-                  )
-                )}
-              </td>
-            </tr>
-            {MinorityFlag && (
               <tr>
-                <th scope="row">6</th>
+                <th scope="row">2</th>
+                <td>AICTE Approval</td>
                 <td>
-                  Minority Certification <span style={{ color: "red" }}>*</span>
+                  {collegeData?.Documents?.AICTEApproval == true ? (
+                    <GenerateButtons type={"AICTEApproval"} />
+                  ) : (
+                    <div>
+                      No document available
+                      <br /> Upload first
+                    </div>
+                  )}
+                </td>
+
+                <td>
+                  <div className="form-control-wrap">
+                    {freezeFlag ? (
+                      <span></span>
+                    ) : (
+                      <div className="form-file">
+                        {collegeData?.Documents?.AICTEApproval == true ? (
+                          <button
+                            style={{ marginRight: "5px" }}
+                            class="btn btn-sm btn-outline-dark"
+                            onClick={() => inputAICTEApproval.current.click()}
+                          >
+                            Update
+                          </button>
+                        ) : (
+                          <button
+                            style={{ marginRight: "5px" }}
+                            class="btn btn-sm btn-outline-dark"
+                            onClick={() => inputAICTEApproval.current.click()}
+                          >
+                            Add
+                          </button>
+                        )}
+
+                        {AICTEApproval && (
+                          <button
+                            class="btn btn-sm btn-outline-dark"
+                            onClick={() => {
+                              inputAICTEApproval.current.value = "";
+                              setAICTEApproval();
+                            }}
+                          >
+                            Remove
+                          </button>
+                        )}
+                        <input
+                          type="file"
+                          accept=".pdf"
+                          onChange={(e) => {
+                            if (e.target.files[0].size > 1048576) {
+                              inputAICTEApproval.current.value = "";
+                              setAICTEApproval();
+                              toast.warning("File size must not exceed 1MB");
+                              return;
+                            }
+                            setAICTEApproval(e.target.files[0]);
+                          }}
+                          ref={inputAICTEApproval}
+                        />
+                      </div>
+                    )}
+                  </div>
                 </td>
                 <td>
-                  {collegeData?.Documents?.Minority == true ? (
+                  {freezeFlag ? (
+                    <span></span>
+                  ) : (
+                    collegeData?.Documents?.AICTEApproval == true && (
+                      <button
+                        onClick={() => handleDocDelete("AICTEApproval")}
+                        className="btn btn-sm btn-outline-danger"
+                      >
+                        <i class="bi bi-x-lg"></i>
+                      </button>
+                    )
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>Anna University Affiliation</td>
+                <td>
+                  {collegeData?.Documents?.AUAffiliation == true ? (
+                    <GenerateButtons type={"AUAffiliation"} />
+                  ) : (
+                    <div>
+                      No document available
+                      <br /> Upload first
+                    </div>
+                  )}
+                </td>
+
+                <td>
+                  <div className="form-control-wrap">
+                    {freezeFlag ? (
+                      <span></span>
+                    ) : (
+                      <div className="form-file">
+                        {collegeData?.Documents?.AUAffiliation == true ? (
+                          <button
+                            style={{ marginRight: "5px" }}
+                            class="btn btn-sm btn-outline-dark"
+                            onClick={() => inputAUAffiliation.current.click()}
+                          >
+                            Update
+                          </button>
+                        ) : (
+                          <button
+                            style={{ marginRight: "5px" }}
+                            class="btn btn-sm btn-outline-dark"
+                            onClick={() => inputAUAffiliation.current.click()}
+                          >
+                            Add
+                          </button>
+                        )}
+
+                        {AUAffiliation && (
+                          <button
+                            class="btn btn-sm btn-outline-dark"
+                            onClick={() => {
+                              inputAUAffiliation.current.value = "";
+                              setAUAffiliation();
+                            }}
+                          >
+                            Remove
+                          </button>
+                        )}
+                        <input
+                          type="file"
+                          accept=".pdf"
+                          onChange={(e) => {
+                            if (e.target.files[0].size > 1048576) {
+                              inputAUAffiliation.current.value = "";
+                              setAUAffiliation();
+                              toast.warning("File size must not exceed 1MB");
+                              return;
+                            }
+                            setAUAffiliation(e.target.files[0]);
+                          }}
+                          ref={inputAUAffiliation}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </td>
+                <td>
+                  {freezeFlag ? (
+                    <span></span>
+                  ) : (
+                    collegeData?.Documents?.AUAffiliation == true && (
+                      <button
+                        onClick={() => handleDocDelete("AUAffiliation")}
+                        className="btn btn-sm btn-outline-danger"
+                      >
+                        <i class="bi bi-x-lg"></i>
+                      </button>
+                    )
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">4</th>
+                <td>Accredation</td>
+                <td>
+                  {collegeData?.Documents?.Accredation == true ? (
+                    <GenerateButtons type={"Accredation"} />
+                  ) : (
+                    <div>
+                      No document available
+                      <br /> Upload first
+                    </div>
+                  )}
+                </td>
+                <td>
+                  <div className="form-control-wrap">
+                    {freezeFlag ? (
+                      <span></span>
+                    ) : (
+                      <div className="form-file">
+                        {collegeData?.Documents?.Accredation == true ? (
+                          <button
+                            style={{ marginRight: "5px" }}
+                            class="btn btn-sm btn-outline-dark"
+                            onClick={() => inputAccredation.current.click()}
+                          >
+                            Update
+                          </button>
+                        ) : (
+                          <button
+                            style={{ marginRight: "5px" }}
+                            class="btn btn-sm btn-outline-dark"
+                            onClick={() => inputAccredation.current.click()}
+                          >
+                            Add
+                          </button>
+                        )}
+
+                        {Accredation && (
+                          <button
+                            class="btn btn-sm btn-outline-dark"
+                            onClick={() => {
+                              inputAccredation.current.value = "";
+                              setAccredation();
+                            }}
+                          >
+                            Remove
+                          </button>
+                        )}
+                        <input
+                          type="file"
+                          accept=".pdf"
+                          onChange={(e) => {
+                            if (e.target.files[0].size > 1048576) {
+                              inputAccredation.current.value = "";
+                              setAccredation();
+                              toast.warning("File size must not exceed 1MB");
+                              return;
+                            }
+                            setAccredation(e.target.files[0]);
+                          }}
+                          ref={inputAccredation}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </td>
+                <td>
+                  {freezeFlag ? (
+                    <span></span>
+                  ) : (
+                    collegeData?.Documents?.Accredation == true && (
+                      <button onClick={() => handleDocDelete("Accredation")} className="btn btn-sm btn-outline-danger">
+                        <i class="bi bi-x-lg"></i>
+                      </button>
+                    )
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">5</th>
+                <td>Autonomous Certification</td>
+                <td>
+                  {collegeData?.Documents?.Autonomous == true ? (
                     <GenerateButtons type={"Autonomous"} />
                   ) : (
                     <div>
@@ -666,11 +619,11 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
                       <span></span>
                     ) : (
                       <div className="form-file">
-                        {collegeData?.Documents?.Minority == true ? (
+                        {collegeData?.Documents?.Autonomous == true ? (
                           <button
                             style={{ marginRight: "5px" }}
                             class="btn btn-sm btn-outline-dark"
-                            onClick={() => inputMinority.current.click()}
+                            onClick={() => inputAutonomous.current.click()}
                           >
                             Update
                           </button>
@@ -678,18 +631,18 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
                           <button
                             style={{ marginRight: "5px" }}
                             class="btn btn-sm btn-outline-dark"
-                            onClick={() => inputMinority.current.click()}
+                            onClick={() => inputAutonomous.current.click()}
                           >
                             Add
                           </button>
                         )}
 
-                        {Minority && (
+                        {Autonomous && (
                           <button
                             class="btn btn-sm btn-outline-dark"
                             onClick={() => {
-                              inputMinority.current.value = "";
-                              setMinority();
+                              inputAutonomous.current.value = "";
+                              setAutonomous();
                             }}
                           >
                             Remove
@@ -700,21 +653,102 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
                           accept=".pdf"
                           onChange={(e) => {
                             if (e.target.files[0].size > 1048576) {
-                              inputMinority.current.value = "";
-                              setMinority();
+                              inputAutonomous.current.value = "";
+                              setAutonomous();
                               toast.warning("File size must not exceed 1MB");
                               return;
                             }
-                            setMinority(e.target.files[0]);
+                            setAutonomous(e.target.files[0]);
                           }}
-                          ref={inputMinority}
+                          ref={inputAutonomous}
                         />
                       </div>
                     )}
                   </div>
                 </td>
                 <td>
-                  {/* {freezeFlag ? (
+                  {freezeFlag ? (
+                    <span></span>
+                  ) : (
+                    collegeData?.Documents?.Autonomous == true && (
+                      <button onClick={() => handleDocDelete("Autonomous")} className="btn btn-sm btn-outline-danger">
+                        <i class="bi bi-x-lg"></i>
+                      </button>
+                    )
+                  )}
+                </td>
+              </tr>
+              {MinorityFlag && (
+                <tr>
+                  <th scope="row">6</th>
+                  <td>
+                    Minority Certification <span style={{ color: "red" }}>*</span>
+                  </td>
+                  <td>
+                    {collegeData?.Documents?.Minority == true ? (
+                      <GenerateButtons type={"Minority"} />
+                    ) : (
+                      <div>
+                        No document available
+                        <br /> Upload first
+                      </div>
+                    )}
+                  </td>
+                  <td>
+                    <div className="form-control-wrap">
+                      {freezeFlag ? (
+                        <span></span>
+                      ) : (
+                        <div className="form-file">
+                          {collegeData?.Documents?.Minority == true ? (
+                            <button
+                              style={{ marginRight: "5px" }}
+                              class="btn btn-sm btn-outline-dark"
+                              onClick={() => inputMinority.current.click()}
+                            >
+                              Update
+                            </button>
+                          ) : (
+                            <button
+                              style={{ marginRight: "5px" }}
+                              class="btn btn-sm btn-outline-dark"
+                              onClick={() => inputMinority.current.click()}
+                            >
+                              Add
+                            </button>
+                          )}
+
+                          {Minority && (
+                            <button
+                              class="btn btn-sm btn-outline-dark"
+                              onClick={() => {
+                                inputMinority.current.value = "";
+                                setMinority();
+                              }}
+                            >
+                              Remove
+                            </button>
+                          )}
+                          <input
+                            type="file"
+                            accept=".pdf"
+                            onChange={(e) => {
+                              if (e.target.files[0].size > 1048576) {
+                                inputMinority.current.value = "";
+                                setMinority();
+                                toast.warning("File size must not exceed 1MB");
+                                return;
+                              }
+                              setMinority(e.target.files[0]);
+                            }}
+                            ref={inputMinority}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                  <td>
+                    {/* {freezeFlag ? (
                     <span></span>
                   ) : (
                     collegeData?.Documents?.Minority == true && (
@@ -723,51 +757,51 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
                       </button>
                     )
                   )} */}
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-      <Button
-        type="submit"
-        onClick={() => {
-          toggleIconTab("7");
-        }}
-        className="text-center m-4"
-        color="danger"
-      >
-        &lt; Back
-      </Button>
-
-      {freezeFlag == false && (
-        <Button onClick={handleSubmit} color="primary">
-          Submit Changes
-        </Button>
-      )}
-      <div
-        style={{
-          marginTop: "50px",
-          width: "100%",
-          alignItems: "center",
-          textAlign: "center",
-          justifyContent: "center",
-        }}
-      >
-        <button
-          onClick={handleShow}
-          disabled={freezeFlag}
-          style={{ width: "300px", height: "50px", justifyContent: "center" }}
-          className="btn btn-danger"
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+        <Button
+          type="submit"
+          onClick={() => {
+            toggleIconTab("7");
+          }}
+          className="text-center m-4"
+          color="danger"
         >
-          Freeze
-        </button>
-      </div>
-      <div>
-        <span style={{ color: "red" }}>*Important: </span>Click freeze button once you are done with all the changes,
-        this action is irreversible.
-      </div>
-    </Block>
-  );
+          &lt; Back
+        </Button>
+
+        {freezeFlag == false && (
+          <Button onClick={handleSubmit} color="primary">
+            Submit Changes
+          </Button>
+        )}
+        <div
+          style={{
+            marginTop: "50px",
+            width: "100%",
+            alignItems: "center",
+            textAlign: "center",
+            justifyContent: "center",
+          }}
+        >
+          <button
+            onClick={handleShow}
+            disabled={freezeFlag}
+            style={{ width: "300px", height: "50px", justifyContent: "center" }}
+            className="btn btn-danger"
+          >
+            Freeze
+          </button>
+        </div>
+        <div>
+          <span style={{ color: "red" }}>*Important: </span>Click freeze button once you are done with all the changes,
+          this action is irreversible.
+        </div>
+      </Block>
+    );
 };
 export default FormFour;

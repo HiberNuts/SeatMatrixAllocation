@@ -412,6 +412,10 @@ UserRouter.post("/forgotpass", async (req, res) => {
   }
 });
 
+//*AUTO FREEZING LOGIC CODE
+
+
+
 // *Route for admin panel dashboard - jermey*
 
 UserRouter.get("/list/college/:collegeCode", async (req, res) => {
