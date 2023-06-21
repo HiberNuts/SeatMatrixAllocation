@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import LogoDark2x from "../images/logo-dark2x.png";
-import {backendURL} from "../backendurl";
+import { backendURL } from "../backendurl";
 const PdfDisplay = () => {
-const css=`<style>
+  const css = `<style>
   *,
 ::before,
 ::after {
@@ -8972,15 +8972,14 @@ input:checked + .custom-switch:before {
   }
 }
 </style>`;
-  const [data,setData]=useState([]);
-  const genCourse=(Data)=>{
-    var x="";
+  const [data, setData] = useState([]);
+  const genCourse = (Data) => {
+    var x = "";
     console.log(Data);
     if (Data.CourseDetails) {
-      let i=1;
-      Data.CourseDetails.forEach(element => {
-    
-        x+= `<tr style="border:2px solid black">
+      let i = 1;
+      Data.CourseDetails.forEach((element) => {
+        x += `<tr style="border:2px solid black">
                              
         <th scope="row" class="px-6 my-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
           ${i}
@@ -9011,19 +9010,20 @@ input:checked + .custom-switch:before {
         </td>
     
     </tr>
-  `      
-  i++;
+  `;
+        i++;
       });
     }
-   
-    return x;  
-        
-  }
-  const Value=(Data) => {
 
-  return  `<!DOCTYPE html>
+    return x;
+  };
+  const Value = (Data) => {
+    return (
+      `<!DOCTYPE html>
   <html lang="en" dir="ltr">
-  `+css+`
+  ` +
+      css +
+      `
   <head>
       <meta charset="utf-8" />
       <title>TNEA</title>
@@ -9128,7 +9128,7 @@ input:checked + .custom-switch:before {
                                 Course Code
                             </th>
                             <th scope="col" class="p-5">
-                                Accredation
+                            Accreditation
                             </th>
                             <th scope="col" class="p-5">
                               Intake
@@ -9149,10 +9149,9 @@ input:checked + .custom-switch:before {
 
                     </thead>
                     <tbody>
-                    `+
-                   genCourse(Data)
-                    +
-                      `
+                    ` +
+      genCourse(Data) +
+      `
                     </tbody>
                 </table>
             </div>                            
@@ -9205,11 +9204,11 @@ function printCurrentPage() {
 window.onload=printCurrentPage;
 </script>
 </html>
-  `;
-  }
-    
+  `
+    );
+  };
 
-  const getCollegeInfo =() => {
+  const getCollegeInfo = () => {
     fetch(`${backendURL}/collegeData`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -9234,12 +9233,12 @@ window.onload=printCurrentPage;
     getCollegeInfo();
   }, []);
   useEffect(() => {
-  if (data.ccode) {
-    document.open();
-    document.write(Value(data));
-    document.close();
-  }
- },[data])
+    if (data.ccode) {
+      document.open();
+      document.write(Value(data));
+      document.close();
+    }
+  }, [data]);
 
   return null;
 };
