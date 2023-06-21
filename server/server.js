@@ -10,7 +10,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 app.use(require("./routes/api/UsersRouter"));
-app.use(require("./routes/api/AutoFreezeRoute"));
+// app.use(require("./routes/api/AutoFreezeRoute"));
 
 // Connect Database
 connectDB();

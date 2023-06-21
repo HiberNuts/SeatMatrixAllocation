@@ -76,11 +76,12 @@ const FormThree = ({ alter, toggleIconTab, Data, updateCollegeInfo }) => {
           if (freezeFlag) {
             return;
           } else {
-            updateDeclarationFlag(e.target.checked);
+            updateDeclarationFlag(true);
+            updateCollegeInfo();
           }
         }}
         type="checkbox"
-        checked={freezeFlag || declarationFlag}
+        checked={declarationFlag || freezeFlag}
         id="flexCheckChecked"
       ></input>
       <p>
@@ -92,9 +93,14 @@ const FormThree = ({ alter, toggleIconTab, Data, updateCollegeInfo }) => {
       </p>
 
       {(freezeFlag == true || declarationFlag == true) && (
-        <button onClick={()=>{
-          window.open('/pdf', '_blank');
-        }} className="btn btn-primary">Download the declaration form here!</button>
+        <button
+          onClick={() => {
+            window.open("/pdf", "_blank");
+          }}
+          className="btn btn-primary"
+        >
+          Download the declaration form here!
+        </button>
       )}
 
       <div>

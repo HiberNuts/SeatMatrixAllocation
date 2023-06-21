@@ -117,9 +117,9 @@ const Homepage = ({ ...props }) => {
                 <a href="/Instructions">Click here to view instructions or click General Instructions in left panel</a>
               </p>
               <p style={{ color: "red" }}>
-                *Last Date to Freeze phase 1 is extended !!!
+                *Declaration and Document upload section is now enabled
                 <br />
-                *Declaration and Document upload section are part of Phase2 and will be enabled in third week of june.
+                *Please complete the document upload section and freeze phase 2 before 11:00pm June 23rd.
                 {/* *Declaration and Documents Upload section are part of Phase 2 and will be enabled after June 15th. */}
               </p>
               {/* <p>Please fill the form within the due date</p> */}
@@ -205,25 +205,22 @@ const Homepage = ({ ...props }) => {
               </NavItem>
 
               <NavItem>
-                <NavLink
-                  tag="a"
+                  <NavLink
+                    tag="a"
                   href="#tab"
                   style={{
-                    // color: personalFlag == true && courseFlag == true && declarationFlag ? "#526484" : "lightgray",
-                    // cursor: personalFlag && courseFlag == true && declarationFlag ? "pointer" : "not-allowed",
-                    color: "lightgray",
-                    cursor: "not-allowed",
+                    color: personalFlag == true && courseFlag == true ? "#526484" : "lightgray",
+                    cursor: personalFlag && courseFlag == true ? "pointer" : "not-allowed",
                   }}
                   className={classnames({ active: activeIconTab === "7" })}
-                  // onClick={(ev) => {
-                  //   if (personalFlag && courseFlag) {
-                  //     ev.preventDefault();
-                  //     // getCollegeInfo();
-                  //   } else {
-                  //     toggleIconTab("7");
-                  //     return;
-                  //   }
-                  // }}
+                  onClick={(ev) => {
+                    if (personalFlag && courseFlag) {
+                      ev.preventDefault();
+                      toggleIconTab("7");
+                    } else {
+                      return;
+                    }
+                  }}
                 >
                   <Icon name="check-fill-c" /> <span>Declaration</span>
                 </NavLink>
@@ -234,20 +231,18 @@ const Homepage = ({ ...props }) => {
                   tag="a"
                   href="#tab"
                   style={{
-                    // color: personalFlag == true && courseFlag == true && declarationFlag ? "#526484" : "lightgray",
-                    // cursor: personalFlag && courseFlag == true && declarationFlag ? "pointer" : "not-allowed",
-                    color: "lightgray",
-                    cursor: "not-allowed",
+                    color: personalFlag == true && courseFlag == true && declarationFlag ? "#526484" : "lightgray",
+                    cursor: personalFlag && courseFlag == true && declarationFlag ? "pointer" : "not-allowed",
                   }}
                   className={classnames({ active: activeIconTab === "8" })}
-                  // onClick={(ev) => {
-                  //   if (personalFlag && courseFlag && declarationFlag) {
-                  //     ev.preventDefault();
-                  //   } else {
-                  //     toggleIconTab("8");
-                  //     return;
-                  //   }
-                  // }}
+                  onClick={(ev) => {
+                    if (personalFlag && courseFlag && declarationFlag) {
+                      ev.preventDefault();
+                      toggleIconTab("8");
+                    } else {
+                      return;
+                    }
+                  }}
                 >
                   <Icon name="upload" /> <span>Document Upload</span>
                 </NavLink>
