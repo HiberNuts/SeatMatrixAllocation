@@ -191,6 +191,10 @@ const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, 
           <h5 style={{ color: "red" }}> Total Percentage: {pending()[2]}%</h5>
           <h5 style={{ color: "red" }}> Quota Percentage: {GOVTSeats[Category] * 100}%</h5>
           <h5 style={{ color: "red" }}> Extra Seats Added: {pending()[3]}</h5>
+          <h6 style={{ color: "red" }}>
+            We have made some changes in the seats to meet the overall seat requirement, so some college may have got
+            extra seats than specified. please do not confuse and go ahead with declaration page.
+          </h6>
         </>
       ) : null}
       <Form className={formClass} onSubmit={(e) => e.preventDefault()}>
