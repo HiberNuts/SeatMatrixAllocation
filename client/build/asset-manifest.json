@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.5be5f17d.css",
-    "main.js": "/static/js/main.69c0cd68.js",
+    "main.js": "/static/js/main.96e7da99.js",
     "static/js/27.5a8fbbde.chunk.js": "/static/js/27.5a8fbbde.chunk.js",
     "static/media/Nioicon.svg": "/static/media/Nioicon.3a683679c4d0ec1b9f41.svg",
     "static/media/logo-dark.png": "/static/media/logo-dark.219644cd39d70a9d4826.png",
@@ -31,6 +31,6 @@
   },
   "entrypoints": [
     "static/css/main.5be5f17d.css",
-    "static/js/main.69c0cd68.js"
+    "static/js/main.96e7da99.js"
   ]
 }
