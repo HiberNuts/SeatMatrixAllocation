@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Button, Modal, ModalBody, ModalFooter } from "reactstrap";
+import { Button, Modal, ModalBody, ModalFooter, Spinner } from "reactstrap";
 import { Block } from "../../components/block/Block";
 import axios from "axios";
 import FormData from "form-data";
@@ -265,6 +265,12 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
           </ModalFooter>
         </Modal>
         <div className="table-responsive">
+          <h6 style={{ color: "darkblue" }}>Refresh the page after uploading the docuemnt to see active changes</h6>
+          <p>
+            Click on add and select the document you want to upload from your device and then click{" "}
+            <b>Submit changes</b> button in the bottom to successfully upload the files. Please ensure the docuemnt size
+            to be less than 1MB.
+          </p>
           <table className="table">
             <thead>
               <tr>
@@ -779,24 +785,27 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
             Submit Changes
           </Button>
         )}
-        <div
-          style={{
-            marginTop: "50px",
-            width: "100%",
-            alignItems: "center",
-            textAlign: "center",
-            justifyContent: "center",
-          }}
-        >
-          <button
-            onClick={handleShow}
-            disabled={freezeFlag}
-            style={{ width: "300px", height: "50px", justifyContent: "center" }}
-            className="btn btn-danger"
+        {collegeData?.DocumentUploadFlag && (
+          <div
+            style={{
+              marginTop: "50px",
+              width: "100%",
+              alignItems: "center",
+              textAlign: "center",
+              justifyContent: "center",
+            }}
           >
-            Freeze
-          </button>
-        </div>
+            <button
+              onClick={handleShow}
+              disabled={freezeFlag}
+              style={{ width: "300px", height: "50px", justifyContent: "center" }}
+              className="btn btn-danger"
+            >
+              {freezeFlag ? "Frozen Phase 2" : "Freeze Phase 2"}
+            </button>
+          </div>
+        )}
+
         <div>
           <span style={{ color: "red" }}>*Important: </span>Click freeze button once you are done with all the changes,
           this action is irreversible.

@@ -14,7 +14,7 @@ import {
 import { Modal, ModalHeader, ModalBody, Form, Spinner, Alert, ModalFooter } from "reactstrap";
 import Logo from "../../images/logo.png";
 import LogoDark from "../../images/logo-dark.png";
-
+import { DontLogin } from "../../utils/CollegeNotLogin";
 import PageContainer from "../../layout/page-container/PageContainer";
 import Head from "../../layout/head/Head";
 import AuthFooter from "./AuthFooter";
@@ -36,42 +36,47 @@ const Login = () => {
 
   const onFormSubmit = (formData) => {
     setcollegeCode(formData.name);
-    setLoading(true);
-    fetch(`${backendURL}/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ ccode: formData.name, CollegePassword: formData.passcode }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
+    if (DontLogin.includes(formData.name)) {
+      setError("Your college is not allowed to login");
+      return;
+    } else {
+      setLoading(true);
+      fetch(`${backendURL}/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ccode: formData.name, CollegePassword: formData.passcode }),
       })
-      .then((data) => {
-        // Do something with the response data
-        localStorage.setItem("accessToken", data.token);
-        setError("");
-        setLoading(false);
-        if (data.resetReq) {
-          setModalForm(true);
-        } else {
-          window.history.pushState(
-            `${process.env.PUBLIC_URL ? process.env.PUBLIC_URL : "/"}`,
-            "auth-login",
-            `${process.env.PUBLIC_URL ? process.env.PUBLIC_URL : "/"}`
-          );
-          window.location.reload();
-        }
-      })
-      .catch((error) => {
-        setTimeout(() => {
-          setError("Invalid Credentials, Try Again");
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          // Do something with the response data
+          localStorage.setItem("accessToken", data.token);
+          setError("");
           setLoading(false);
-        }, 2000);
-      });
+          if (data.resetReq) {
+            setModalForm(true);
+          } else {
+            window.history.pushState(
+              `${process.env.PUBLIC_URL ? process.env.PUBLIC_URL : "/"}`,
+              "auth-login",
+              `${process.env.PUBLIC_URL ? process.env.PUBLIC_URL : "/"}`
+            );
+            window.location.reload();
+          }
+        })
+        .catch((error) => {
+          setTimeout(() => {
+            setError("Invalid Credentials, Try Again");
+            setLoading(false);
+          }, 2000);
+        });
+    }
   };
 
   const { errors, register, handleSubmit } = useForm();
@@ -105,7 +110,8 @@ const Login = () => {
               <div className="mb-3">
                 <Alert color="danger" className="alert-icon">
                   {" "}
-                  <Icon name="alert-circle" /> Invalid Credentials, Try Again{" "}
+                  {/* <Icon name="alert-circle" /> Invalid Credentials, Try Again{" "} */}
+                  <Icon name="alert-circle" /> {errorVal}
                 </Alert>
               </div>
             )}

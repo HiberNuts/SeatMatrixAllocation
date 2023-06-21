@@ -308,7 +308,7 @@ const Verify = ({ alter, activeIconTab, toggleIconTab, Data, updateCollegeInfo, 
             style={{ width: "300px", height: "50px", justifyContent: "center" }}
             className="btn btn-danger"
           >
-            {freezeFlag ? "Frozen" : "Freeze"}
+            {freezeFlag ? "Frozen Phase 1" : "Freeze Phase 1"}
           </button>
         </div>
         <div hidden={freezeFlag} className="text-center">

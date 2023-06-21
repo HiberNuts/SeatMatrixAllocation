@@ -164,9 +164,9 @@ const FormOne = ({ alter, toggleIconTab, updateCollegeInfo, Data }) => {
     setKeyboard(e.currentTarget.checked);
   };
 
-  // useEffect(() => {
-  //   toggle();
-  // }, []);
+  useEffect(() => {
+    toggle();
+  }, []);
 
   if (!loading)
     return (
@@ -183,9 +183,15 @@ const FormOne = ({ alter, toggleIconTab, updateCollegeInfo, Data }) => {
             Instructions!
           </ModalHeader>
           <ModalBody>
-            Please ensure that you provide all the required data before June 15th 11:00pm IST. After this time limit,
-            every college will be auto-frozen and no further changes will be acknowledged. The required data includes
-            personal details, bank details, course details and verification pages.
+            Phase 2 has been enabled and so the declaration tab is opened.
+            <br />
+            Please download the declaration pdf from the Declaration tab and get signature of respective authorities of
+            your college.
+            <br />
+            Then upload all the applicable document in the Documents tab and freeze phase 2 after validating all the
+            changes from your end.
+            <br />
+            <b>Last Date the Freeze Phase 2 is 11:00pm June 23rd.</b>
           </ModalBody>
           <ModalFooter>
             <Button color="secondary" onClick={toggle}>
