@@ -164,12 +164,15 @@ const FormFour = ({ toggleIconTab, updateCollegeInfo, Data, alter }) => {
     getCollegeData();
   }, [Data]);
 
+
+
   const GenerateButtons = ({ type }) => {
     return (
       <a
         class="btn btn-sm btn-primary"
         style={{ textDecoration: "none" }}
-        href={signedUrls[`${type}.pdf`]}
+        // href={signedUrls[`${type}.pdf`]}
+        href={`${collegeData.docUrl[type]}`}
         target="_blank"
       >
         <span>Click here to download </span>
